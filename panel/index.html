@@ -185,6 +185,8 @@ async function doLogin(){
       enterPanel();
     }else if(r&&r.error==='locked'){
       err.textContent='به دلیل تلاش‌های زیاد، ورود ۱۵ دقیقه قفل شد.';
+    }else if(r&&(r.code==='PGRST202'||/could not find the function/i.test(r.message||''))){
+      err.textContent='سرور پنل هنوز راه‌اندازی نشده — فایل admin-panel.sql باید در Supabase SQL Editor اجرا شود.';
     }else{
       err.textContent='نام کاربری یا رمز اشتباه است';
     }
