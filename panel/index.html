@@ -5,76 +5,115 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>پنل مدیریت — ترید پلن</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
 <style>
 :root{
   --navy:#081226; --navy-card:#112240; --navy-deep:#0a1830;
   --gold:#e8a020; --gold-light:#f4c86a; --gold-border:rgba(232,160,32,.28);
   --text:#e8ecf4; --muted:#8fa0bd; --dim:#5a6b8a;
-  --green:#22c55e; --red:#ef4444; --blue:#7fb4e8;
+  --green:#22c55e; --red:#ef4444; --blue:#7fb4e8; --purple:#a78bfa;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:radial-gradient(1200px 800px at 50% -10%,#12294d 0%,var(--navy) 62%);min-height:100vh;font-family:'Vazirmatn',Tahoma,Arial,sans-serif;color:var(--text)}
+body{background:radial-gradient(1400px 900px at 50% -12%,#132b52 0%,var(--navy) 60%);min-height:100vh;font-family:'Vazirmatn',Tahoma,Arial,sans-serif;color:var(--text)}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 400px at 85% 110%,rgba(232,160,32,.06),transparent 70%);pointer-events:none}
 button{font-family:inherit;cursor:pointer}
 input{font-family:inherit}
 
 /* ===== login ===== */
-#login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px}
+#login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;z-index:10}
 #login-screen.hidden{display:none}
-.login-card{width:100%;max-width:360px;background:linear-gradient(160deg,rgba(17,34,64,.96),rgba(12,24,48,.98));border:1px solid var(--gold-border);border-radius:22px;padding:32px 26px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.55)}
-.login-logo{font-size:40px;margin-bottom:8px;filter:drop-shadow(0 0 16px rgba(232,160,32,.5))}
-.login-title{font-size:20px;font-weight:900;color:var(--gold)}
-.login-sub{font-size:12px;color:var(--muted);margin:4px 0 20px}
-.login-card input{width:100%;padding:13px 15px;margin-bottom:12px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.09);border-radius:12px;color:var(--text);font-size:16px;text-align:right}
-.login-card input:focus{outline:none;border-color:var(--gold-border)}
+.login-card{width:100%;max-width:360px;background:linear-gradient(160deg,rgba(17,34,64,.97),rgba(12,24,48,.99));border:1px solid var(--gold-border);border-radius:24px;padding:34px 26px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.03) inset;animation:cardIn .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.login-logo{font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 18px rgba(232,160,32,.55))}
+.login-title{font-size:20px;font-weight:900;background:linear-gradient(90deg,var(--gold),var(--gold-light));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.login-sub{font-size:12px;color:var(--muted);margin:5px 0 22px}
+.login-card input{width:100%;padding:13px 15px;margin-bottom:12px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.09);border-radius:13px;color:var(--text);font-size:16px;text-align:right;transition:border-color .2s}
+.login-card input:focus{outline:none;border-color:var(--gold-border);background:rgba(232,160,32,.05)}
 .login-card input.ltr{direction:ltr;text-align:left}
-.login-err{min-height:20px;color:var(--red);font-size:12.5px;font-weight:700;margin-bottom:8px;line-height:1.6}
-.login-btn{width:100%;padding:13px;border:none;border-radius:12px;background:linear-gradient(135deg,#c8881a,var(--gold));color:#081020;font-size:15px;font-weight:900}
+.login-err{min-height:20px;color:var(--red);font-size:12.5px;font-weight:700;margin-bottom:10px;line-height:1.7}
+.login-btn{width:100%;padding:14px;border:none;border-radius:13px;background:linear-gradient(135deg,#c8881a,var(--gold));color:#081020;font-size:15px;font-weight:900;box-shadow:0 8px 22px rgba(232,160,32,.28);transition:transform .15s}
+.login-btn:active{transform:translateY(1px)}
 .login-btn:disabled{opacity:.6}
 
 /* ===== panel ===== */
-#panel{display:none;max-width:1100px;margin:0 auto;padding:18px 14px 60px}
-#panel.show{display:block}
+#panel{display:none;max-width:1100px;margin:0 auto;padding:18px 14px 60px;position:relative}
+#panel.show{display:block;animation:cardIn .4s cubic-bezier(.2,.8,.2,1)}
 .p-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
-.p-title{font-size:19px;font-weight:900;color:var(--gold)}
-.p-title small{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-top:3px}
+.p-title{font-size:20px;font-weight:900;background:linear-gradient(90deg,var(--gold),var(--gold-light) 60%,#fff0d0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.p-title small{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-top:4px;-webkit-text-fill-color:var(--muted)}
 .p-actions{display:flex;gap:8px}
-.p-refresh,.p-logout{padding:9px 14px;border-radius:10px;font-size:12.5px;font-weight:800;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--text)}
+.p-refresh,.p-logout{padding:9px 15px;border-radius:11px;font-size:12.5px;font-weight:800;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--text);transition:background .2s,transform .15s}
+.p-refresh:hover{background:rgba(255,255,255,.1)}
+.p-refresh:active,.p-logout:active{transform:translateY(1px)}
 .p-logout{border-color:rgba(239,68,68,.35);color:var(--red);background:rgba(239,68,68,.07)}
+.p-logout:hover{background:rgba(239,68,68,.14)}
 
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+/* ===== stat cards ===== */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:14px}
 @media(max-width:760px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
-.stat-card{background:var(--navy-card);border:1px solid var(--gold-border);border-radius:15px;padding:15px 14px;position:relative;overflow:hidden}
-.stat-card::after{content:'';position:absolute;top:0;right:0;width:60px;height:60px;background:radial-gradient(circle at top right,rgba(232,160,32,.14),transparent 70%)}
-.sc-icon{font-size:20px;margin-bottom:8px}
-.sc-val{font-size:26px;font-weight:900;color:var(--gold-light);line-height:1.2}
+.stat-card{--ac:var(--gold);background:linear-gradient(160deg,var(--navy-card),var(--navy-deep));border:1px solid rgba(255,255,255,.07);border-radius:17px;padding:16px 15px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s}
+.stat-card:hover{transform:translateY(-3px);border-color:var(--ac);box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.stat-card::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;background:linear-gradient(90deg,transparent,var(--ac),transparent);opacity:.7}
+.stat-card::after{content:'';position:absolute;top:-24px;left:-24px;width:90px;height:90px;background:radial-gradient(circle,color-mix(in srgb,var(--ac) 16%,transparent),transparent 70%);pointer-events:none}
+.stat-card.c-gold{--ac:#e8a020}.stat-card.c-blue{--ac:#7fb4e8}.stat-card.c-green{--ac:#22c55e}.stat-card.c-purple{--ac:#a78bfa}
+.sc-icon{width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:19px;border-radius:12px;background:color-mix(in srgb,var(--ac) 13%,transparent);border:1px solid color-mix(in srgb,var(--ac) 30%,transparent);margin-bottom:10px}
+.sc-val{font-size:27px;font-weight:900;color:var(--text);line-height:1.2}
 .sc-label{font-size:11.5px;color:var(--muted);font-weight:700;margin-top:4px}
 
-.card{background:var(--navy-card);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:16px;margin-bottom:14px}
-.card-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.legend{display:flex;gap:14px;margin-right:auto;font-size:11px;color:var(--muted);font-weight:700}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-left:5px;vertical-align:-1px}
-#chart{width:100%;height:220px;display:block}
+/* ===== cards ===== */
+.card{background:linear-gradient(165deg,var(--navy-card),var(--navy-deep));border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 10px 34px rgba(0,0,0,.25)}
+.card-title{font-size:14px;font-weight:900;color:var(--text);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
+/* ===== chart ===== */
+.ch-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.ch-month-nav{display:flex;align-items:center;gap:6px}
+.ch-nav-btn{width:34px;height:34px;border-radius:11px;border:1px solid var(--gold-border);background:rgba(232,160,32,.08);color:var(--gold);font-size:16px;font-weight:900;transition:background .2s,transform .15s;display:flex;align-items:center;justify-content:center}
+.ch-nav-btn:hover{background:rgba(232,160,32,.18)}
+.ch-nav-btn:active{transform:scale(.94)}
+.ch-nav-btn:disabled{opacity:.3;cursor:default}
+.ch-month-label{min-width:120px;text-align:center;font-size:14.5px;font-weight:900;color:var(--gold-light)}
+.ch-metric{display:flex;gap:5px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:4px}
+.ch-chip{padding:7px 14px;border:none;background:transparent;color:var(--muted);font-size:12px;font-weight:800;border-radius:9px;transition:all .25s}
+.ch-chip.active{background:linear-gradient(135deg,#c8881a,var(--gold));color:#081020;box-shadow:0 4px 12px rgba(232,160,32,.3)}
+.ch-chip.active.blue{background:linear-gradient(135deg,#4a7fb8,var(--blue));box-shadow:0 4px 12px rgba(127,180,232,.3)}
+
+.ch-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+@media(max-width:640px){.ch-stats{grid-template-columns:repeat(2,1fr)}}
+.chs-item{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 11px;text-align:center}
+.chs-val{font-size:16.5px;font-weight:900;color:var(--gold-light)}
+.chs-val .up{color:var(--green)}.chs-val .down{color:var(--red)}
+.chs-lbl{font-size:10.5px;color:var(--dim);font-weight:700;margin-top:3px}
+
+.chart-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;position:relative;border-radius:12px}
+.chart-scroll::-webkit-scrollbar{height:6px}
+.chart-scroll::-webkit-scrollbar-thumb{background:rgba(232,160,32,.25);border-radius:3px}
+#chart{height:250px;display:block}
+#chart-tip{position:fixed;z-index:99;pointer-events:none;background:#1a2c50;border:1px solid var(--gold-border);border-radius:11px;padding:8px 12px;font-size:11.5px;font-weight:800;color:var(--text);box-shadow:0 10px 28px rgba(0,0,0,.5);opacity:0;transition:opacity .15s;white-space:nowrap}
+#chart-tip.show{opacity:1}
+#chart-tip .tv{color:var(--gold-light);font-size:13px}
+
+/* ===== users table ===== */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;min-width:820px}
-th{font-size:11px;color:var(--muted);font-weight:800;text-align:right;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.09);white-space:nowrap}
-td{font-size:12.5px;padding:11px 10px;border-bottom:1px solid rgba(255,255,255,.05);white-space:nowrap;vertical-align:middle}
-tr:hover td{background:rgba(255,255,255,.02)}
+th{font-size:11px;color:var(--muted);font-weight:800;text-align:right;padding:10px;border-bottom:1px solid rgba(255,255,255,.09);white-space:nowrap}
+td{font-size:12.5px;padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.05);white-space:nowrap;vertical-align:middle;transition:background .15s}
+tr:hover td{background:rgba(232,160,32,.03)}
 .u-name{font-weight:800;color:var(--text)}
 .u-email{direction:ltr;text-align:left;font-family:monospace;font-size:11px;color:var(--muted)}
-.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:10.5px;font-weight:800}
+.badge{display:inline-block;padding:4px 11px;border-radius:20px;font-size:10.5px;font-weight:800}
 .badge.ok{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.3)}
 .badge.mid{background:rgba(232,160,32,.12);color:var(--gold);border:1px solid var(--gold-border)}
 .badge.no{background:rgba(255,255,255,.05);color:var(--dim);border:1px solid rgba(255,255,255,.1)}
 .badge.ban{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.3)}
-.act-btn{padding:7px 10px;border-radius:9px;font-size:11px;font-weight:800;border:1px solid;background:transparent;margin-left:5px}
-.act-ban{color:#fbbf24;border-color:rgba(251,191,36,.4)}
-.act-pass{color:var(--blue);border-color:rgba(127,180,232,.4)}
-.act-del{color:var(--red);border-color:rgba(239,68,68,.4)}
-.act-btn:active{opacity:.7}
-.empty-row{text-align:center;color:var(--dim);padding:26px 0!important;font-size:13px}
+.act-btn{padding:7px 11px;border-radius:9px;font-size:11px;font-weight:800;border:1px solid;background:transparent;margin-left:5px;transition:background .2s,transform .15s}
+.act-btn:active{transform:translateY(1px)}
+.act-ban{color:#fbbf24;border-color:rgba(251,191,36,.4)}.act-ban:hover{background:rgba(251,191,36,.1)}
+.act-pass{color:var(--blue);border-color:rgba(127,180,232,.4)}.act-pass:hover{background:rgba(127,180,232,.1)}
+.act-del{color:var(--red);border-color:rgba(239,68,68,.4)}.act-del:hover{background:rgba(239,68,68,.1)}
+.empty-row{text-align:center;color:var(--dim);padding:28px 0!important;font-size:13px}
+.legend{margin-right:auto;font-size:11px;color:var(--muted);font-weight:700}
 
-#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a2c50;border:1px solid var(--gold-border);color:var(--text);padding:12px 20px;border-radius:13px;font-size:13px;font-weight:700;box-shadow:0 12px 34px rgba(0,0,0,.5);transition:transform .3s;z-index:9999;max-width:90vw}
+#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(90px);background:#1a2c50;border:1px solid var(--gold-border);color:var(--text);padding:12px 20px;border-radius:13px;font-size:13px;font-weight:700;box-shadow:0 12px 34px rgba(0,0,0,.5);transition:transform .3s;z-index:9999;max-width:90vw}
 #toast.show{transform:translateX(-50%) translateY(0)}
 </style>
 </head>
@@ -104,20 +143,34 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 
   <div class="stats-grid">
-    <div class="stat-card"><div class="sc-icon">👁️</div><div class="sc-val" id="st-visits">—</div><div class="sc-label">بازدید امروز</div></div>
-    <div class="stat-card"><div class="sc-icon">👥</div><div class="sc-val" id="st-users">—</div><div class="sc-label">کل کاربران</div></div>
-    <div class="stat-card"><div class="sc-icon">✨</div><div class="sc-val" id="st-signups">—</div><div class="sc-label">ثبت‌نام امروز</div></div>
-    <div class="stat-card"><div class="sc-icon">📊</div><div class="sc-val" id="st-trades">—</div><div class="sc-label">تریدهای ثبت‌شده امروز</div></div>
+    <div class="stat-card c-blue"><div class="sc-icon">👁️</div><div class="sc-val" id="st-visits">—</div><div class="sc-label">بازدید امروز</div></div>
+    <div class="stat-card c-gold"><div class="sc-icon">👥</div><div class="sc-val" id="st-users">—</div><div class="sc-label">کل کاربران</div></div>
+    <div class="stat-card c-green"><div class="sc-icon">✨</div><div class="sc-val" id="st-signups">—</div><div class="sc-label">ثبت‌نام امروز</div></div>
+    <div class="stat-card c-purple"><div class="sc-icon">📊</div><div class="sc-val" id="st-trades">—</div><div class="sc-label">تریدهای ثبت‌شده امروز</div></div>
   </div>
 
+  <!-- ===== month chart ===== -->
   <div class="card">
-    <div class="card-title">📈 بازدید و ثبت‌نام — ۱۴ روز اخیر
-      <span class="legend">
-        <span><i style="background:var(--gold)"></i>بازدید</span>
-        <span><i style="background:var(--green)"></i>ثبت‌نام</span>
-      </span>
+    <div class="ch-head">
+      <div class="ch-month-nav">
+        <button class="ch-nav-btn" onclick="chNav(1)" title="ماه بعد" id="ch-next">‹</button>
+        <div class="ch-month-label" id="ch-month-label">—</div>
+        <button class="ch-nav-btn" onclick="chNav(-1)" title="ماه قبل">›</button>
+      </div>
+      <div class="ch-metric">
+        <button class="ch-chip active" id="chip-signups" onclick="chMetric('signups')">✨ ثبت‌نام</button>
+        <button class="ch-chip" id="chip-visits" onclick="chMetric('visits')">👁️ بازدید</button>
+      </div>
     </div>
-    <canvas id="chart"></canvas>
+    <div class="ch-stats">
+      <div class="chs-item"><div class="chs-val" id="chs-total">—</div><div class="chs-lbl">جمع این ماه</div></div>
+      <div class="chs-item"><div class="chs-val" id="chs-avg">—</div><div class="chs-lbl">میانگین روزانه</div></div>
+      <div class="chs-item"><div class="chs-val" id="chs-best">—</div><div class="chs-lbl">بهترین روز</div></div>
+      <div class="chs-item"><div class="chs-val" id="chs-diff">—</div><div class="chs-lbl">نسبت به ماه قبل</div></div>
+    </div>
+    <div class="chart-scroll" id="chart-scroll">
+      <canvas id="chart"></canvas>
+    </div>
   </div>
 
   <div class="card">
@@ -133,6 +186,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
+<div id="chart-tip"></div>
 <div id="toast"></div>
 
 <script>
@@ -140,7 +194,6 @@ const SUPA_URL='https://lrcsbamzdoldopjklnqh.supabase.co';
 const SUPA_KEY='sb_publishable_mAeK0Je17QOT5YVX9qkAxA_SdIbwRSp';
 const TOKEN_KEY='tp_admin_token';
 let ADMIN_TOKEN=sessionStorage.getItem(TOKEN_KEY)||'';
-let _chartData=null;
 
 async function rpc(fn,args){
   const res=await fetch(SUPA_URL+'/rest/v1/rpc/'+fn,{
@@ -168,6 +221,40 @@ function faDateTime(iso){
   if(!iso)return '—';
   try{return new Intl.DateTimeFormat('fa-IR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(iso));}catch(e){return '—';}
 }
+
+/* ============ تقویم جلالی (الگوریتم jalaali-js) ============ */
+function _div(a,b){return ~~(a/b);}
+function _mod(a,b){return a-~~(a/b)*b;}
+function jalCal(jy){
+  var breaks=[-61,9,38,199,426,686,756,818,1111,1181,1210,1635,2060,2097,2192,2262,2324,2394,2456,3178];
+  var bl=breaks.length,gy=jy+621,leapJ=-14,jp=breaks[0],jm,jump,leap,leapG,march,n,i;
+  for(i=1;i<bl;i+=1){jm=breaks[i];jump=jm-jp;if(jy<jm)break;leapJ=leapJ+_div(jump,33)*8+_div(_mod(jump,33),4);jp=jm;}
+  n=jy-jp;
+  leapJ=leapJ+_div(n,33)*8+_div(_mod(n,33)+3,4);
+  if(_mod(jump,33)===4&&jump-n===4)leapJ+=1;
+  leapG=_div(gy,4)-_div((_div(gy,100)+1)*3,4)-150;
+  march=20+leapJ-leapG;
+  if(jump-n<6)n=n-jump+_div(jump+4,33)*33;
+  leap=_mod(_mod(n+1,33)-1,4);
+  if(leap===-1)leap=4;
+  return{leap:leap,gy:gy,march:march};
+}
+function g2d(gy,gm,gd){var d=_div((gy+_div(gm-8,6)+100100)*1461,4)+_div(153*_mod(gm+9,12)+2,5)+gd-34840408;d=d-_div(_div(gy+100100+_div(gm-8,6),100)*3,4)+752;return d;}
+function d2g(jdn){var j,i,gd,gm,gy;j=4*jdn+139361631;j=j+_div(_div(4*jdn+183187720,146097)*3,4)*4-3908;i=_div(_mod(j,1461),4)*5+308;gd=_div(_mod(i,153),5)+1;gm=_mod(_div(i,153),12)+1;gy=_div(j,1461)-100100+_div(8-gm,6);return{gy:gy,gm:gm,gd:gd};}
+function j2d(jy,jm,jd){var r=jalCal(jy);return g2d(r.gy,3,r.march)+(jm-1)*31-_div(jm,7)*(jm-7)+jd-1;}
+function d2j(jdn){
+  var gy=d2g(jdn).gy,jy=gy-621,r=jalCal(jy),jdn1f=g2d(gy,3,r.march),k,jm,jd;
+  k=jdn-jdn1f;
+  if(k>=0){if(k<=185){jm=1+_div(k,31);jd=_mod(k,31)+1;return{jy:jy,jm:jm,jd:jd};}else{k-=186;}}
+  else{jy-=1;k+=179;if(r.leap===1)k+=1;}
+  jm=7+_div(k,30);jd=_mod(k,30)+1;
+  return{jy:jy,jm:jm,jd:jd};
+}
+function toJalaali(gy,gm,gd){return d2j(g2d(gy,gm,gd));}
+function toGregorian(jy,jm,jd){return d2g(j2d(jy,jm,jd));}
+function jMonthLen(jy,jm){if(jm<=6)return 31;if(jm<=11)return 30;return j2d(jy+1,1,1)-j2d(jy,12,1);}
+const J_MONTHS=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+function gStr(g){return g.gy+'-'+String(g.gm).padStart(2,'0')+'-'+String(g.gd).padStart(2,'0');}
 
 /* ===== login ===== */
 async function doLogin(){
@@ -209,10 +296,9 @@ function enterPanel(){
   loadAll();
 }
 async function loadAll(){
-  loadStats(); loadUsers();
+  loadStats(); loadUsers(); chLoad(true);
   document.getElementById('p-updated').textContent='آخرین به‌روزرسانی: '+new Intl.DateTimeFormat('fa-IR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
 }
-
 async function loadStats(){
   try{
     const r=await rpc('admin_stats',{p_token:ADMIN_TOKEN});
@@ -221,57 +307,218 @@ async function loadStats(){
     document.getElementById('st-users').textContent  =faNum(r.total_users);
     document.getElementById('st-signups').textContent=faNum(r.signups_today);
     document.getElementById('st-trades').textContent =faNum(r.trades_today);
-    _chartData=r.chart||[];
-    drawChart();
   }catch(e){}
 }
 
-/* ===== chart (vanilla canvas, dual line) ===== */
-function drawChart(){
+/* ============ نمودار ماهانه شمسی ============ */
+const _tNow=new Date();
+const _tJ=toJalaali(_tNow.getFullYear(),_tNow.getMonth()+1,_tNow.getDate());
+let chY=_tJ.jy, chM=_tJ.jm;      // ماه جاری نمودار
+let chKey='signups';             // متریک فعال
+let _chCache={};                 // 'jy-jm' => {days:[...], prevTotal:{signups,visits}}
+let _chAnim=0,_chAnimT0=0,_chBars=[];
+
+function chNav(dir){
+  // dir=+1 ماه بعد، -1 ماه قبل — جلوتر از ماه جاری نمی‌رود
+  let y=chY,m=chM+dir;
+  if(m>12){m=1;y++;} if(m<1){m=12;y--;}
+  if(y>_tJ.jy||(y===_tJ.jy&&m>_tJ.jm))return;
+  chY=y;chM=m;
+  chLoad();
+}
+function chMetric(k){
+  chKey=k;
+  document.getElementById('chip-signups').className='ch-chip'+(k==='signups'?' active':'');
+  document.getElementById('chip-visits').className ='ch-chip'+(k==='visits'?' active blue':'');
+  chRenderStats(); chStartAnim();
+}
+
+async function chLoad(force){
+  const label=document.getElementById('ch-month-label');
+  label.textContent=J_MONTHS[chM-1]+' '+faNum(chY).replace(/٬|,/g,'');
+  document.getElementById('ch-next').disabled=(chY===_tJ.jy&&chM===_tJ.jm);
+
+  const key=chY+'-'+chM;
+  if(_chCache[key]&&!force){ chRenderStats(); chStartAnim(); return; }
+
+  // بازه: از اول ماهِ قبل تا آخر همین ماه شمسی (یک درخواست، دو ماه)
+  let py=chY,pm=chM-1; if(pm<1){pm=12;py--;}
+  const from=gStr(toGregorian(py,pm,1));
+  const to  =gStr(toGregorian(chY,chM,jMonthLen(chY,chM)));
+  try{
+    const r=await rpc('admin_chart',{p_token:ADMIN_TOKEN,p_from:from,p_to:to});
+    if(!r||!r.ok){
+      if(r&&r.error==='unauthorized')authFail();
+      else if(r&&(r.code==='PGRST202'||/could not find the function/i.test(r.message||'')))
+        toast('⚠️ فایل admin-chart.sql هنوز در Supabase اجرا نشده');
+      return;
+    }
+    const curStart=gStr(toGregorian(chY,chM,1));
+    const cur=[],prev={signups:0,visits:0};
+    (r.days||[]).forEach(d=>{
+      if(d.d>=curStart) cur.push(d);
+      else{ prev.signups+=d.signups; prev.visits+=d.visits; }
+    });
+    _chCache[key]={days:cur,prevTotal:prev};
+    chRenderStats(); chStartAnim();
+  }catch(e){}
+}
+
+function chData(){ return _chCache[chY+'-'+chM]||null; }
+
+function chRenderStats(){
+  const d=chData(); if(!d)return;
+  const vals=d.days.map(x=>x[chKey]);
+  const total=vals.reduce((s,v)=>s+v,0);
+  // میانگین فقط تا امروز (برای ماه جاری) — نه کل روزهای نیامده
+  const isCur=(chY===_tJ.jy&&chM===_tJ.jm);
+  const passed=isCur?_tJ.jd:vals.length;
+  const avg=passed>0?(total/passed):0;
+  let bi=-1,bv=0;
+  vals.forEach((v,i)=>{ if(v>bv){bv=v;bi=i;} });
+  document.getElementById('chs-total').textContent=faNum(total);
+  document.getElementById('chs-avg').textContent=avg>=10?faNum(Math.round(avg)):(Math.round(avg*10)/10).toLocaleString('fa-IR');
+  document.getElementById('chs-best').textContent=bi>=0?(faNum(bi+1)+' '+J_MONTHS[chM-1]+' — '+faNum(bv)):'—';
+  const p=d.prevTotal[chKey];
+  const el=document.getElementById('chs-diff');
+  if(p===0&&total===0)el.textContent='—';
+  else if(p===0)el.innerHTML='<span class="up">جدید ↑</span>';
+  else{
+    const pct=Math.round((total-p)/p*100);
+    el.innerHTML=pct>=0?('<span class="up">↑ '+faNum(pct)+'٪</span>'):('<span class="down">↓ '+faNum(-pct)+'٪</span>');
+  }
+}
+
+function chStartAnim(){
+  _chAnimT0=performance.now();
+  cancelAnimationFrame(_chAnim);
+  const tick=t=>{
+    const k=Math.min(1,(t-_chAnimT0)/550);
+    const e=1-Math.pow(1-k,3); // easeOutCubic
+    drawChart(e);
+    if(k<1)_chAnim=requestAnimationFrame(tick);
+  };
+  _chAnim=requestAnimationFrame(tick);
+}
+
+function niceMax(m){
+  if(m<=4)return 4;
+  const p=Math.pow(10,Math.floor(Math.log10(m)));
+  for(const f of [1,2,2.5,5,10]){ if(f*p>=m)return Math.ceil(f*p); }
+  return m;
+}
+
+function drawChart(prog){
+  const d=chData();
   const cv=document.getElementById('chart');
-  if(!cv||!_chartData)return;
+  const wrap=document.getElementById('chart-scroll');
+  if(!d||!cv)return;
+  const days=d.days, n=days.length;
   const dpr=window.devicePixelRatio||1;
-  const W=cv.clientWidth,H=cv.clientHeight||220;
+  // عرض: حداقل عرض کارت؛ اگر روزها جا نشوند، اسکرول افقی
+  const minBar=24;
+  const W=Math.max(wrap.clientWidth-2, n*minBar+56);
+  const H=250;
+  cv.style.width=W+'px'; cv.style.height=H+'px';
   cv.width=W*dpr; cv.height=H*dpr;
-  const c=cv.getContext('2d'); c.scale(dpr,dpr); c.clearRect(0,0,W,H);
+  const c=cv.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,W,H);
 
-  const d=_chartData;
-  if(!d.length)return;
-  const padL=8,padR=30,padT=14,padB=26;
+  const padL=8,padR=40,padT=16,padB=30;
   const iw=W-padL-padR, ih=H-padT-padB;
-  const maxV=Math.max(2,...d.map(x=>Math.max(x.visits,x.signups)));
-  const stepX=iw/Math.max(1,d.length-1);
-  const X=i=>W-padR-i*stepX; // RTL: روز اول سمت راست
+  const vals=days.map(x=>x[chKey]);
+  const maxV=niceMax(Math.max(1,...vals));
+  const stepX=iw/n;
+  const X=i=>W-padR-(i+1)*stepX+stepX/2; // RTL: روز ۱ سمت راست
   const Y=v=>padT+ih-(v/maxV)*ih;
+  const gold=chKey==='signups';
+  const cMain=gold?'#e8a020':'#7fb4e8', cLight=gold?'#f4c86a':'#a8cef0';
 
-  // grid
-  c.strokeStyle='rgba(255,255,255,.06)'; c.lineWidth=1;
-  c.font='10px Tahoma'; c.fillStyle='#5a6b8a'; c.textAlign='left';
+  // خطوط راهنما + برچسب محور Y
+  c.font='10.5px Vazirmatn,Tahoma'; c.fillStyle='#5a6b8a'; c.textAlign='left';
+  c.strokeStyle='rgba(255,255,255,.055)'; c.lineWidth=1;
   const gridN=4;
   for(let g=0;g<=gridN;g++){
     const v=Math.round(maxV*g/gridN), y=Y(v);
+    c.setLineDash(g===0?[]:[3,4]);
     c.beginPath(); c.moveTo(padL,y); c.lineTo(W-padR,y); c.stroke();
-    c.fillText(String(v),W-padR+6,y+3);
+    c.fillText(faNum(v),W-padR+8,y+3.5);
   }
-  // day labels (هر روز دوم)
-  c.textAlign='center';
-  d.forEach((p,i)=>{
-    if(i%2)return;
-    const day=p.d.slice(8);
-    c.fillText(day,X(i),H-8);
-  });
+  c.setLineDash([]);
 
-  function line(key,color){
-    c.strokeStyle=color; c.lineWidth=2.2; c.lineJoin='round'; c.beginPath();
-    d.forEach((p,i)=>{ const x=X(i),y=Y(p[key]); i?c.lineTo(x,y):c.moveTo(x,y); });
-    c.stroke();
-    c.fillStyle=color;
-    d.forEach((p,i)=>{ c.beginPath(); c.arc(X(i),Y(p[key]),2.6,0,7); c.fill(); });
-  }
-  line('visits','#e8a020');
-  line('signups','#22c55e');
+  // میله‌ها
+  const p=(prog===undefined)?1:prog;
+  const bw=Math.min(15,stepX*.55);
+  _chBars=[];
+  days.forEach((day,i)=>{
+    const v=day[chKey];
+    const x=X(i);
+    const isToday=(chY===_tJ.jy&&chM===_tJ.jm&&i===_tJ.jd-1);
+    const hFull=(v/maxV)*ih, h=hFull*p;
+    const y=padT+ih-h;
+    _chBars.push({x:x,w:Math.max(bw,10),v:v,i:i,top:y});
+
+    if(v>0){
+      const grad=c.createLinearGradient(0,y,0,padT+ih);
+      grad.addColorStop(0,isToday?cLight:cMain);
+      grad.addColorStop(1,gold?'rgba(200,136,26,.25)':'rgba(74,127,184,.25)');
+      c.fillStyle=grad;
+      if(isToday){ c.shadowColor=cMain; c.shadowBlur=12; }
+      const r=Math.min(bw/2,5);
+      c.beginPath();
+      c.moveTo(x-bw/2,padT+ih);
+      c.lineTo(x-bw/2,y+r); c.arcTo(x-bw/2,y,x-bw/2+r,y,r);
+      c.lineTo(x+bw/2-r,y); c.arcTo(x+bw/2,y,x+bw/2,y+r,r);
+      c.lineTo(x+bw/2,padT+ih);
+      c.closePath(); c.fill();
+      c.shadowBlur=0;
+      // مقدار روی میله‌های بلند
+      if(hFull>26&&stepX>=17){
+        c.fillStyle=isToday?'#fff':'rgba(232,236,244,.85)';
+        c.font='bold 10px Vazirmatn,Tahoma'; c.textAlign='center';
+        c.fillText(faNum(v),x,y-5);
+      }
+    }else{
+      c.fillStyle='rgba(255,255,255,.06)';
+      c.fillRect(x-bw/2,padT+ih-2,bw,2);
+    }
+
+    // برچسب روز (شمسی)
+    const showEvery=stepX>=20?1:2;
+    if(i%showEvery===0){
+      c.fillStyle=isToday?cLight:'#5a6b8a';
+      c.font=(isToday?'bold ':'')+'10.5px Vazirmatn,Tahoma'; c.textAlign='center';
+      c.fillText(faNum(i+1),x,H-9);
+    }
+  });
 }
-window.addEventListener('resize',drawChart);
+
+/* تول‌تیپ نمودار */
+(function(){
+  const cv=document.getElementById('chart');
+  const tip=document.getElementById('chart-tip');
+  function showTip(clientX,clientY){
+    if(!_chBars.length)return;
+    const rect=cv.getBoundingClientRect();
+    const mx=clientX-rect.left;
+    let best=null,bd=1e9;
+    _chBars.forEach(b=>{ const dd=Math.abs(b.x-mx); if(dd<bd){bd=dd;best=b;} });
+    if(!best||bd>18){ tip.classList.remove('show'); return; }
+    const lbl=chKey==='signups'?'ثبت‌نام':'بازدید';
+    tip.innerHTML=faNum(best.i+1)+' '+J_MONTHS[chM-1]+' '+faNum(chY).replace(/٬|,/g,'')+' — <span class="tv">'+faNum(best.v)+'</span> '+lbl;
+    tip.classList.add('show');
+    const tw=tip.offsetWidth;
+    let lx=clientX-tw/2;
+    lx=Math.max(6,Math.min(window.innerWidth-tw-6,lx));
+    tip.style.left=lx+'px';
+    tip.style.top=(rect.top+best.top-40)+'px';
+  }
+  cv.addEventListener('mousemove',e=>showTip(e.clientX,e.clientY));
+  cv.addEventListener('mouseleave',()=>tip.classList.remove('show'));
+  cv.addEventListener('touchstart',e=>{ if(e.touches[0])showTip(e.touches[0].clientX,e.touches[0].clientY); },{passive:true});
+  cv.addEventListener('touchmove',e=>{ if(e.touches[0])showTip(e.touches[0].clientX,e.touches[0].clientY); },{passive:true});
+  cv.addEventListener('touchend',()=>setTimeout(()=>tip.classList.remove('show'),1200),{passive:true});
+})();
+window.addEventListener('resize',()=>drawChart());
 
 /* ===== users ===== */
 let _users=[];
@@ -338,13 +585,11 @@ async function delUser(id,name){
 
 /* ===== boot ===== */
 if(ADMIN_TOKEN){
-  // اعتبار توکن ذخیره‌شده را با یک درخواست چک می‌کنیم
   rpc('admin_stats',{p_token:ADMIN_TOKEN}).then(r=>{
     if(r&&r.ok){ enterPanel(); }
     else{ sessionStorage.removeItem(TOKEN_KEY); ADMIN_TOKEN=''; }
   }).catch(()=>{});
 }
-// آمار هر ۶۰ ثانیه تازه می‌شود
 setInterval(()=>{ if(ADMIN_TOKEN&&document.visibilityState==='visible') loadStats(); },60000);
 </script>
 </body>
