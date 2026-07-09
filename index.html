@@ -2755,6 +2755,8 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 .acct-dep-label{font-size:9.5px;font-weight:800;color:rgba(255,255,255,.45);letter-spacing:1px;margin-bottom:2px}
 .acct-deposit{font-size:15.5px;font-weight:700;color:rgba(255,255,255,.82)}
 .acct-sync{margin-top:10px;padding-top:8px;border-top:1px dashed rgba(232,160,32,.22);font-size:10.5px;font-weight:600;color:rgba(255,255,255,.55);position:relative}
+.acct-card.waiting .acct-live{background:#8496ad;box-shadow:none;animation:none}
+.acct-card.waiting .acct-balance{color:rgba(255,255,255,.35);text-shadow:none}
 .mt5link-copy{background:rgba(232,160,32,.12);border:1px solid var(--gold-border);border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
 .mt5link-btn{width:100%;background:linear-gradient(135deg,#c8881a,#e8a020);border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:800;color:#081020;cursor:pointer;font-family:'Vazirmatn',sans-serif}
 .mt5link-steps{margin-top:12px;border-top:1px solid rgba(255,255,255,.06);padding-top:10px}
@@ -3653,7 +3655,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
   </div>
 
   <!-- MT5 ACCOUNT — live balance / deposit / last sync (from MetaTrader) -->
-  <div class="acct-card" id="acct-card" style="display:none">
+  <div class="acct-card waiting" id="acct-card">
     <div class="acct-top">
       <div>
         <div class="acct-label"><span class="acct-live"></span>بالانس حساب</div>
@@ -3664,7 +3666,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
         <div class="acct-deposit acct-num" id="acct-deposit">—</div>
       </div>
     </div>
-    <div class="acct-sync" id="acct-sync">—</div>
+    <div class="acct-sync" id="acct-sync">⏳ در انتظار اولین داده از متاتریدر — اکسپرت TradePlanSync باید روی چارت فعال باشد</div>
   </div>
 
   <!-- month nav -->
@@ -9413,8 +9415,16 @@ function renderMt5Account(){
   const card=document.getElementById('acct-card');
   if(!card) return;
   const a=data&&data.mt5Account;
-  if(!a||!a.syncedAt){ card.style.display='none'; return; }
-  card.style.display='block';
+  // هنوز داده‌ای از متاتریدر نرسیده => حالت «در انتظار اتصال»
+  if(!a||!a.syncedAt){
+    card.classList.add('waiting');
+    const b=document.getElementById('acct-balance'); if(b) b.textContent='—';
+    const dp=document.getElementById('acct-deposit'); if(dp) dp.textContent='—';
+    const sy=document.getElementById('acct-sync');
+    if(sy) sy.textContent='⏳ در انتظار اولین داده از متاتریدر — اکسپرت TradePlanSync باید روی چارت فعال باشد';
+    return;
+  }
+  card.classList.remove('waiting');
   const balEl=document.getElementById('acct-balance');
   const bal=parseFloat(a.balance)||0;
   if(_acctShownBal!==null&&Math.abs(_acctShownBal-bal)>=0.005&&typeof animateValue==='function'){
