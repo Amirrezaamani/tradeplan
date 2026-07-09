@@ -3167,6 +3167,47 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 </style>
 <style id="desktop-responsive">
 /* ===== DESKTOP / TABLET (>=768px) — mobile layout untouched, app framed & polished ===== */
+/* ===== STRATEGY PANEL — luxe typography, smart color coding, subtle FX ===== */
+/* عنوان بخش «پلن معاملاتی» — طلایی گرم با هاله و ستاره‌ی نبض‌دار */
+.strat-q{font-size:14.5px;font-weight:900;color:#F8DA8F;letter-spacing:.2px;text-shadow:0 0 18px rgba(244,200,106,.35);border-color:rgba(244,200,106,.3)}
+.sq-num{animation:sqStar 3s ease-in-out infinite}
+@keyframes sqStar{0%,100%{box-shadow:0 2px 8px rgba(232,160,32,.45)}50%{box-shadow:0 2px 18px rgba(244,200,106,.9)}}
+/* هویت رنگی هوشمند سه گروه قانون: ورود=سبز، خروج=قرمز، مدیریت=آبی */
+.rule-group.rg-entry{border-color:rgba(34,197,94,.22)}
+.rule-group.rg-entry::before{background:radial-gradient(circle,rgba(34,197,94,.10),transparent 70%)}
+.rg-entry .rg-title{color:#7ce7a5;text-shadow:0 0 14px rgba(34,197,94,.35)}
+.rg-entry .rule-item{border-right:2px solid rgba(34,197,94,.45)}
+.rg-entry .rule-add input:focus{border-color:rgba(34,197,94,.5);box-shadow:0 0 0 3px rgba(34,197,94,.08)}
+.rule-group.rg-exit{border-color:rgba(239,68,68,.22)}
+.rule-group.rg-exit::before{background:radial-gradient(circle,rgba(239,68,68,.09),transparent 70%)}
+.rg-exit .rg-title{color:#fca5a5;text-shadow:0 0 14px rgba(239,68,68,.3)}
+.rg-exit .rule-item{border-right:2px solid rgba(239,68,68,.4)}
+.rg-exit .rule-add input:focus{border-color:rgba(239,68,68,.45);box-shadow:0 0 0 3px rgba(239,68,68,.07)}
+.rule-group.rg-manage{border-color:rgba(96,165,250,.22)}
+.rule-group.rg-manage::before{background:radial-gradient(circle,rgba(96,165,250,.10),transparent 70%)}
+.rg-manage .rg-title{color:#93c5fd;text-shadow:0 0 14px rgba(96,165,250,.35)}
+.rg-manage .rule-item{border-right:2px solid rgba(96,165,250,.4)}
+.rg-manage .rule-add input:focus{border-color:rgba(96,165,250,.5);box-shadow:0 0 0 3px rgba(96,165,250,.08)}
+.rg-title{font-size:14px}
+/* متن قوانین — درشت‌تر، روشن‌تر، خواناتر */
+.rule-text{font-size:12.8px;font-weight:800;color:rgba(255,255,255,.94);line-height:1.75;letter-spacing:.1px}
+.rule-item{background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.025))}
+.rule-item:hover{transform:translateX(-2px)}
+.rule-help{font-size:11.5px;color:#cfe0f5}
+/* نام استراتژی — طلایی درخشان */
+.pn-label{font-size:12px;color:#F4C86A;letter-spacing:.3px;text-shadow:0 0 12px rgba(244,200,106,.3)}
+.pn-input-box{border-color:rgba(244,200,106,.22);background:rgba(244,200,106,.05)}
+.pn-input-box:focus-within{border-color:rgba(244,200,106,.55);box-shadow:0 0 0 3px rgba(244,200,106,.10),0 0 24px rgba(244,200,106,.12)}
+.pn-prefix{color:#F4C86A}
+#strategy-name{font-size:16px;font-weight:900;color:#FBE3A3;letter-spacing:.2px;text-shadow:0 1px 10px rgba(244,200,106,.25)}
+#strategy-name::placeholder{color:rgba(255,255,255,.28);font-weight:600}
+/* کارت «سبک، بازار و ستاپ» */
+.see-title{font-weight:900;color:#fff;text-shadow:0 0 14px rgba(255,255,255,.12)}
+/* قوانین طلایی — درخشش متحرک روی عنوان + متن خواناتر */
+.hg-header span{background:linear-gradient(90deg,#F4C86A,#fff2cf 30%,#F4C86A 60%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900;animation:hgShine 6s linear infinite}
+@keyframes hgShine{to{background-position:-200% center}}
+.plan-golden-section .ci-text{font-size:12.8px;font-weight:800;color:rgba(255,255,255,.92)}
+
 @media (min-width:768px){
   body{
     display:flex;align-items:center;justify-content:center;padding:26px 0;
@@ -3241,9 +3282,13 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
   #page-home{column-count:3;column-gap:2px;padding:0 10px 26px}
   #page-journal,#page-psychology,#page-settings{column-count:2;column-gap:2px;padding:0 10px 26px}
   #page-home>*,#page-journal>*,#page-psychology>*,#page-settings>*{break-inside:avoid}
-  /* setup page: tabs full width, active panel content in 2 columns */
-  .setup-panel.active{column-count:2;column-gap:2px;padding-bottom:26px}
-  .setup-panel.active>*{break-inside:avoid}
+  /* setup page (پلن ترید): two-column desktop layout.
+     NOTE: panels are flex containers, so column-count is ignored — grid is used instead. */
+  .setup-panel.active{padding-bottom:26px}
+  #panel-plan.active{display:grid;grid-template-columns:1fr 1fr;gap:13px;align-items:start}
+  /* ستون چپ: پلن معاملاتی (بلند)؛ ستون راست: سبک/نام استراتژی/قوانین طلایی */
+  #panel-plan .strat-section-rules{grid-column:2;grid-row:1/span 3}
+  #panel-checklist.active{display:grid;grid-template-columns:1fr 1fr;gap:13px;align-items:start}
   .settings-section{break-after:avoid}
 }
 /* mouse niceties — touch devices unaffected */
@@ -3870,10 +3915,10 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
     </div>
 
     <!-- Trading plan — 3 rule groups -->
-    <div class="strat-section">
+    <div class="strat-section strat-section-rules">
       <div class="strat-q"><span class="sq-num">★</span> پلن معاملاتی</div>
 
-      <div class="rule-group">
+      <div class="rule-group rg-entry">
         <div class="rg-head">
           <div class="rg-title"><span class="rg-icon">🟢</span> قوانین ورود</div>
           <button type="button" class="rg-help-btn" onclick="toggleRuleHelp('entry')" aria-label="راهنما">؟</button>
@@ -3888,7 +3933,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
         </div>
       </div>
 
-      <div class="rule-group">
+      <div class="rule-group rg-exit">
         <div class="rg-head">
           <div class="rg-title"><span class="rg-icon">🔴</span> قوانین خروج</div>
           <button type="button" class="rg-help-btn" onclick="toggleRuleHelp('exit')" aria-label="راهنما">؟</button>
@@ -3903,7 +3948,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
         </div>
       </div>
 
-      <div class="rule-group">
+      <div class="rule-group rg-manage">
         <div class="rg-head">
           <div class="rg-title"><span class="rg-icon">⚙️</span> مدیریت معامله در جریان</div>
           <button type="button" class="rg-help-btn" onclick="toggleRuleHelp('manage')" aria-label="راهنما">؟</button>
