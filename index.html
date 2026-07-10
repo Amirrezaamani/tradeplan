@@ -3599,7 +3599,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       <button type="submit" class="auth-submit" id="auth-submit">ورود</button>
     </form>
     <div class="auth-hint" id="auth-hint">حساب نداری؟ <a onclick="setAuthMode('signup')">ثبت‌نام کن</a><br><a class="auth-forgot" onclick="authForgot()">رمزت رو فراموش کردی؟</a></div>
-    <div class="auth-ver" id="auth-version">TradePlan v75.9</div>
+    <div class="auth-ver" id="auth-version">TradePlan v76.0</div>
   </div>
 </div>
 
@@ -4731,7 +4731,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       </svg>
       <span class="cl-handle">trade.planfx</span>
     </a>
-    <div class="credit-text" id="app-version-line" style="font-size:10px;color:var(--text-dim);margin-top:3px">نسخه برنامه: 75.9 — اکسپرت متاتریدر: v1.20</div>
+    <div class="credit-text" id="app-version-line" style="font-size:10px;color:var(--text-dim);margin-top:3px">نسخه برنامه: 76.0 — اکسپرت متاتریدر: v1.20</div>
   </div>
   </div><!-- /set-cols -->
 </div>
@@ -5244,60 +5244,107 @@ function renderStrategyIdentity(){
 
 // 5-dimension skill scores (0-100) over a rolling recent window, with a full
 // breakdown returned in `detail` so the help panel can explain every number.
+// امتیازها مستقیم از خودِ اعداد ثبت‌شده (دستی یا اکسپرت) محاسبه می‌شوند:
+// افت سرمایه، سقف ضرر روزانه، اندازه‌ی ضررها، بیش‌معامله‌گری، تیلت و … .
 const RADAR_WINDOW_DAYS=30;
 function computeSkillRadar(){
   const plan=data.plan||{};
   ensureStrategy(); const strat=data.strategy;
-  // clamp با کف ۴۰ و سقف ۹۰ به‌جز حالت‌های خیلی خوب/بد
   const clamp=(v,lo=0,hi=100)=>Math.max(lo,Math.min(hi,Math.round(v||0)));
-  // تبدیل raw (0-100) به محدوده ۴۰-۹۰ — فقط حالت‌های استثنایی از این بازه خارج می‌شوند
-  const toScore=(raw,lo=40,hi=90)=>clamp(lo + (raw/100)*(hi-lo));
+  // بازه‌ی نمایشی ۲۵–۹۵: بد واقعاً پایین دیده می‌شود، عالی واقعاً بالا
+  const toScore=(raw,lo=25,hi=95)=>clamp(lo+(raw/100)*(hi-lo));
+  // با داده‌ی کم، امتیاز به سمت خنثی (۵۰) می‌رود تا ۲-۳ معامله قضاوت نکند
+  const blend=(raw,w)=>50+(raw-50)*Math.max(0,Math.min(1,w));
+  // نگاشت چندنقطه‌ای: بین نقاط [x,y] خطی درون‌یابی می‌کند
+  const piece=(x,pts)=>{
+    if(!isFinite(x)) return pts[Math.floor(pts.length/2)][1];
+    if(x<=pts[0][0]) return pts[0][1];
+    for(let i=1;i<pts.length;i++){
+      if(x<=pts[i][0]){ const [x0,y0]=pts[i-1],[x1,y1]=pts[i]; return y0+(x-x0)/(x1-x0)*(y1-y0); }
+    }
+    return pts[pts.length-1][1];
+  };
+  const median=a=>{ if(!a.length) return 0; const s=[...a].sort((x,y)=>x-y); const m=Math.floor(s.length/2); return s.length%2?s[m]:(s[m-1]+s[m])/2; };
+  const EPS=1e-9;
 
   // ── پنجره زمانی ──────────────────────────────────
   const today=new Date(); today.setHours(0,0,0,0);
   const start=new Date(today); start.setDate(start.getDate()-(RADAR_WINDOW_DAYS-1));
   const inWindow=k=>{ const d=new Date(k+'T00:00:00'); return d>=start && d<=today; };
 
-  // ── ژورنال ─────────────────────────────────────
-  const jEntries=Object.entries(data.journal||{}).filter(([k,e])=>inWindow(k)&&e&&e.trades>0);
+  // ── ژورنال (مرتب‌شده به ترتیب تاریخ — برای Drawdown و تیلت لازم است) ──
+  const jEntries=Object.entries(data.journal||{})
+    .filter(([k,e])=>inWindow(k)&&e&&e.trades>0)
+    .sort((a,b)=>a[0]<b[0]?-1:1);
   const activeDays=jEntries.length;
   let totalTrades=0, winDays=0, lossDays=0, totalPnl=0;
   let allPositions_j=[];
+  const dailyPnls=[], dailyTrades=[];
   jEntries.forEach(([k,e])=>{
     totalTrades+=e.trades||0;
     totalPnl+=e.pnl||0;
+    dailyPnls.push(e.pnl||0);
+    dailyTrades.push(e.trades||0);
     if((e.pnl||0)>0) winDays++; else if((e.pnl||0)<0) lossDays++;
     if(e.positions) allPositions_j=allPositions_j.concat(e.positions);
   });
-  // وین‌ریت: (تعداد معاملات سودده ÷ کل معاملات) × ۱۰۰ — با استفاده از positions
+
+  // مرجع سرمایه: پلن ← دیپازیت متاتریدر ← دیپازیت دستی ژورنال
+  const cap = parseFloat(plan.totalCapital)
+           || (data.mt5Account&&parseFloat(data.mt5Account.deposit))
+           || parseFloat(data.acctDeposit) || 0;
+
+  // ── آمار سطح معامله (از positions؛ بدون آن‌ها از سطح روز) ──
   let positionWins=0, positionTotal=0;
+  let grossProfit=0, grossLoss=0, winTrades=0, lossTrades=0, maxTradeLoss=0;
   jEntries.forEach(([,e])=>{
     const pos=e.positions||[];
     if(pos.length>0){
       pos.forEach(p=>{
         positionTotal++;
-        if((p.pnlSign==='profit'&&(parseFloat(p.pnlValue)||0)>=0)||p.pnlSign==='profit') positionWins++;
+        const v=parseFloat(p.pnlValue)||0;
+        if((p.pnlSign||'profit')==='profit'){ positionWins++; if(v>0){grossProfit+=v; winTrades++;} }
+        else if(p.pnlSign==='loss'&&v>0){ grossLoss+=v; lossTrades++; if(v>maxTradeLoss) maxTradeLoss=v; }
       });
     } else {
-      // fallback بدون positions
       const cnt=e.trades||1;
       positionTotal+=cnt;
-      if((e.pnl||0)>0) positionWins+=cnt;
+      if((e.pnl||0)>0){ positionWins+=cnt; grossProfit+=e.pnl; winTrades+=cnt; }
+      else if((e.pnl||0)<0){ const l=Math.abs(e.pnl); grossLoss+=l; lossTrades+=cnt; if(l/cnt>maxTradeLoss) maxTradeLoss=l/cnt; }
     }
   });
   const winRate = positionTotal>0 ? Math.round(positionWins/positionTotal*100) : 50;
-
-  // Profit Factor
-  let grossProfit=0, grossLoss=0, winTrades=0, lossTrades=0;
-  allPositions_j.forEach(p=>{
-    const v=parseFloat(p.pnlValue)||0;
-    if((p.pnlSign||'profit')==='profit'&&v>0){ grossProfit+=v; winTrades++; }
-    else if(p.pnlSign==='loss'&&v>0){ grossLoss+=v; lossTrades++; }
-  });
   const profitFactor=grossLoss>0?grossProfit/grossLoss:(grossProfit>0?3:1);
   const avgWin=winTrades>0?grossProfit/winTrades:0;
   const avgLoss=lossTrades>0?grossLoss/lossTrades:0;
   const rr=avgLoss>0?avgWin/avgLoss:(avgWin>0?2:1);
+
+  // ── فاکتورهای عددی مشترک (از منحنی روزانه) ──────────
+  // حداکثر افت سرمایه روی منحنی تجمعی
+  let eq=0, peak=0, maxDD=0;
+  dailyPnls.forEach(p=>{ eq+=p; if(eq>peak) peak=eq; const dd=peak-eq; if(dd>maxDD) maxDD=dd; });
+  const worstDay = dailyPnls.length ? Math.min(0,...dailyPnls) : 0;
+  const bestDayPnl = dailyPnls.length ? Math.max(0,...dailyPnls) : 0;
+  const avgAbsDay = dailyPnls.length ? dailyPnls.reduce((s,v)=>s+Math.abs(v),0)/dailyPnls.length : 0;
+  // نقض سقف ضرر روزانه — مستقیم از خود اعداد، نه فقط خوداظهاری
+  const DLL=parseFloat(plan.dailyLossLimit)||0;
+  const dllBreachDays = DLL>0 ? dailyPnls.filter(p=>p<-DLL).length : 0;
+  // بیش‌معامله‌گری: عبور از سقف پلن، یا جهش نسبت به میانه‌ی خود تریدر
+  const medTrades=median(dailyTrades)||1;
+  const maxTPD=parseFloat(plan.maxTradesPerDay)||0;
+  const overtradeDays=dailyTrades.filter(t=> maxTPD>0 ? t>maxTPD : t>Math.max(4,medTrades*2.5)).length;
+  // تیلت: فردای یک روز قرمزِ بزرگ، تعداد معامله جهش کند (امضای انتقام‌گیری)
+  let tiltDays=0;
+  for(let i=1;i<dailyPnls.length;i++){
+    if(dailyPnls[i-1] < -Math.max(avgAbsDay*1.5,EPS) && dailyTrades[i] > Math.max(3,medTrades*1.6)) tiltDays++;
+  }
+  // بلندترین زنجیره‌ی روزهای قرمز
+  let maxRedStreak=0, redRun=0;
+  dailyPnls.forEach(p=>{ if(p<0){ redRun++; if(redRun>maxRedStreak) maxRedStreak=redRun; } else redRun=0; });
+
+  // وزن اطمینان بر اساس حجم داده
+  const wTrades=Math.min(1,totalTrades/12);
+  const wDays  =Math.min(1,activeDays/8);
 
   // ── روانشناسی ────────────────────────────────────
   let positions=[]; let psychDays=0, cleanDays=0;
@@ -5332,33 +5379,36 @@ function computeSkillRadar(){
 
   // ================================================================
   // ۱) انضباط — Discipline
-  // ۷۰٪ رعایت پلن | ۲۰٪ کم‌بودن اشتباهات | ۱۰٪ روزهای بدون خطا
+  // ۴۵٪ پایبندی به پلن (خوداظهاری) | ۱۵٪ کم‌بودن اشتباهات | ۱۰٪ روزهای پاک
+  // ۱۵٪ بیش‌معامله‌گری (عددی) | ۱۵٪ توقف در زنجیره‌ی باخت (عددی)
   // ================================================================
-  let disciplineRaw=50;
+  const overtradeScore=activeDays>0 ? piece(overtradeDays/activeDays,[[0,100],[0.1,80],[0.25,55],[0.5,20],[1,0]]) : 60;
+  const redStreakScore=piece(maxRedStreak,[[0,100],[2,85],[3,65],[5,35],[8,10]]);
+  let discipline;
   if(psychDays>0){
-    // نرخ تخلف از پلن — هر تخلف = ۱۵ امتیاز کسر (حداکثر ۱۰۰ کسر)
     const violRate=positions.length>0?planViolations/positions.length:0;
-    const planScore=Math.max(0, 100 - violRate * 120);
-
-    // نرخ اشتباه کلی — هر اشتباه = ۱۰ امتیاز کسر
+    const planScore=Math.max(0, 100 - violRate*120);
     const mistRate=positions.length>0?totalMistakeCount/positions.length:0;
-    const mistScore=Math.max(0, 100 - mistRate * 90);
-
-    // روزهای بدون خطا
+    const mistScore=Math.max(0, 100 - mistRate*90);
     const cleanScore=cleanDays/psychDays*100;
-
-    disciplineRaw = planScore*0.70 + mistScore*0.20 + cleanScore*0.10;
+    const raw = planScore*0.45 + mistScore*0.15 + cleanScore*0.10
+              + overtradeScore*0.15 + redStreakScore*0.15;
+    discipline = toScore(blend(raw, Math.max(wDays, Math.min(1,positions.length/8))));
+  } else if(activeDays>0){
+    // بدون لاگ روانشناسی: فقط رفتار عددی، با احتیاط
+    discipline = toScore(blend(overtradeScore*0.5 + redStreakScore*0.5, wDays*0.7));
+  } else {
+    discipline = 55;
   }
-  // بدون داده → نمره ۵۵ (وسط بازه)
-  const discipline = psychDays>0 ? toScore(disciplineRaw) : 55;
 
   // ================================================================
-  // ۲) ریسک — Risk Management
-  // ۴۰٪ رعایت حجم/ریسک | ۳۰٪ رعایت سقف روزانه | ۲۰٪ SL | ۱۰٪ تنظیمات
+  // ۲) ریسک — Risk Management (مستقیم از اعداد سود/ضرر)
+  // ۳۰٪ افت سرمایه | ۲۵٪ سقف ضرر روزانه | ۱۵٪ اندازه‌ی ضرر بزرگ |
+  // ۲۰٪ رفتارهای ثبت‌شده (SL/حجم) | ۱۰٪ کامل‌بودن تنظیمات
   // ================================================================
   const rp=parseFloat(plan.riskPerTrade)||0;
-  const hasCap =parseFloat(plan.totalCapital)>0;
-  const hasDLL =parseFloat(plan.dailyLossLimit)>0;
+  const hasCap =cap>0;
+  const hasDLL =DLL>0;
   const hasMCL =parseFloat(plan.maxConsecutiveLosses)>0;
   const hasExit=!!(strat.rules&&strat.rules.exit&&strat.rules.exit.length>0);
   const riskFactors=[];
@@ -5368,88 +5418,115 @@ function computeSkillRadar(){
   if(hasMCL)  configScore+=20;
   if(rp>0&&rp<=3) configScore+=20;
   if(hasExit) configScore+=10;
-  riskFactors.push(hasCap ?'سرمایه‌ی کل ثبت شده ✓':'سرمایه‌ی کل ثبت نشده ✗');
-  riskFactors.push(hasDLL ?'سقف ضرر روزانه ✓':'سقف ضرر روزانه خالی ✗');
-  riskFactors.push(hasMCL ?'حد ضرر متوالی ✓':'حد ضرر متوالی خالی ✗');
-  riskFactors.push(rp>0   ?`ریسک هر معامله: ${rp}٪`:'ریسک هر معامله تعیین نشده ✗');
+  // افت سرمایه: اگر سرمایه معلوم است نسبت به آن، وگرنه نسبت به نوسان روزانه‌ی خود تریدر
+  const ddScore = activeDays===0 ? 60
+    : hasCap ? piece(maxDD/cap*100,[[0,100],[3,90],[5,80],[10,55],[20,25],[30,0]])
+             : piece(avgAbsDay>0?maxDD/(avgAbsDay*8):0,[[0,100],[0.5,85],[1,62],[2,30],[3,5]]);
+  // سقف ضرر روزانه: نقض عددی واقعی؛ بدون DLL از نسبت بدترین روز به میانگین
+  const dayCapScore = activeDays===0 ? 55
+    : hasDLL ? piece(dllBreachDays,[[0,100],[1,65],[2,42],[4,10],[6,0]])
+             : piece(avgAbsDay>0?Math.abs(worstDay)/avgAbsDay:1,[[1,90],[2,70],[3,45],[5,12]]);
+  // دم توزیع: بزرگ‌ترین ضرر تک‌معامله نسبت به میانگین سود
+  const tailScore = (lossTrades>0&&avgWin>0) ? piece(maxTradeLoss/avgWin,[[1,95],[2,75],[3,50],[5,15],[8,0]])
+                  : (lossTrades>0?55:80);
+  riskFactors.push(activeDays>0?`حداکثر افت سرمایه‌ی بازه: ${fmtUSD(-maxDD)}`+(hasCap?` (${(maxDD/cap*100).toFixed(1)}٪ سرمایه)`:''):'هنوز معامله‌ای در بازه نیست');
+  riskFactors.push(hasDLL?`نقض سقف ضرر روزانه (از خود اعداد): ${toFA(dllBreachDays)} روز`:'سقف ضرر روزانه تعیین نشده ✗');
+  riskFactors.push(activeDays>0?`بدترین روز: ${fmtUSD(worstDay)}`:'');
+  riskFactors.push(rp>0?`ریسک هر معامله: ${rp}٪`:'ریسک هر معامله تعیین نشده ✗');
   riskFactors.push(hasExit?'قوانین خروج ✓':'قانون خروج نداری ✗');
-
-  let riskBehaviorRaw=50;
+  // رفتارهای ثبت‌شده
+  let behaviorScore=60;
   if(positions.length>0){
     const slMoves  =positions.filter(p=>(p.mistakes||[]).includes('sl_move')).length;
     const oversizes=positions.filter(p=>(p.mistakes||[]).includes('oversize')).length;
-    const dllViol  =positions.filter(p=>(p.mistakes||[]).includes('daily_loss_exceeded')).length;
-
-    // کسر تدریجی — نه فوری صفر
-    const sizeScore=Math.max(0, 100 - (oversizes/positions.length)*180);
-    const dllScore =hasDLL ? Math.max(0, 100 - (dllViol/Math.max(1,psychDays))*150) : 55;
-    const slScore  =Math.max(0, 100 - (slMoves/positions.length)*160);
-    riskBehaviorRaw = sizeScore*0.40 + dllScore*0.30 + slScore*0.20 + configScore*0.10;
-  } else {
-    // بدون معامله → تنها تنظیمات ملاک است، اما نمره ۵۵ حداقل
-    riskBehaviorRaw = Math.max(55, configScore*0.6 + 40);
+    behaviorScore = Math.max(0,100-(oversizes/positions.length)*180)*0.55
+                  + Math.max(0,100-(slMoves/positions.length)*160)*0.45;
   }
-  const risk = toScore(riskBehaviorRaw);
+  let risk;
+  if(activeDays>0){
+    const raw = ddScore*0.30 + dayCapScore*0.25 + tailScore*0.15
+              + behaviorScore*0.20 + configScore*0.10;
+    risk = toScore(blend(raw,wDays));
+  } else {
+    risk = toScore(Math.max(50, configScore*0.6+40)*0.5+25); // فقط تنظیمات، محافظه‌کار
+  }
 
   // ================================================================
   // ۳) ثبات — Consistency
-  // ۵۰٪ روزهای سبز | ۳۰٪ پایداری نتایج | ۲۰٪ روزهای فعال
+  // ۳۵٪ نرخ روز سبز | ۲۵٪ پراکندگی نتایج | ۲۰٪ عدم وابستگی به یک روز شانس |
+  // ۲۰٪ منظم‌بودن فعالیت
   // ================================================================
-  let consistencyRaw=50;
+  let consistency;
   if(activeDays>0){
     const greenRate=(winDays/Math.max(1,winDays+lossDays))*100;
-
-    // پایداری: CV ضرایب نوسان سود
-    const pnls=jEntries.map(([,e])=>e.pnl||0);
-    let stability=65;
-    if(pnls.length>1){
-      const avg=pnls.reduce((a,b)=>a+b,0)/pnls.length;
-      const std=Math.sqrt(pnls.map(v=>(v-avg)**2).reduce((a,b)=>a+b,0)/pnls.length);
-      const cv=Math.abs(avg)>0?std/Math.abs(avg):1;
-      stability=Math.max(0, 100-cv*45);
+    const greenScore=piece(greenRate,[[0,5],[30,35],[50,62],[65,80],[80,95],[100,100]]);
+    // پراکندگی: انحراف معیار روزانه نسبت به میانگین قدرمطلق (مقاوم به میانگینِ نزدیک صفر)
+    let dispScore=65;
+    if(dailyPnls.length>1&&avgAbsDay>0){
+      const avg=totalPnl/dailyPnls.length;
+      const std=Math.sqrt(dailyPnls.map(v=>(v-avg)**2).reduce((a,b)=>a+b,0)/dailyPnls.length);
+      dispScore=piece(std/avgAbsDay,[[0.6,95],[1,75],[1.5,55],[2.2,35],[3,15]]);
     }
-    // روزهای فعال — ۱۰ روز = ۱۰۰٪
-    const activeScore=Math.min(100,(activeDays/10)*100);
-    consistencyRaw = greenRate*0.50 + stability*0.30 + activeScore*0.20;
+    // یکنواختی فقط وقتی فضیلت است که برآیند مثبت باشد — باختِ منظم امتیاز ثبات نمی‌گیرد
+    if(totalPnl<0) dispScore=Math.min(dispScore,50);
+    // تمرکز سود: سهم بهترین روز از کل سود روزهای سبز (۱۰۰٪ = فقط یک روز خوش‌شانس)
+    const grossGreen=dailyPnls.filter(p=>p>0).reduce((a,b)=>a+b,0);
+    const concScore=(winDays>=2&&grossGreen>0)?piece(bestDayPnl/grossGreen,[[0.2,95],[0.35,80],[0.5,60],[0.75,35],[1,20]]):60;
+    const activityScore=piece(activeDays,[[1,20],[4,50],[8,75],[12,90],[16,100]]);
+    let raw=greenScore*0.35 + dispScore*0.25 + concScore*0.20 + activityScore*0.20;
+    // بازه‌ی قرمز با روزهای قرمزِ بیشتر از سبز: ثبات واقعی زیر سؤال است
+    if(totalPnl<0 && lossDays>winDays) raw*=0.8;
+    consistency=toScore(blend(raw,wDays));
+  } else {
+    consistency=50;
   }
-  const consistency = activeDays>0 ? toScore(consistencyRaw) : 50;
 
   // ================================================================
   // ۴) احساسات — Psychology
-  // ۵۰٪ میانگین امتیاز احساسات | ۳۰٪ کم‌بودن اشتباهات احساسی | ۲۰٪ کیفیت یادداشت
+  // ۴۵٪ میانگین امتیاز روانی | ۳۰٪ اشتباهات احساسی | ۱۰٪ یادداشت‌ها |
+  // ۱۵٪ تیلت عددی (جهش معامله بعد از ضرر بزرگ)
   // ================================================================
-  let emotionRaw=50;
+  const tiltScore=piece(tiltDays,[[0,100],[1,70],[2,45],[4,10]]);
+  let emotion;
   if(positions.length>0){
-    // امتیاز ۱-۱۰ → ۰-۱۰۰
     const scoreNorm=Math.min(100,(avgScore/10)*100);
-    // کسر برای هر اشتباه احساسی
     const emoRate=emoMistakeCount/positions.length;
     const emoScore=Math.max(0, 100 - emoRate*180);
-    // کیفیت یادداشت‌ها
     const noteScore=psychDays>0?(notedDays/psychDays)*100:50;
-    emotionRaw = scoreNorm*0.50 + emoScore*0.30 + noteScore*0.20;
-  } else if(psychDays>0){
-    emotionRaw = 50 + (notedDays/psychDays)*20;
+    const raw=scoreNorm*0.45 + emoScore*0.30 + noteScore*0.10 + tiltScore*0.15;
+    emotion=toScore(blend(raw, Math.max(wDays, Math.min(1,positions.length/8))));
+  } else if(activeDays>0){
+    emotion=toScore(blend(tiltScore, wDays*0.6));
+  } else {
+    emotion=toScore(50);
   }
-  const emotion = toScore(emotionRaw);
 
   // ================================================================
-  // ۵) عملکرد — Performance (بدون هدف سالانه)
-  // ۴۰٪ Profit Factor | ۳۰٪ Win Rate | ۳۰٪ سود خالص
+  // ۵) عملکرد — Performance
+  // ۳۵٪ Profit Factor | ۳۵٪ اکسپکتنسی (امید ریاضی هر معامله بر حسب R) |
+  // ۳۰٪ بازده خالص (نسبت به سرمایه اگر معلوم باشد)
   // ================================================================
-  let performanceRaw=50;
+  let profit;
   if(totalTrades>0){
-    // Profit Factor: 1 = 50، 2 = 100، <0.5 = 0
-    const pfScore=Math.min(100, Math.max(0, (profitFactor-0.5)*66.7));
-    // Win Rate مستقیم
-    const wrScore=winRate;
-    // سود خالص: لگاریتمی، مثبت → بالای ۵۰، منفی → زیر ۵۰
-    let pnlScore=50;
-    if(totalPnl>0) pnlScore=Math.min(95, 55+Math.log1p(totalPnl)*4);
-    else if(totalPnl<0) pnlScore=Math.max(5,  45-Math.log1p(Math.abs(totalPnl))*3);
-    performanceRaw = pfScore*0.40 + wrScore*0.30 + pnlScore*0.30;
+    const pfScore=piece(profitFactor,[[0.3,0],[0.5,10],[0.8,28],[1,45],[1.3,60],[1.6,72],[2,85],[3,100]]);
+    // اکسپکتنسی به واحد R: (WR×میانگین سود − LR×میانگین ضرر) ÷ میانگین ضرر
+    let expScore;
+    if(avgLoss>0){
+      const expR=((winRate/100)*avgWin-(1-winRate/100)*avgLoss)/avgLoss;
+      expScore=piece(expR,[[-0.5,0],[-0.2,20],[0,42],[0.15,60],[0.3,75],[0.6,90],[1,100]]);
+    } else expScore=grossProfit>0?90:50;
+    // بازده: با سرمایه‌ی معلوم درصدی، وگرنه لگاریتمی
+    let retScore;
+    if(cap>0){
+      retScore=piece(totalPnl/cap*100,[[-10,3],[-5,22],[-2,38],[0,48],[3,65],[6,80],[10,92],[20,100]]);
+    } else if(totalPnl>0) retScore=Math.min(95,55+Math.log1p(totalPnl)*4);
+    else if(totalPnl<0)  retScore=Math.max(5,45-Math.log1p(Math.abs(totalPnl))*3);
+    else retScore=50;
+    const raw=pfScore*0.35 + expScore*0.35 + retScore*0.30;
+    profit=toScore(blend(raw,wTrades));
+  } else {
+    profit=toScore(50);
   }
-  const profit = toScore(performanceRaw);
 
   return {
     discipline, risk, consistency, emotion, profit,
@@ -5457,9 +5534,13 @@ function computeSkillRadar(){
       windowDays:RADAR_WINDOW_DAYS, activeDays, totalTrades, winDays, lossDays, winRate,
       totalPnl:Math.round(totalPnl*100)/100, psychDays, cleanDays,
       positions:positions.length, avgScore:Math.round(avgScore*10)/10, emoMistakes:emoMistakeCount,
-      riskFactors, yearlyGoal:0,
+      riskFactors:riskFactors.filter(Boolean), yearlyGoal:0,
       profitFactor:Math.round(profitFactor*100)/100, rr:Math.round(rr*100)/100,
-      planViolations, totalMistakeCount
+      planViolations, totalMistakeCount,
+      // فاکتورهای عددی جدید — برای پنل راهنما
+      cap, maxDD:Math.round(maxDD*100)/100, worstDay:Math.round(worstDay*100)/100,
+      dllBreachDays, overtradeDays, tiltDays, maxRedStreak,
+      retPct: cap>0?Math.round(totalPnl/cap*1000)/10:null
     }
   };
 }
@@ -6834,20 +6915,20 @@ function renderRadarHelp(){
   const s=computeSkillRadar(); const d=s.detail;
   const metrics=[
     {name:'انضباط',color:'#ff6b6b',score:s.discipline,
-      desc:'نسبت روزهایی که بدون هیچ رفتار اشتباهی معامله کردی، به کل روزهای دارای یادداشت روانشناسی.',
-      stats:`روزهای بی‌اشتباه: <b>${toFA(d.cleanDays)}</b> از <b>${toFA(d.psychDays)}</b> روز`},
+      desc:'پایبندی به پلن (تخلف‌های ثبت‌شده و روزهای بی‌اشتباه) + دو فاکتور عددی از خودِ دیتا: بیش‌معامله‌گری (جهش تعداد معامله در روز) و ادامه دادن در زنجیره‌ی روزهای قرمز.',
+      stats:`روزهای بی‌اشتباه: <b>${toFA(d.cleanDays)}</b> از <b>${toFA(d.psychDays)}</b> · روز بیش‌معامله‌گری: <b>${toFA(d.overtradeDays)}</b> · بلندترین زنجیره‌ی قرمز: <b>${toFA(d.maxRedStreak)}</b> روز`},
     {name:'ریسک',color:'#f5c84f',score:s.risk,
-      desc:'کیفیت تنظیمات مدیریت سرمایه‌ات (سرمایه، سقف ضرر، ریسک هر معامله، قوانین خروج). این مورد به تنظیماتت بستگی دارد، نه بازه‌ی زمانی.',
+      desc:'مستقیم از اعداد سود/ضرر: حداکثر افت سرمایه (Drawdown)، نقض عددی سقف ضرر روزانه، اندازه‌ی بزرگ‌ترین ضرر نسبت به میانگین سود، به‌علاوه رفتارهای ثبت‌شده (جابه‌جایی SL، حجم زیاد) و کامل‌بودن تنظیمات پلن.',
       stats:d.riskFactors.map(f=>'• '+f).join('<br>')},
     {name:'ثبات',color:'#4da3ff',score:s.consistency,
-      desc:'نسبت روزهای سودده به کل روزهای فعال، که با تعداد روزها پخته‌تر می‌شود (هرچه داده بیشتر، دقیق‌تر).',
+      desc:'نرخ روزهای سبز + یکنواختی نتایج روزانه + این‌که سودت به یک روز خوش‌شانس وابسته نباشد + منظم‌بودن فعالیت. با داده‌ی کم، امتیاز محتاطانه به میانه نزدیک می‌ماند.',
       stats:`روز سبز: <b>${toFA(d.winDays)}</b> · روز قرمز: <b>${toFA(d.lossDays)}</b> · روز فعال: <b>${toFA(d.activeDays)}</b> · وین‌ریت: <b>${toFA(d.winRate)}٪</b>`},
     {name:'احساسات',color:'#c77dff',score:s.emotion,
-      desc:'میانگین امتیاز روانی معاملاتت منهای فشار اشتباهات احساسی (ترس، طمع، انتقام، FOMO، اعتماد کاذب، استرس).',
-      stats:`میانگین امتیاز: <b>${toFA(d.avgScore)}</b>/۱۰ · اشتباه احساسی: <b>${toFA(d.emoMistakes)}</b> از <b>${toFA(d.positions)}</b> معامله`},
+      desc:'میانگین امتیاز روانی معاملات و اشتباهات احساسی (ترس، طمع، انتقام، FOMO…) + شاخص عددی تیلت: جهش تعداد معامله دقیقاً بعد از یک روز ضرر بزرگ.',
+      stats:`میانگین امتیاز: <b>${toFA(d.avgScore)}</b>/۱۰ · اشتباه احساسی: <b>${toFA(d.emoMistakes)}</b> از <b>${toFA(d.positions)}</b> · روز تیلت: <b>${toFA(d.tiltDays)}</b>`},
     {name:'عملکرد',color:'#5fe896',score:s.profit,
-      desc:'وین‌ریت ترکیب‌شده با علامت سود خالص'+(d.yearlyGoal>0?' و نسبتش به هدف سالانه':'')+'.',
-      stats:`سود خالص بازه: <b>${fmtUSD(d.totalPnl)}</b> · وین‌ریت: <b>${toFA(d.winRate)}٪</b>`+(d.yearlyGoal>0?` · هدف سالانه: <b>${fmtUSD(d.yearlyGoal)}</b>`:'')}
+      desc:'سه سنجه‌ی حرفه‌ای: Profit Factor (سود ناخالص ÷ ضرر ناخالص)، اکسپکتنسی (امید ریاضی هر معامله بر حسب R) و بازده خالص'+(d.cap>0?' نسبت به سرمایه':'')+'.',
+      stats:`سود خالص بازه: <b>${fmtUSD(d.totalPnl)}</b>${d.retPct!==null?` (<b>${toFA(d.retPct)}٪</b> سرمایه)`:''} · PF: <b>${toFA(d.profitFactor)}</b> · وین‌ریت: <b>${toFA(d.winRate)}٪</b> · R/R: <b>${toFA(d.rr)}</b>`}
   ];
   el.innerHTML=`<div class="rh-window">📅 محاسبه بر اساس <b>${toFA(d.windowDays)} روز اخیر</b> — ${toFA(d.totalTrades)} معامله در ${toFA(d.activeDays)} روز فعال</div>`+
     metrics.map(m=>`<div class="rh-metric" style="--mc:${m.color}">
@@ -9666,7 +9747,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    APP_VERSION: نسخه‌ی خود برنامه — با هر تغییری که دیپلوی می‌شود یک دهم بالا برود.
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌ی دانلود از همین ثابت ساخته می‌شود. */
-const APP_VERSION='75.9';
+const APP_VERSION='76.0';
 const MT5_EA_VERSION='1.20';
 (function(){
   const av=document.getElementById('auth-version');

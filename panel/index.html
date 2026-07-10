@@ -93,9 +93,24 @@ input{font-family:inherit}
 #chart-tip .tv{color:var(--gold-light);font-size:13px}
 
 /* ===== users table ===== */
-.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* لیست‌های بلند: بعد از ~۵ ردیف، اسکرول داخل خود باکس تا فضای پنل گرفته نشود */
+.tbl-wrap{overflow-x:auto;overflow-y:auto;max-height:338px;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;min-width:820px}
-th{font-size:11px;color:var(--muted);font-weight:800;text-align:right;padding:10px;border-bottom:1px solid rgba(255,255,255,.09);white-space:nowrap}
+th{font-size:11px;color:var(--muted);font-weight:800;text-align:right;padding:10px;border-bottom:1px solid rgba(255,255,255,.09);white-space:nowrap;position:sticky;top:0;background:#101d33;z-index:2}
+#ann-list,#fb-list{max-height:420px;overflow-y:auto;padding-left:4px}
+#dn-clicks{max-height:225px;overflow-y:auto;padding-left:4px}
+.tbl-wrap::-webkit-scrollbar,#ann-list::-webkit-scrollbar,#fb-list::-webkit-scrollbar,#dn-clicks::-webkit-scrollbar{width:6px;height:6px}
+.tbl-wrap::-webkit-scrollbar-thumb,#ann-list::-webkit-scrollbar-thumb,#fb-list::-webkit-scrollbar-thumb,#dn-clicks::-webkit-scrollbar-thumb{background:rgba(232,160,32,.35);border-radius:3px}
+.tbl-wrap::-webkit-scrollbar-track,#ann-list::-webkit-scrollbar-track,#fb-list::-webkit-scrollbar-track,#dn-clicks::-webkit-scrollbar-track{background:rgba(255,255,255,.04)}
+/* جست‌وجوی هوشمند کاربر */
+.u-search{
+  width:100%;max-width:340px;margin-bottom:11px;display:block;
+  background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.1);border-radius:11px;
+  color:var(--text);font-family:inherit;font-size:13px;font-weight:700;padding:10px 13px;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.u-search:focus{border-color:rgba(232,160,32,.6);box-shadow:0 0 0 2px rgba(232,160,32,.12)}
+.u-search::placeholder{color:var(--dim)}
 td{font-size:12.5px;padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.05);white-space:nowrap;vertical-align:middle;transition:background .15s}
 tr:hover td{background:rgba(232,160,32,.03)}
 .u-name{font-weight:800;color:var(--text)}
@@ -218,6 +233,7 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
 
   <div class="card">
     <div class="card-title">👥 مدیریت کاربران <span class="legend" id="u-count"></span></div>
+    <input type="text" id="u-search" class="u-search" placeholder="🔍 جست‌وجوی نام کاربری… حتی با یک حرف" autocomplete="off" oninput="userSearch(this.value)">
     <div class="tbl-wrap">
       <table>
         <thead><tr>
@@ -623,11 +639,24 @@ async function loadUsers(){
   }catch(e){}
 }
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+let _userQuery='';
+function userSearch(v){ _userQuery=(v||'').trim().toLowerCase(); renderUsers(); }
 function renderUsers(){
   const tb=document.getElementById('users-body');
-  document.getElementById('u-count').textContent=faNum(_users.length)+' کاربر';
-  if(!_users.length){ tb.innerHTML='<tr><td colspan="7" class="empty-row">هنوز کاربری ثبت‌نام نکرده</td></tr>'; return; }
-  tb.innerHTML=_users.map(u=>{
+  // جست‌وجوی هوشمند: اول کسانی که نامشان با عبارت شروع می‌شود، بعد شامل‌شونده‌ها
+  let list=_users;
+  if(_userQuery){
+    const q=_userQuery;
+    const nm=u=>(u.name||'').toLowerCase();
+    const starts=_users.filter(u=>nm(u).startsWith(q));
+    const incl  =_users.filter(u=>!nm(u).startsWith(q)&&nm(u).includes(q));
+    list=starts.concat(incl);
+  }
+  document.getElementById('u-count').textContent=_userQuery
+    ? faNum(list.length)+' از '+faNum(_users.length)+' کاربر'
+    : faNum(_users.length)+' کاربر';
+  if(!list.length){ tb.innerHTML='<tr><td colspan="7" class="empty-row">'+(_userQuery?'کاربری با این نام پیدا نشد':'هنوز کاربری ثبت‌نام نکرده')+'</td></tr>'; return; }
+  tb.innerHTML=list.map(u=>{
     const ea = u.trades>0 ? '<span class="badge ok">✅ وصل — '+faNum(u.trades)+' ترید</span>'
              : u.has_token ? '<span class="badge mid">🔑 توکن ساخته</span>'
              : '<span class="badge no">وصل نشده</span>';
