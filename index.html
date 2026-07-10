@@ -2124,7 +2124,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 }
 @keyframes headerSweep{0%,100%{opacity:.5}50%{opacity:1}}
 
-.jh-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:1}
+.jh-title-row{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
 .jh-title{display:flex;align-items:center;gap:10px}
 .jh-icon-wrap{
   width:40px;height:40px;border-radius:12px;
@@ -2136,12 +2136,21 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 }
 .jh-icon{width:20px;height:20px;color:#F4C86A}
 .jh-name{
-  font-size:22px;font-weight:900;
-  background:linear-gradient(135deg,#ffe9a0 0%,#F4C86A 45%,#e8a020 100%);
+  font-size:24px;font-weight:900;
+  background:linear-gradient(90deg,#e8a020 0%,#F4C86A 30%,#fff2cf 50%,#F4C86A 70%,#e8a020 100%);
+  background-size:200% auto;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  letter-spacing:.5px;line-height:1;font-family:'Rajdhani',sans-serif;
+  letter-spacing:.6px;line-height:1.1;font-family:'Rajdhani',sans-serif;
+  filter:drop-shadow(0 2px 14px rgba(244,200,106,.4));
+  animation:jhShine 5s linear infinite;
 }
-.jh-sub{font-size:11px;color:rgba(255,255,255,.45);font-weight:600;margin-top:4px;position:relative;z-index:1;letter-spacing:.3px}
+@keyframes jhShine{to{background-position:-200% center}}
+.jh-sub{font-size:11px;color:rgba(255,255,255,.58);font-weight:700;margin-top:4px;position:relative;z-index:1;letter-spacing:.3px}
+/* CTA اتصال متاتریدر — سمت چپ هدر */
+.jh-mt5-cta{margin-right:auto;max-width:172px;padding:8px 12px;border-radius:12px;border:1px solid rgba(244,200,106,.42);background:linear-gradient(135deg,rgba(244,200,106,.16),rgba(232,160,32,.05));color:#F4C86A;font-family:'Vazirmatn',sans-serif;font-size:10.5px;font-weight:800;line-height:1.7;cursor:pointer;text-align:center;position:relative;z-index:1;flex-shrink:1;animation:ctaPulse 2.8s ease-in-out infinite;-webkit-tap-highlight-color:transparent}
+@keyframes ctaPulse{0%,100%{box-shadow:0 0 0 rgba(244,200,106,0)}50%{box-shadow:0 0 18px rgba(244,200,106,.3)}}
+.jh-mt5-cta:active{transform:scale(.97)}
+.jh-mt5-cta.connected{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.1);color:#4ade80;animation:none}
 .jh-badge{
   display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;
   background:rgba(232,160,32,.1);border:1px solid rgba(232,160,32,.28);
@@ -3320,8 +3329,23 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
   .home-brand-bar,.journal-header,.psych-header,.page-header,.setup-tabs{column-span:all}
   /* masonry column layouts per page */
   #page-home{column-count:3;column-gap:2px;padding:0 10px 26px}
-  #page-journal,#page-psychology,#page-settings{column-count:2;column-gap:2px;padding:0 10px 26px}
-  #page-home>*,#page-journal>*,#page-psychology>*,#page-settings>*{break-inside:avoid}
+  #page-psychology,#page-settings{column-count:2;column-gap:2px;padding:0 10px 26px}
+  #page-home>*,#page-psychology>*,#page-settings>*{break-inside:avoid}
+  /* ژورنال در دسکتاپ: تک‌ستونه مثل موبایل — تقویم تمام‌عرض با خانه‌های بزرگ،
+     بقیه‌ی بخش‌ها زیرش با اسکرول عادی */
+  #page-journal{padding:0 12px 30px}
+  #page-journal .cal-wrap{padding:12px 8px 0}
+  #page-journal .day-cell{min-height:118px;padding:7px 9px;border-radius:12px}
+  #page-journal .dc-greg{font-size:16px}
+  #page-journal .dc-shamsi{font-size:9.5px}
+  #page-journal .dc-pnl{font-size:19px}
+  #page-journal .dc-trades{font-size:10.5px}
+  #page-journal .week-summary-cell{padding:13px 6px}
+  #page-journal .wsc-label{font-size:10px}
+  #page-journal .wsc-val{font-size:16px}
+  #page-journal .wsc-trades{font-size:10px}
+  /* نمودار سود تجمعی: باکس محدودتر و وسط‌چین تا حتی با زوم هم کامل دیده شود */
+  #page-journal .year-hero{max-width:740px;margin-left:auto;margin-right:auto}
   /* setup page (پلن ترید): two-column desktop layout.
      NOTE: panels are flex containers, so column-count is ignored — grid is used instead. */
   .setup-panel.active{padding-bottom:26px}
@@ -3503,7 +3527,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 <div id="app">
 
 <!-- ===== HOME ===== -->
-<div class="page active" id="page-home">
+<div class="page" id="page-home">
 
   <!-- TOP BRAND BAR -->
   <div class="home-brand-bar">
@@ -3721,7 +3745,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 </div>
 
 <!-- ===== JOURNAL ===== -->
-<div class="page" id="page-journal">
+<div class="page active" id="page-journal">
   <div class="journal-header">
     <div class="jh-title-row">
       <div class="jh-title">
@@ -3740,6 +3764,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
           <div class="jh-sub">ثبت دقیق معاملات · تحلیل روزانه · رشد مستمر</div>
         </div>
       </div>
+      <button type="button" class="jh-mt5-cta" id="jh-mt5-cta" onclick="openMt5Guide()">⚡ اتصال خودکار متاتریدر رو فعال کن</button>
       <span class="save-dot" id="j-save-dot"></span>
     </div>
   </div>
@@ -4526,13 +4551,13 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 
 <!-- BOTTOM NAV -->
 <nav id="bottom-nav">
-  <div class="nav-item active" onclick="showPage('home')" id="nav-home">
-    <svg class="nav-ic" viewBox="0 0 24 24" fill="none"><path d="M4 11.4 12 4l8 7.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10.5V19a1 1 0 0 0 1 1H10v-4.5a2 2 0 0 1 4 0V20h3.5a1 1 0 0 0 1-1v-8.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <span class="nav-label">داشبورد</span>
-  </div>
-  <div class="nav-item" onclick="showPage('journal')" id="nav-journal">
+  <div class="nav-item active" onclick="showPage('journal')" id="nav-journal">
     <svg class="nav-ic" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="15.5" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 9.4H20.5" stroke="currentColor" stroke-width="1.8"/><path d="M8 3.2V6.4M16 3.2V6.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="6.7" y="12" width="3" height="3" rx="0.8" fill="currentColor"/><rect x="10.9" y="12" width="3" height="3" rx="0.8" fill="currentColor" opacity=".5"/></svg>
     <span class="nav-label">ژورنال</span>
+  </div>
+  <div class="nav-item" onclick="showPage('home')" id="nav-home">
+    <svg class="nav-ic" viewBox="0 0 24 24" fill="none"><path d="M4 11.4 12 4l8 7.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10.5V19a1 1 0 0 0 1 1H10v-4.5a2 2 0 0 1 4 0V20h3.5a1 1 0 0 0 1-1v-8.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="nav-label">داشبورد</span>
   </div>
   <div class="nav-item" onclick="showPage('setup')" id="nav-setup">
     <svg class="nav-ic" viewBox="0 0 24 24" fill="none"><path d="M13 2.5 4.5 13.2a.7.7 0 0 0 .55 1.13H10l-.9 7.1a.35.35 0 0 0 .63.26L19 10.9a.7.7 0 0 0-.55-1.13H14l.6-6.98a.35.35 0 0 0-.6-.28Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
@@ -4862,7 +4887,7 @@ function saveData(){
 }
 
 // ===== NAVIGATION =====
-let currentPage='home';
+let currentPage='journal'; // ژورنال صفحه‌ی اول برنامه است
 function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -9397,6 +9422,7 @@ function init(){
   }
   nameInput.value=data.name||'';
   updateHome();
+  showPage('journal'); // صفحه‌ی شروع: ژورنال (رندر کامل تقویم و نمودارها)
 
   // journal day-entry: save immediately on every keystroke, no button needed
   const pnlInput=document.getElementById('day-pnl-input');
@@ -9417,6 +9443,13 @@ function init(){
   }
 
   window.addEventListener('resize',()=>{if(currentPage==='home'&&chartViewYear!==null){drawChart(chartViewYear,chartViewMonth);}});
+  // با تغییر عرض پنجره/زوم، اندازه‌ی اعداد سود روزانه‌ی تقویم دوباره فیت می‌شود
+  let _calFitT=null;
+  window.addEventListener('resize',()=>{
+    if(currentPage!=='journal')return;
+    clearTimeout(_calFitT);
+    _calFitT=setTimeout(()=>{ if(typeof fitDayPnl==='function') fitDayPnl(); },150);
+  });
 }
 
 /* ============================================================
@@ -9750,6 +9783,12 @@ function updateMt5Banner(){
   const b=document.getElementById('mt5-journal-banner');
   if(!b) return;
   const connected=!!(data&&data.mtCloudSig);
+  // CTA هدر ژورنال هم با همین وضعیت به‌روز می‌شود
+  const cta=document.getElementById('jh-mt5-cta');
+  if(cta){
+    cta.classList.toggle('connected',connected);
+    cta.textContent=connected?'✅ متاتریدر متصله':'⚡ اتصال خودکار متاتریدر رو فعال کن';
+  }
   b.style.display='flex';
   b.classList.toggle('connected',connected);
   const ic=b.querySelector('.mcb-icon'), t=b.querySelector('.mcb-title'),
