@@ -3563,7 +3563,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       <button type="submit" class="auth-submit" id="auth-submit">ورود</button>
     </form>
     <div class="auth-hint" id="auth-hint">حساب نداری؟ <a onclick="setAuthMode('signup')">ثبت‌نام کن</a></div>
-    <div class="auth-ver" id="auth-version">TradePlan v75.4</div>
+    <div class="auth-ver" id="auth-version">TradePlan v75.5</div>
   </div>
 </div>
 
@@ -4693,7 +4693,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       NDS
     </a>
     <div class="credit-text" style="font-size:10px;color:var(--text-dim)">ساخته شده توسط Hossein</div>
-    <div class="credit-text" id="app-version-line" style="font-size:10px;color:var(--text-dim);margin-top:3px">نسخه برنامه: 75.4 — اکسپرت متاتریدر: v1.20</div>
+    <div class="credit-text" id="app-version-line" style="font-size:10px;color:var(--text-dim);margin-top:3px">نسخه برنامه: 75.5 — اکسپرت متاتریدر: v1.20</div>
   </div>
 </div>
 
@@ -9627,7 +9627,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    APP_VERSION: نسخه‌ی خود برنامه — با هر تغییری که دیپلوی می‌شود یک دهم بالا برود.
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌ی دانلود از همین ثابت ساخته می‌شود. */
-const APP_VERSION='75.4';
+const APP_VERSION='75.5';
 const MT5_EA_VERSION='1.20';
 (function(){
   const av=document.getElementById('auth-version');
@@ -10251,7 +10251,20 @@ bootAuth();
 /* PWA: register the service worker for offline + installability (skipped on file://) */
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+    navigator.serviceWorker.register('service-worker.js').then(reg=>{
+      // هر بار کاربر به برنامه برمی‌گردد، وجود نسخه‌ی جدید چک شود
+      document.addEventListener('visibilitychange',()=>{
+        if(document.visibilityState==='visible') reg.update().catch(()=>{});
+      });
+    }).catch(()=>{});
+    // نسخه‌ی جدید که فعال شد، یک بار صفحه تازه می‌شود تا همه بدون کار دستی
+    // آخرین نسخه را بگیرند (اولین نصب استثناست تا وسط ثبت‌نام رفرش نشود)
+    let hadController=!!navigator.serviceWorker.controller, reloaded=false;
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{
+      if(!hadController){ hadController=true; return; }
+      if(reloaded) return; reloaded=true;
+      location.reload();
+    });
   });
 }
 </script>
