@@ -3563,7 +3563,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       <button type="submit" class="auth-submit" id="auth-submit">ورود</button>
     </form>
     <div class="auth-hint" id="auth-hint">حساب نداری؟ <a onclick="setAuthMode('signup')">ثبت‌نام کن</a></div>
-    <div class="auth-ver" id="auth-version">TradePlan v75.3</div>
+    <div class="auth-ver" id="auth-version">TradePlan v75.4</div>
   </div>
 </div>
 
@@ -4693,7 +4693,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       NDS
     </a>
     <div class="credit-text" style="font-size:10px;color:var(--text-dim)">ساخته شده توسط Hossein</div>
-    <div class="credit-text" id="app-version-line" style="font-size:10px;color:var(--text-dim);margin-top:3px">نسخه برنامه: 75.3 — اکسپرت متاتریدر: v1.20</div>
+    <div class="credit-text" id="app-version-line" style="font-size:10px;color:var(--text-dim);margin-top:3px">نسخه برنامه: 75.4 — اکسپرت متاتریدر: v1.20</div>
   </div>
 </div>
 
@@ -5043,7 +5043,7 @@ function showPage(name){
   document.getElementById('nav-'+name).classList.add('active');
   currentPage=name;
   if(name==='home') updateHome();
-  if(name==='settings'){ updateSettings(); if(typeof mt5LoadToken==='function') mt5LoadToken(); if(typeof donateLoad==='function') donateLoad(true); }
+  if(name==='settings'){ updateSettings(); if(typeof mt5LoadToken==='function') mt5LoadToken(); if(typeof donateLoad==='function') donateLoad(); }
   if(name==='setup') renderStrategy();
   if(name==='journal'){ renderJournal(); renderYearCumulative(true); animateMonthlyPnl(); if(typeof updateMt5Banner==='function') updateMt5Banner(); if(typeof mtCloudSync==='function') mtCloudSync(); if(typeof renderMt5Account==='function'){ renderMt5Account(); mt5LoadAccount(); } }
   if(name==='psychology') renderPsychology();
@@ -9627,7 +9627,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    APP_VERSION: نسخه‌ی خود برنامه — با هر تغییری که دیپلوی می‌شود یک دهم بالا برود.
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌ی دانلود از همین ثابت ساخته می‌شود. */
-const APP_VERSION='75.3';
+const APP_VERSION='75.4';
 const MT5_EA_VERSION='1.20';
 (function(){
   const av=document.getElementById('auth-version');
@@ -9885,9 +9885,8 @@ async function fbSend(){
    از پنل مدیریت پر می‌کند؛ تا وقتی چیزی تنظیم نشده، کل بخش مخفی است. */
 let _donateCfg=null;
 function _dnEsc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-async function donateLoad(onlyIfEmpty){
+async function donateLoad(){
   if(!SB||!CURRENT_USER) return;
-  if(onlyIfEmpty&&_donateCfg) return;
   try{
     const {data:row,error}=await SB.from('donate_settings')
       .select('toman_text,toman_value,usd_text,usd_link,active').eq('id',1).maybeSingle();
