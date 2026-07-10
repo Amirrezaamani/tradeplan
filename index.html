@@ -2852,6 +2852,66 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 .ann-ok{width:100%;margin-top:14px;padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,#F4C86A,#e8a020);color:#0b1628;font-family:'Vazirmatn',sans-serif;font-size:14.5px;font-weight:900;cursor:pointer;box-shadow:0 8px 24px rgba(232,160,32,.35);transition:transform .15s}
 .ann-ok:active{transform:scale(.98)}
 
+/* ===== DONATE (settings) — لوکس ولی کم‌ادعا ===== */
+.donate-card{
+  position:relative;margin:0 14px;padding:18px 16px 14px;border-radius:18px;overflow:hidden;
+  background:linear-gradient(155deg,rgba(40,30,10,.55),#0d1f3c 55%,#0a1830);
+  border:1px solid rgba(244,200,106,.35);
+  box-shadow:0 12px 34px rgba(0,0,0,.45),0 0 30px rgba(232,160,32,.08),inset 0 1px 0 rgba(255,255,255,.06);
+  text-align:center;
+}
+.dn-shine{position:absolute;top:0;left:-80%;width:55%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,240,200,.05),transparent);transform:skewX(-18deg);animation:annSweep 5.2s ease-in-out infinite;pointer-events:none}
+.dn-heart{font-size:30px;line-height:1;margin-bottom:9px;filter:drop-shadow(0 3px 14px rgba(244,200,106,.45));animation:annPulse 2.8s ease-in-out infinite}
+.dn-intro{font-size:12px;font-weight:700;color:rgba(255,255,255,.78);line-height:2.15;margin-bottom:13px}
+.dn-intro b{color:#F4C86A;font-weight:900;text-shadow:0 0 12px rgba(244,200,106,.35)}
+.dn-block{
+  text-align:right;background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:12px 13px;margin-bottom:9px;position:relative;
+}
+.dn-block-title{font-size:11.5px;font-weight:900;color:#F4C86A;letter-spacing:.3px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.dn-block-txt{font-size:11px;font-weight:600;color:rgba(255,255,255,.62);line-height:1.9;margin-bottom:9px;white-space:pre-wrap;word-break:break-word}
+.dn-card-row{display:flex;align-items:center;gap:8px;direction:ltr}
+.dn-card-num{
+  flex:1;min-width:0;overflow-x:auto;white-space:nowrap;
+  font-family:'Segoe UI',Roboto,monospace;font-variant-numeric:tabular-nums;
+  font-size:15px;font-weight:800;letter-spacing:1.5px;color:#fff;
+  background:rgba(244,200,106,.08);border:1px dashed rgba(244,200,106,.4);
+  border-radius:10px;padding:9px 11px;text-align:center;
+}
+.dn-copy{flex-shrink:0;background:rgba(232,160,32,.14);border:1px solid var(--gold-border);border-radius:10px;padding:9px 13px;font-size:14px;cursor:pointer;transition:transform .15s}
+.dn-copy:active{transform:scale(.95)}
+.dn-pay-btn{
+  display:block;width:100%;padding:12px;border:none;border-radius:12px;cursor:pointer;
+  background:linear-gradient(135deg,#F4C86A,#e8a020);color:#0b1628;
+  font-family:'Vazirmatn',sans-serif;font-size:13px;font-weight:900;
+  box-shadow:0 7px 20px rgba(232,160,32,.3);transition:transform .15s,box-shadow .2s;
+}
+.dn-pay-btn:active{transform:translateY(1px);box-shadow:0 4px 12px rgba(232,160,32,.25)}
+.dn-thanks{font-size:10px;font-weight:700;color:rgba(244,200,106,.55);margin-top:4px}
+.donate-card.flash{animation:dnFlash 1.6s ease-out}
+@keyframes dnFlash{0%{box-shadow:0 0 0 3px rgba(244,200,106,.65),0 12px 34px rgba(0,0,0,.45)}100%{box-shadow:0 12px 34px rgba(0,0,0,.45),0 0 30px rgba(232,160,32,.08)}}
+
+/* اشاره‌ی ملایم حمایت در خانه — کوچک و کم‌مزاحم */
+.donate-nudge{
+  display:flex;align-items:center;gap:8px;
+  margin:12px 14px 0;padding:9px 12px;border-radius:14px;
+  background:linear-gradient(150deg,rgba(40,30,10,.4),rgba(10,24,40,.85));
+  border:1px solid rgba(244,200,106,.28);
+  box-shadow:0 6px 18px rgba(0,0,0,.3);
+  animation:dnuIn .5s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes dnuIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.dnu-heart{font-size:15px;flex-shrink:0;filter:drop-shadow(0 2px 8px rgba(244,200,106,.4))}
+.dnu-txt{flex:1;font-size:10.5px;font-weight:700;color:rgba(255,255,255,.7);line-height:1.8}
+.dnu-txt b{color:#F4C86A}
+.dnu-btn{
+  flex-shrink:0;padding:7px 14px;border:none;border-radius:10px;cursor:pointer;
+  background:linear-gradient(135deg,#F4C86A,#e8a020);color:#0b1628;
+  font-family:'Vazirmatn',sans-serif;font-size:11px;font-weight:900;
+  box-shadow:0 4px 12px rgba(232,160,32,.28);
+}
+.dnu-close{flex-shrink:0;width:24px;height:24px;border:none;border-radius:8px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.4);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
 /* ===== FEEDBACK box (settings) ===== */
 .fb-card{margin:0 14px;background:linear-gradient(150deg,#16304f,#0d1f3c 60%,#0a1830);border:1px solid var(--gold-border);border-radius:18px;padding:15px}
 .fb-desc{font-size:11.5px;color:rgba(255,255,255,.6);line-height:2;margin-bottom:11px}
@@ -3503,7 +3563,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       <button type="submit" class="auth-submit" id="auth-submit">ورود</button>
     </form>
     <div class="auth-hint" id="auth-hint">حساب نداری؟ <a onclick="setAuthMode('signup')">ثبت‌نام کن</a></div>
-    <div class="auth-ver" id="auth-version">TradePlan v75.2</div>
+    <div class="auth-ver" id="auth-version">TradePlan v75.3</div>
   </div>
 </div>
 
@@ -3743,6 +3803,14 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 
   <!-- GOALS PROGRESS — daily/weekly/monthly/yearly rings -->
   <div class="goals-progress home-rise" id="goals-progress"></div>
+
+  <!-- اشاره‌ی ملایم حمایت — فقط بعد از مدتی فعالیت، در لحظات مثبت، هر چند هفته یک بار -->
+  <div class="donate-nudge" id="donate-nudge" style="display:none">
+    <span class="dnu-heart">💛</span>
+    <span class="dnu-txt">اگه ترید پلن کمکت کرده، می‌تونی توی <b>هزینه‌ی سرور</b> شریکش باشی</span>
+    <button type="button" class="dnu-btn" onclick="goDonate('nudge')">حمایت</button>
+    <button type="button" class="dnu-close" onclick="donateNudgeDismiss()" aria-label="بستن">✕</button>
+  </div>
 
   <!-- JOURNAL CTA — luxury, glowing, blinking -->
   <div class="quick-actions home-rise">
@@ -4598,6 +4666,22 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
     </div>
   </div>
   <button class="danger-btn" onclick="showClearAllModal()">🗑️ پاک کردن تمام داده‌ها</button>
+
+  <!-- حمایت مالی — فقط وقتی از پنل مدیریت تنظیم شده باشد نمایش داده می‌شود -->
+  <div class="settings-section" id="donate-sec-head" style="display:none"><h2>💛 حمایت مالی</h2></div>
+  <div class="donate-card" id="donate-card" style="display:none">
+    <div class="dn-shine"></div>
+    <div class="dn-heart">💛</div>
+    <div class="dn-intro">
+      ترید پلن برای همه رایگان است و رایگان می‌ماند.<br>
+      اگر این ابزار همراه مسیرت بوده و لبخندی به معاملاتت اضافه کرده،
+      می‌توانی با یک حمایت کوچک در <b>هزینه‌ی سرور</b> شریک شوی —
+      تا این چراغ برای همه‌ی تریدرهای ایرانی روشن بماند. ✨
+    </div>
+    <div id="donate-blocks"></div>
+    <div class="dn-thanks">هر حمایتی، از هر اندازه، با تمام وجود دیده می‌شود. 🙏</div>
+  </div>
+
   <div class="credit-box">
     <div class="credit-text">ترید پلن — ابزار حرفه‌ای تریدر ایرانی</div>
     <a href="https://instagram.com/NDS" target="_blank" class="credit-link">
@@ -4609,7 +4693,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       NDS
     </a>
     <div class="credit-text" style="font-size:10px;color:var(--text-dim)">ساخته شده توسط Hossein</div>
-    <div class="credit-text" id="app-version-line" style="font-size:10px;color:var(--text-dim);margin-top:3px">نسخه برنامه: 75.2 — اکسپرت متاتریدر: v1.20</div>
+    <div class="credit-text" id="app-version-line" style="font-size:10px;color:var(--text-dim);margin-top:3px">نسخه برنامه: 75.3 — اکسپرت متاتریدر: v1.20</div>
   </div>
 </div>
 
@@ -4959,7 +5043,7 @@ function showPage(name){
   document.getElementById('nav-'+name).classList.add('active');
   currentPage=name;
   if(name==='home') updateHome();
-  if(name==='settings'){ updateSettings(); if(typeof mt5LoadToken==='function') mt5LoadToken(); }
+  if(name==='settings'){ updateSettings(); if(typeof mt5LoadToken==='function') mt5LoadToken(); if(typeof donateLoad==='function') donateLoad(true); }
   if(name==='setup') renderStrategy();
   if(name==='journal'){ renderJournal(); renderYearCumulative(true); animateMonthlyPnl(); if(typeof updateMt5Banner==='function') updateMt5Banner(); if(typeof mtCloudSync==='function') mtCloudSync(); if(typeof renderMt5Account==='function'){ renderMt5Account(); mt5LoadAccount(); } }
   if(name==='psychology') renderPsychology();
@@ -7286,6 +7370,7 @@ function updateHome(){
   renderBestDay();
   renderStrategyIdentity();
   idCardPeek();
+  if(typeof maybeShowDonateNudge==='function') maybeShowDonateNudge();
 }
 
 // One-time subtle 3D peek so users notice the card has a back side.
@@ -9542,7 +9627,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    APP_VERSION: نسخه‌ی خود برنامه — با هر تغییری که دیپلوی می‌شود یک دهم بالا برود.
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌ی دانلود از همین ثابت ساخته می‌شود. */
-const APP_VERSION='75.2';
+const APP_VERSION='75.3';
 const MT5_EA_VERSION='1.20';
 (function(){
   const av=document.getElementById('auth-version');
@@ -9795,6 +9880,121 @@ async function fbSend(){
   finally{ btn.textContent='📤 ارسال'; fbInput(); }
 }
 
+/* ----- Donate (حمایت مالی) -----
+   محتوا (متن/شماره کارت/لینک) از جدول donate_settings می‌آید که ادمین
+   از پنل مدیریت پر می‌کند؛ تا وقتی چیزی تنظیم نشده، کل بخش مخفی است. */
+let _donateCfg=null;
+function _dnEsc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+async function donateLoad(onlyIfEmpty){
+  if(!SB||!CURRENT_USER) return;
+  if(onlyIfEmpty&&_donateCfg) return;
+  try{
+    const {data:row,error}=await SB.from('donate_settings')
+      .select('toman_text,toman_value,usd_text,usd_link,active').eq('id',1).maybeSingle();
+    if(error) throw error;
+    _donateCfg=row||null;
+  }catch(e){ /* جدول هنوز ساخته نشده یا آفلاین — بخش مخفی می‌ماند */ }
+  renderDonate();
+  if(currentPage==='home') maybeShowDonateNudge();
+}
+// یک بلاک پرداخت: اگر مقدار لینک باشد دکمه‌ی پرداخت، وگرنه (شماره کارت /
+// آدرس ولت) کادر کپی‌شدنی ساخته می‌شود.
+function _dnBlock(kind,title,btnLabel,txt,val){
+  const isLink=/^https?:\/\//i.test(val);
+  return `<div class="dn-block">
+    <div class="dn-block-title">${title}</div>
+    ${txt?`<div class="dn-block-txt">${_dnEsc(txt)}</div>`:''}
+    ${isLink
+      ? `<button type="button" class="dn-pay-btn" onclick="donateGo('${kind}')">${btnLabel}</button>`
+      : `<div class="dn-card-row"><div class="dn-card-num">${_dnEsc(val)}</div><button type="button" class="dn-copy" onclick="donateCopy('${kind}')" title="کپی">📋</button></div>`}
+  </div>`;
+}
+function renderDonate(){
+  const head=document.getElementById('donate-sec-head');
+  const card=document.getElementById('donate-card');
+  const blocks=document.getElementById('donate-blocks');
+  if(!head||!card||!blocks) return;
+  const cfg=_donateCfg||{};
+  const tomanVal=(cfg.toman_value||'').trim();
+  const usdVal=(cfg.usd_link||'').trim();
+  const on=cfg.active!==false && (tomanVal||usdVal) && _donateCfg;
+  head.style.display=on?'':'none';
+  card.style.display=on?'':'none';
+  if(!on) return;
+  let html='';
+  if(tomanVal) html+=_dnBlock('toman','🇮🇷 پرداخت تومانی','💳 پرداخت تومانی',cfg.toman_text,tomanVal);
+  if(usdVal)   html+=_dnBlock('usd','🌍 پرداخت دلاری','🚀 پرداخت دلاری',cfg.usd_text,usdVal);
+  blocks.innerHTML=html;
+}
+// ثبت کلیک حمایت برای پنل مدیریت (هر نوع، حداکثر یک بار در ۶ ساعت)
+async function donateLog(kind){
+  if(!SB||!CURRENT_USER) return;
+  try{
+    const k='tp_dn_log:'+CURRENT_USER.id+':'+kind;
+    const last=parseInt(localStorage.getItem(k)||'0');
+    if(Date.now()-last<6*60*60*1000) return;
+    localStorage.setItem(k,String(Date.now()));
+    const name=(CURRENT_USER.user_metadata&&CURRENT_USER.user_metadata.display_name)||data.name||'';
+    await SB.from('donate_clicks').insert({user_id:CURRENT_USER.id,name:name,kind:kind});
+  }catch(e){ /* مهم نیست */ }
+}
+function donateCopy(kind){
+  const cfg=_donateCfg||{};
+  const val=((kind==='usd'?cfg.usd_link:cfg.toman_value)||'').trim();
+  if(!val) return;
+  const done=()=>showToast('📋 کپی شد — ممنون از حمایتت 💛');
+  try{ navigator.clipboard.writeText(val).then(done); }
+  catch(e){
+    const ta=document.createElement('textarea'); ta.value=val; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); document.body.removeChild(ta); done();
+  }
+  donateLog(kind);
+}
+function donateGo(kind){
+  const cfg=_donateCfg||{};
+  const url=((kind==='usd'?cfg.usd_link:cfg.toman_value)||'').trim();
+  if(!/^https?:\/\//i.test(url)) return;
+  donateLog(kind);
+  window.open(url,'_blank','noopener');
+}
+/* --- اشاره‌ی ملایم در خانه: فقط بعد از ۱۲+ روز فعالیت، در لحظه‌ی مثبت
+   (روز یا هفته‌ی سبز)، حداکثر هر ۳ هفته یک بار و تا ۲ روز قابل دیدن --- */
+function _dnuKey(){ return 'tp_dn_nudge:'+(CURRENT_USER?CURRENT_USER.id:'x'); }
+function _dnuGet(){ try{return JSON.parse(localStorage.getItem(_dnuKey())||'null');}catch(e){return null;} }
+function _dnuSet(v){ try{localStorage.setItem(_dnuKey(),JSON.stringify(v));}catch(e){} }
+function maybeShowDonateNudge(){
+  const el=document.getElementById('donate-nudge'); if(!el) return;
+  const cfg=_donateCfg||{};
+  const hasContent=_donateCfg && cfg.active!==false && ((cfg.toman_value||'').trim()||(cfg.usd_link||'').trim());
+  let show=false;
+  if(hasContent){
+    let days=0; try{ days=getAllTimeJournalStats().activeDays; }catch(e){}
+    const positive=(getTodayPnl()>0)||(getWeekPnl()>0);
+    const eligible=days>=12&&positive;
+    const st=_dnuGet(), now=Date.now(), DAY=86400000, CYCLE=21*DAY;
+    if(!st){ if(eligible){ show=true; _dnuSet({t:now}); } }
+    else if(!st.d && now-st.t<2*DAY){ show=true; } // پنجره‌ی ۴۸ ساعته‌ی همان نمایش
+    else if(now-st.t>CYCLE && eligible){ show=true; _dnuSet({t:now}); }
+  }
+  el.style.display=show?'flex':'none';
+}
+function donateNudgeDismiss(){
+  _dnuSet({t:Date.now(),d:1});
+  const el=document.getElementById('donate-nudge'); if(el) el.style.display='none';
+}
+function goDonate(src){
+  _dnuSet({t:Date.now(),d:1}); // بعد از کلیک، یادآور تا چرخه‌ی بعد استراحت می‌کند
+  const el=document.getElementById('donate-nudge'); if(el) el.style.display='none';
+  showPage('settings');
+  setTimeout(()=>{
+    const card=document.getElementById('donate-card');
+    if(card&&card.style.display!=='none'){
+      card.scrollIntoView({behavior:'smooth',block:'center'});
+      card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash');
+    }
+  },350);
+}
+
 /* ----- MT5 connection token (settings) ----- */
 let _mt5Token='';
 // توکن هر حساب یکی است و در سرور نگه‌داری می‌شود؛ اگر هنوز ساخته نشده،
@@ -10019,6 +10219,7 @@ async function enterApp(interactive){
   mt5LoadAccount();      // بالانس و وضعیت حساب برای کارت بالای ژورنال
   checkAnnouncements();  // اطلاعیه‌های جدید ادمین (اگر باشد، نمایش داده می‌شود)
   logVisit();            // ثبت بازدید برای آمار پنل مدیریت
+  donateLoad();          // تنظیمات حمایت مالی (از پنل مدیریت)
   // For a brand-new account with no data yet, seed the display name into the app.
   if(!hadRow){
     const dn = CURRENT_USER.user_metadata && CURRENT_USER.user_metadata.display_name;

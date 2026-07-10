@@ -121,6 +121,24 @@ tr:hover td{background:rgba(232,160,32,.03)}
 .ann-inp:focus{outline:none;border-color:var(--gold-border);background:rgba(232,160,32,.04)}
 .ann-emoji{width:64px;flex-shrink:0;text-align:center;font-size:17px;padding:9px 6px}
 textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
+/* donate */
+.dn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}
+@media(max-width:720px){.dn-grid{grid-template-columns:1fr}}
+.dn-col{display:flex;flex-direction:column;gap:8px}
+.dn-col-title{font-size:12.5px;font-weight:900;color:var(--gold)}
+.dn-col textarea.ann-inp{min-height:52px}
+.dn-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.dn-active-lbl{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--dim);cursor:pointer;user-select:none}
+.dn-active-lbl input{accent-color:#e8a020;width:15px;height:15px;cursor:pointer}
+.dn-hint{font-size:10.5px;color:var(--dim);margin-top:9px;line-height:1.8}
+.dn-clicks-title{margin-top:16px}
+.dn-click-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.05);font-size:12.5px}
+.dn-click-row:last-child{border-bottom:none}
+.dcr-name{flex:1;font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dcr-kind{flex-shrink:0;font-size:10.5px;font-weight:800;border-radius:8px;padding:3px 9px}
+.dcr-kind.toman{background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.3)}
+.dcr-kind.usd{background:rgba(99,179,255,.12);color:#93c5fd;border:1px solid rgba(99,179,255,.3)}
+.dcr-at{flex-shrink:0;font-size:11px;color:var(--dim);font-weight:700}
 .ann-actions{display:flex;gap:8px;margin-top:8px}
 .ann-send{padding:11px 20px;border:none;border-radius:11px;background:linear-gradient(135deg,#c8881a,var(--gold));color:#081020;font-size:13px;font-weight:900;box-shadow:0 6px 18px rgba(232,160,32,.25);transition:transform .15s}
 .ann-send:active{transform:translateY(1px)}
@@ -231,6 +249,32 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
   <div class="card">
     <div class="card-title">💬 بازخورد کاربران <span class="legend" id="fb-count"></span></div>
     <div id="fb-list"><div class="empty-row">در حال بارگذاری…</div></div>
+  </div>
+
+  <!-- ===== donate settings + clicks ===== -->
+  <div class="card">
+    <div class="card-title">💛 حمایت مالی (دونیت)</div>
+    <div class="ann-form">
+      <div class="dn-grid">
+        <div class="dn-col">
+          <div class="dn-col-title">🇮🇷 پرداخت تومانی</div>
+          <input type="text" id="dn-toman-value" class="ann-inp ltr" placeholder="شماره کارت یا لینک پرداخت — خالی بگذاری این بخش در برنامه مخفی می‌شود" maxlength="300">
+          <textarea id="dn-toman-text" class="ann-inp" rows="2" placeholder="توضیح اختیاری (مثلاً: بانک سامان، به نام …)" maxlength="500"></textarea>
+        </div>
+        <div class="dn-col">
+          <div class="dn-col-title">🌍 پرداخت دلاری</div>
+          <input type="text" id="dn-usd-link" class="ann-inp ltr" placeholder="لینک پرداخت یا آدرس ولت — خالی بگذاری این بخش مخفی می‌شود" maxlength="300">
+          <textarea id="dn-usd-text" class="ann-inp" rows="2" placeholder="توضیح اختیاری (مثلاً: شبکه TRC20)" maxlength="500"></textarea>
+        </div>
+      </div>
+      <div class="ann-actions dn-actions">
+        <label class="dn-active-lbl"><input type="checkbox" id="dn-active" checked> نمایش بخش حمایت مالی در برنامه</label>
+        <button class="ann-send" id="dn-save-btn" onclick="donAdmSave()">💾 ذخیره و اعمال در برنامه</button>
+      </div>
+      <div class="dn-hint">لینک باید با http شروع شود تا دکمه‌ی پرداخت ساخته شود؛ هر چیز دیگری (شماره کارت، آدرس ولت) به‌صورت کادرِ کپی‌شدنی نمایش داده می‌شود.</div>
+    </div>
+    <div class="card-title dn-clicks-title">👆 کلیک‌های حمایت <span class="legend" id="dn-clicks-stats"></span></div>
+    <div id="dn-clicks"><div class="empty-row">در حال بارگذاری…</div></div>
   </div>
 </div>
 
@@ -344,7 +388,7 @@ function enterPanel(){
   loadAll();
 }
 async function loadAll(){
-  loadStats(); loadStatsExtra(); loadUsers(); chLoad(true); annLoad(); fbLoad();
+  loadStats(); loadStatsExtra(); loadUsers(); chLoad(true); annLoad(); fbLoad(); donAdmLoad();
   document.getElementById('p-updated').textContent='آخرین به‌روزرسانی: '+new Intl.DateTimeFormat('fa-IR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
 }
 async function loadStats(){
@@ -764,6 +808,55 @@ async function fbDel(id){
   const r=await rpc('admin_fb_delete',{p_token:ADMIN_TOKEN,p_id:id});
   if(r&&r.ok){ toast('🗑 حذف شد'); fbLoad(); loadStatsExtra(); }
   else if(r&&r.error==='unauthorized')authFail();
+}
+
+/* ===== donate (حمایت مالی) ===== */
+async function donAdmLoad(){
+  const box=document.getElementById('dn-clicks');
+  try{
+    const r=await rpc('admin_donate_get',{p_token:ADMIN_TOKEN});
+    if(!r||!r.ok){
+      if(r&&r.error==='unauthorized'){ authFail(); return; }
+      if(box) box.innerHTML='<div class="empty-row">برای فعال‌سازی این بخش، فایل donate.sql باید در Supabase SQL Editor اجرا شود</div>';
+      return;
+    }
+    const s=r.settings||{};
+    document.getElementById('dn-toman-value').value=s.toman_value||'';
+    document.getElementById('dn-toman-text').value =s.toman_text||'';
+    document.getElementById('dn-usd-link').value   =s.usd_link||'';
+    document.getElementById('dn-usd-text').value   =s.usd_text||'';
+    document.getElementById('dn-active').checked   =s.active!==false;
+
+    const c=await rpc('admin_donate_clicks',{p_token:ADMIN_TOKEN});
+    if(c&&c.ok){
+      const st=document.getElementById('dn-clicks-stats');
+      if(st) st.textContent=c.total?faNum(c.total)+' کلیک · '+faNum(c.unique_users)+' کاربر · '+faNum(c.last7)+' در ۷ روز اخیر':'';
+      if(box) box.innerHTML=(c.items&&c.items.length)
+        ? c.items.map(i=>'<div class="dn-click-row">'+
+            '<span class="dcr-name">'+esc(i.name||'—')+'</span>'+
+            '<span class="dcr-kind '+(i.kind==='usd'?'usd':'toman')+'">'+(i.kind==='usd'?'دلاری':'تومانی')+'</span>'+
+            '<span class="dcr-at">'+faDateTime(i.at)+'</span></div>').join('')
+        : '<div class="empty-row">هنوز کسی روی دکمه‌ی حمایت نزده</div>';
+    }
+  }catch(e){}
+}
+async function donAdmSave(){
+  const btn=document.getElementById('dn-save-btn');
+  btn.disabled=true; btn.textContent='در حال ذخیره…';
+  try{
+    const r=await rpc('admin_donate_save',{
+      p_token:ADMIN_TOKEN,
+      p_toman_value:document.getElementById('dn-toman-value').value.trim(),
+      p_toman_text: document.getElementById('dn-toman-text').value.trim(),
+      p_usd_link:   document.getElementById('dn-usd-link').value.trim(),
+      p_usd_text:   document.getElementById('dn-usd-text').value.trim(),
+      p_active:     document.getElementById('dn-active').checked
+    });
+    if(r&&r.ok) toast('💛 ذخیره شد — از این لحظه در برنامه‌ی همه اعمال است');
+    else if(r&&r.error==='unauthorized') authFail();
+    else toast('❌ ذخیره نشد — donate.sql اجرا شده؟');
+  }catch(e){ toast('❌ اتصال برقرار نشد'); }
+  btn.disabled=false; btn.textContent='💾 ذخیره و اعمال در برنامه';
 }
 
 /* ===== boot ===== */
