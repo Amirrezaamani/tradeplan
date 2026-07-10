@@ -2761,6 +2761,36 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 .acct-sync{margin-top:10px;padding-top:8px;border-top:1px dashed rgba(232,160,32,.22);font-size:10.5px;font-weight:600;color:rgba(255,255,255,.55);position:relative}
 .acct-card.waiting .acct-live{background:#8496ad;box-shadow:none;animation:none}
 .acct-card.waiting .acct-balance{background:none;-webkit-background-clip:initial;background-clip:initial;color:rgba(255,255,255,.35);filter:none;animation:none}
+
+/* ===== ANNOUNCEMENT modal — luxe broadcast from admin ===== */
+#ann-overlay{position:fixed;inset:0;z-index:98000;display:none;align-items:center;justify-content:center;padding:26px;background:rgba(3,8,18,.82);backdrop-filter:blur(6px)}
+#ann-overlay.show{display:flex}
+.ann-card{position:relative;width:100%;max-width:380px;background:linear-gradient(160deg,#1a2f4e 0%,#0f2238 55%,#0a1830 100%);border:1px solid rgba(244,200,106,.4);border-radius:24px;padding:30px 24px 24px;text-align:center;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(232,160,32,.12);animation:annIn .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes annIn{from{opacity:0;transform:translateY(26px) scale(.96)}to{opacity:1;transform:none}}
+.ann-card::before{content:'';position:absolute;top:-50px;right:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(244,200,106,.18),transparent 70%);pointer-events:none}
+.ann-shine{position:absolute;top:0;left:-80%;width:60%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,240,200,.07),transparent);transform:skewX(-18deg);animation:annSweep 3.4s ease-in-out infinite;pointer-events:none}
+@keyframes annSweep{0%,55%{left:-80%}100%{left:130%}}
+.ann-emoji{font-size:44px;line-height:1;margin-bottom:12px;filter:drop-shadow(0 4px 18px rgba(244,200,106,.45));animation:annPulse 2.6s ease-in-out infinite}
+@keyframes annPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.ann-title{font-size:18px;font-weight:900;letter-spacing:.2px;background:linear-gradient(90deg,#F4C86A,#fff2cf 45%,#F4C86A);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:hgShine 5s linear infinite;margin-bottom:10px}
+.ann-body{font-size:13.5px;font-weight:700;color:rgba(255,255,255,.88);line-height:2.15;white-space:pre-wrap;word-break:break-word;text-align:right;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:13px 15px;max-height:46vh;overflow-y:auto}
+.ann-date{font-size:10.5px;color:rgba(255,255,255,.4);font-weight:700;margin-top:10px}
+.ann-ok{width:100%;margin-top:14px;padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,#F4C86A,#e8a020);color:#0b1628;font-family:'Vazirmatn',sans-serif;font-size:14.5px;font-weight:900;cursor:pointer;box-shadow:0 8px 24px rgba(232,160,32,.35);transition:transform .15s}
+.ann-ok:active{transform:scale(.98)}
+
+/* ===== FEEDBACK box (settings) ===== */
+.fb-card{margin:0 14px;background:linear-gradient(150deg,#16304f,#0d1f3c 60%,#0a1830);border:1px solid var(--gold-border);border-radius:18px;padding:15px}
+.fb-desc{font-size:11.5px;color:rgba(255,255,255,.6);line-height:2;margin-bottom:11px}
+.fb-kinds{display:flex;gap:7px;margin-bottom:10px}
+.fb-kind{flex:1;padding:9px 4px;border-radius:11px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.6);font-family:'Vazirmatn',sans-serif;font-size:11.5px;font-weight:800;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.fb-kind.active{border-color:rgba(244,200,106,.55);background:rgba(244,200,106,.12);color:#F4C86A;box-shadow:0 0 14px rgba(244,200,106,.12)}
+.fb-text{width:100%;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:11px 13px;color:#fff;font-family:'Vazirmatn',sans-serif;font-size:12.5px;font-weight:600;line-height:1.9;resize:vertical;min-height:86px;outline:none;transition:border-color .2s}
+.fb-text:focus{border-color:rgba(244,200,106,.5);background:rgba(244,200,106,.04)}
+.fb-foot{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
+.fb-chars{font-size:10px;color:rgba(255,255,255,.35);font-weight:700}
+.fb-send{padding:10px 22px;border:none;border-radius:11px;background:linear-gradient(135deg,#F4C86A,#e8a020);color:#0b1628;font-family:'Vazirmatn',sans-serif;font-size:12.5px;font-weight:900;cursor:pointer;box-shadow:0 5px 16px rgba(232,160,32,.3);transition:opacity .2s,transform .15s}
+.fb-send:disabled{opacity:.35;box-shadow:none;cursor:default}
+.fb-send:active:not(:disabled){transform:translateY(1px)}
 .mt5link-copy{background:rgba(232,160,32,.12);border:1px solid var(--gold-border);border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
 .mt5link-btn{width:100%;background:linear-gradient(135deg,#c8881a,#e8a020);border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:800;color:#081020;cursor:pointer;font-family:'Vazirmatn',sans-serif}
 .mt5link-steps{margin-top:12px;border-top:1px solid rgba(255,255,255,.06);padding-top:10px}
@@ -4367,6 +4397,21 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
     </button>
   </div>
 
+  <div class="settings-section"><h2>💬 بازخورد و پیشنهاد</h2></div>
+  <div class="fb-card">
+    <div class="fb-desc">نظرت درباره‌ی برنامه چیه؟ پیشنهاد، انتقاد یا باگی که دیدی رو همین‌جا بنویس — مستقیم به دست سازنده می‌رسه و خونده می‌شه. 💛</div>
+    <div class="fb-kinds">
+      <button type="button" class="fb-kind active" data-kind="suggestion" onclick="fbKind(this)">💡 پیشنهاد</button>
+      <button type="button" class="fb-kind" data-kind="bug" onclick="fbKind(this)">🐛 گزارش باگ</button>
+      <button type="button" class="fb-kind" data-kind="other" onclick="fbKind(this)">💬 سایر</button>
+    </div>
+    <textarea id="fb-text" class="fb-text" rows="4" maxlength="2000" placeholder="پیامت رو بنویس… (حداقل ۵ حرف)" oninput="fbInput()"></textarea>
+    <div class="fb-foot">
+      <span class="fb-chars" id="fb-chars"></span>
+      <button type="button" class="fb-send" id="fb-send" onclick="fbSend()" disabled>📤 ارسال</button>
+    </div>
+  </div>
+
   <div class="settings-section"><h2>هدف‌گذاری پیشرفته</h2></div>
   <div class="goals-card">
     <div class="goals-grid">
@@ -4708,6 +4753,18 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       <button class="modal-btn cancel" onclick="closePsychCalendarModal()">بستن</button>
       <button class="modal-btn primary" onclick="pcalGoToSelectedDay()">مشاهده کامل این روز</button>
     </div>
+  </div>
+</div>
+
+<!-- ANNOUNCEMENT — broadcast from admin panel -->
+<div id="ann-overlay" onclick="if(event.target===this)annDismiss()">
+  <div class="ann-card">
+    <div class="ann-shine"></div>
+    <div class="ann-emoji" id="ann-emoji">📢</div>
+    <div class="ann-title" id="ann-title"></div>
+    <div class="ann-body" id="ann-body"></div>
+    <div class="ann-date" id="ann-date"></div>
+    <button type="button" class="ann-ok" onclick="annDismiss()">متوجه شدم ✨</button>
   </div>
 </div>
 
@@ -9526,6 +9583,79 @@ async function mt5LoadAccount(){
   finally{ _acctBusy=false; }
 }
 
+/* ----- Announcements — broadcast written in the admin panel ----- */
+let _annQueue=[];
+async function checkAnnouncements(){
+  if(!SB||!CURRENT_USER) return;
+  try{
+    const {data:rows,error}=await SB.from('announcements')
+      .select('id,emoji,title,body,created_at')
+      .eq('active',true).order('id',{ascending:false}).limit(10);
+    if(error||!rows||!rows.length) return;
+    const seen=data.seenAnns||[];
+    _annQueue=rows.filter(a=>!seen.includes(a.id));
+    if(_annQueue.length) annShowNext();
+  }catch(e){ /* جدول هنوز ساخته نشده یا آفلاین — بی‌صدا رد شو */ }
+}
+function annShowNext(){
+  const a=_annQueue[0]; if(!a) return;
+  const ov=document.getElementById('ann-overlay'); if(!ov) return;
+  document.getElementById('ann-emoji').textContent=a.emoji||'📢';
+  const t=document.getElementById('ann-title');
+  t.textContent=a.title; t.style.display=a.title?'block':'none';
+  const b=document.getElementById('ann-body');
+  b.textContent=a.body; b.style.display=a.body?'block':'none';
+  const d=new Date(a.created_at);
+  document.getElementById('ann-date').textContent=isNaN(d)?'':
+    d.toLocaleDateString('fa-IR',{weekday:'long',day:'numeric',month:'long'})+'، '+
+    d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+  ov.classList.add('show');
+}
+function annDismiss(){
+  const a=_annQueue.shift();
+  if(a){
+    data.seenAnns=data.seenAnns||[];
+    if(!data.seenAnns.includes(a.id)) data.seenAnns.push(a.id);
+    saveData();
+  }
+  if(_annQueue.length){ annShowNext(); return; }
+  const ov=document.getElementById('ann-overlay');
+  if(ov) ov.classList.remove('show');
+}
+
+/* ----- Feedback box (settings) ----- */
+let _fbKind='suggestion',_fbLastSent=0;
+function fbKind(btn){
+  _fbKind=btn.dataset.kind||'suggestion';
+  document.querySelectorAll('.fb-kind').forEach(b=>b.classList.toggle('active',b===btn));
+}
+function fbInput(){
+  const t=document.getElementById('fb-text'); if(!t) return;
+  const n=(t.value||'').trim().length;
+  const c=document.getElementById('fb-chars');
+  if(c) c.textContent=n?toFA(n)+' / '+toFA(2000):'';
+  const s=document.getElementById('fb-send');
+  if(s&&s.textContent.indexOf('ارسال…')<0) s.disabled=n<5;
+}
+async function fbSend(){
+  if(!SB||!CURRENT_USER){ showToast('❌ ابتدا وارد حساب شو'); return; }
+  const t=document.getElementById('fb-text');
+  const msg=(t.value||'').trim();
+  if(msg.length<5) return;
+  if(Date.now()-_fbLastSent<20000){ showToast('چند لحظه صبر کن، بعد دوباره بفرست'); return; }
+  const btn=document.getElementById('fb-send');
+  btn.disabled=true; btn.textContent='در حال ارسال…';
+  try{
+    const name=(CURRENT_USER.user_metadata&&CURRENT_USER.user_metadata.display_name)||data.name||'';
+    const {error}=await SB.from('feedback').insert({user_id:CURRENT_USER.id,name:name,kind:_fbKind,message:msg});
+    if(error) throw error;
+    _fbLastSent=Date.now();
+    t.value='';
+    showToast('💛 ممنون! بازخوردت رسید و حتماً خونده می‌شه');
+  }catch(e){ showToast('❌ ارسال نشد — دوباره تلاش کن'); }
+  finally{ btn.textContent='📤 ارسال'; fbInput(); }
+}
+
 /* ----- MT5 connection token (settings) ----- */
 let _mt5Token='';
 // توکن هر حساب یکی است و در سرور نگه‌داری می‌شود؛ اگر هنوز ساخته نشده،
@@ -9717,9 +9847,10 @@ async function enterApp(interactive){
   }catch(e){ /* offline: fall back to whatever local cache exists for this user */ }
   hideAuthScreen();
   if(!appStarted){ appStarted=true; init(); }
-  mtCloudSync();    // تریدهای ارسالی از متاتریدر را بگیر و در ژورنال ثبت کن
-  mt5LoadAccount(); // بالانس و وضعیت حساب برای کارت بالای ژورنال
-  logVisit();       // ثبت بازدید برای آمار پنل مدیریت
+  mtCloudSync();         // تریدهای ارسالی از متاتریدر را بگیر و در ژورنال ثبت کن
+  mt5LoadAccount();      // بالانس و وضعیت حساب برای کارت بالای ژورنال
+  checkAnnouncements();  // اطلاعیه‌های جدید ادمین (اگر باشد، نمایش داده می‌شود)
+  logVisit();            // ثبت بازدید برای آمار پنل مدیریت
   // For a brand-new account with no data yet, seed the display name into the app.
   if(!hadRow){
     const dn = CURRENT_USER.user_metadata && CURRENT_USER.user_metadata.display_name;

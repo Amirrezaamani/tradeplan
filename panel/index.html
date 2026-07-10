@@ -113,6 +113,28 @@ tr:hover td{background:rgba(232,160,32,.03)}
 .empty-row{text-align:center;color:var(--dim);padding:28px 0!important;font-size:13px}
 .legend{margin-right:auto;font-size:11px;color:var(--muted);font-weight:700}
 
+/* ===== announcements & feedback ===== */
+.sc-sub{font-size:10px;color:var(--muted);font-weight:700;margin-top:3px}
+.ann-form{margin-bottom:14px}
+.ann-row1{display:flex;gap:8px;margin-bottom:8px}
+.ann-inp{background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.09);border-radius:11px;color:var(--text);font-family:inherit;font-size:13px;font-weight:700;padding:11px 13px;transition:border-color .2s;width:100%}
+.ann-inp:focus{outline:none;border-color:var(--gold-border);background:rgba(232,160,32,.04)}
+.ann-emoji{width:64px;flex-shrink:0;text-align:center;font-size:17px;padding:9px 6px}
+textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
+.ann-actions{display:flex;gap:8px;margin-top:8px}
+.ann-send{padding:11px 20px;border:none;border-radius:11px;background:linear-gradient(135deg,#c8881a,var(--gold));color:#081020;font-size:13px;font-weight:900;box-shadow:0 6px 18px rgba(232,160,32,.25);transition:transform .15s}
+.ann-send:active{transform:translateY(1px)}
+.ann-cancel{padding:11px 16px;border-radius:11px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:var(--muted);font-size:12px;font-weight:800}
+.ann-item,.fb-item{border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:12px 14px;margin-bottom:9px;background:rgba(255,255,255,.02)}
+.ann-item.off{opacity:.55}
+.ann-item-head,.fb-item-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.ann-item-title{font-weight:900;font-size:13.5px;color:var(--text)}
+.item-date{font-size:10.5px;color:var(--dim);font-weight:700;margin-right:auto}
+.ann-item-body,.fb-msg{font-size:12.5px;color:var(--muted);line-height:2;white-space:pre-wrap;word-break:break-word}
+.item-btns{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+.fb-item.new{border-color:rgba(232,160,32,.35);background:rgba(232,160,32,.045)}
+.fb-name{font-weight:900;font-size:12.5px;color:var(--gold-light)}
+
 #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(90px);background:#1a2c50;border:1px solid var(--gold-border);color:var(--text);padding:12px 20px;border-radius:13px;font-size:13px;font-weight:700;box-shadow:0 12px 34px rgba(0,0,0,.5);transition:transform .3s;z-index:9999;max-width:90vw}
 #toast.show{transform:translateX(-50%) translateY(0)}
 </style>
@@ -143,10 +165,13 @@ tr:hover td{background:rgba(232,160,32,.03)}
   </div>
 
   <div class="stats-grid">
-    <div class="stat-card c-blue"><div class="sc-icon">👁️</div><div class="sc-val" id="st-visits">—</div><div class="sc-label">بازدید امروز</div></div>
+    <div class="stat-card c-blue"><div class="sc-icon">🔥</div><div class="sc-val" id="st-visits">—</div><div class="sc-label">کاربر فعال امروز</div></div>
+    <div class="stat-card c-blue"><div class="sc-icon">📅</div><div class="sc-val" id="st-active-week">—</div><div class="sc-label">فعال این هفته</div></div>
     <div class="stat-card c-gold"><div class="sc-icon">👥</div><div class="sc-val" id="st-users">—</div><div class="sc-label">کل کاربران</div></div>
     <div class="stat-card c-green"><div class="sc-icon">✨</div><div class="sc-val" id="st-signups">—</div><div class="sc-label">ثبت‌نام امروز</div></div>
+    <div class="stat-card c-green"><div class="sc-icon">🤖</div><div class="sc-val" id="st-mt5">—</div><div class="sc-label">اتصال متاتریدر</div><div class="sc-sub" id="st-mt5-sub"></div></div>
     <div class="stat-card c-purple"><div class="sc-icon">📊</div><div class="sc-val" id="st-trades">—</div><div class="sc-label">تریدهای ثبت‌شده امروز</div></div>
+    <div class="stat-card c-purple"><div class="sc-icon">💬</div><div class="sc-val" id="st-fb">—</div><div class="sc-label">بازخورد خوانده‌نشده</div></div>
   </div>
 
   <!-- ===== month chart ===== -->
@@ -183,6 +208,29 @@ tr:hover td{background:rgba(232,160,32,.03)}
         <tbody id="users-body"><tr><td colspan="7" class="empty-row">در حال بارگذاری…</td></tr></tbody>
       </table>
     </div>
+  </div>
+
+  <!-- ===== announcements ===== -->
+  <div class="card">
+    <div class="card-title">📢 اطلاعیه‌ها <span class="legend" id="ann-count"></span></div>
+    <div class="ann-form">
+      <div class="ann-row1">
+        <input type="text" id="ann-emoji" class="ann-inp ann-emoji" placeholder="📢" maxlength="8">
+        <input type="text" id="ann-title" class="ann-inp" placeholder="عنوان اطلاعیه…" maxlength="120">
+      </div>
+      <textarea id="ann-body" class="ann-inp" rows="3" placeholder="متن اطلاعیه… (به همه‌ی کاربران داخل برنامه نمایش داده می‌شود)" maxlength="2000"></textarea>
+      <div class="ann-actions">
+        <button class="ann-send" id="ann-save-btn" onclick="annSave()">📤 انتشار اطلاعیه</button>
+        <button class="ann-cancel" id="ann-cancel-btn" onclick="annCancelEdit()" style="display:none">انصراف از ویرایش</button>
+      </div>
+    </div>
+    <div id="ann-list"><div class="empty-row">در حال بارگذاری…</div></div>
+  </div>
+
+  <!-- ===== feedback inbox ===== -->
+  <div class="card">
+    <div class="card-title">💬 بازخورد کاربران <span class="legend" id="fb-count"></span></div>
+    <div id="fb-list"><div class="empty-row">در حال بارگذاری…</div></div>
   </div>
 </div>
 
@@ -296,7 +344,7 @@ function enterPanel(){
   loadAll();
 }
 async function loadAll(){
-  loadStats(); loadUsers(); chLoad(true);
+  loadStats(); loadStatsExtra(); loadUsers(); chLoad(true); annLoad(); fbLoad();
   document.getElementById('p-updated').textContent='آخرین به‌روزرسانی: '+new Intl.DateTimeFormat('fa-IR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
 }
 async function loadStats(){
@@ -583,6 +631,141 @@ async function delUser(id,name){
   else toast('❌ خطا در حذف');
 }
 
+/* ===== extra stats (فعال امروز/هفته، متاتریدر٪، بازخورد جدید) ===== */
+async function loadStatsExtra(){
+  try{
+    const r=await rpc('admin_stats_extra',{p_token:ADMIN_TOKEN});
+    if(!r||!r.ok)return;
+    document.getElementById('st-active-week').textContent=faNum(r.active_week);
+    document.getElementById('st-mt5').textContent=faNum(r.mt5_pct)+'٪';
+    document.getElementById('st-mt5-sub').textContent=faNum(r.mt5_users)+' از '+faNum(r.total_users)+' کاربر';
+    document.getElementById('st-fb').textContent=faNum(r.fb_new);
+  }catch(e){}
+}
+
+/* ===== announcements ===== */
+let _annEdit=null,_anns=[];
+function _sqlMissing(r,box){
+  if(r&&(r.code==='PGRST202'||/could not find the function/i.test(r.message||''))){
+    if(box)box.innerHTML='<div class="empty-row">⚠️ فایل admin-extras.sql هنوز در Supabase اجرا نشده</div>';
+    return true;
+  }
+  return false;
+}
+async function annLoad(){
+  const box=document.getElementById('ann-list');
+  try{
+    const r=await rpc('admin_ann_list',{p_token:ADMIN_TOKEN});
+    if(!r||!r.ok){
+      if(r&&r.error==='unauthorized')authFail(); else _sqlMissing(r,box);
+      return;
+    }
+    _anns=r.items||[];
+    document.getElementById('ann-count').textContent=_anns.length?faNum(_anns.length)+' اطلاعیه':'';
+    box.innerHTML=_anns.length?_anns.map(a=>
+      '<div class="ann-item'+(a.active?'':' off')+'">'+
+        '<div class="ann-item-head">'+
+          '<span>'+esc(a.emoji)+'</span>'+
+          '<span class="ann-item-title">'+esc(a.title)+'</span>'+
+          '<span class="badge '+(a.active?'ok':'no')+'">'+(a.active?'در حال نمایش':'متوقف')+'</span>'+
+          '<span class="item-date">'+faDateTime(a.created_at)+'</span>'+
+        '</div>'+
+        '<div class="ann-item-body">'+esc(a.body)+'</div>'+
+        '<div class="item-btns">'+
+          '<button class="act-btn act-ban" onclick="annToggle('+a.id+','+(!a.active)+')">'+(a.active?'⏸ توقف نمایش':'▶️ نمایش دوباره')+'</button>'+
+          '<button class="act-btn act-pass" onclick="annEdit('+a.id+')">✏️ ویرایش</button>'+
+          '<button class="act-btn act-del" onclick="annDel('+a.id+')">🗑 حذف</button>'+
+        '</div>'+
+      '</div>').join(''):'<div class="empty-row">هنوز اطلاعیه‌ای ننوشته‌ای — اولین اطلاعیه را از فرم بالا منتشر کن</div>';
+  }catch(e){}
+}
+async function annSave(){
+  const emoji=document.getElementById('ann-emoji').value.trim();
+  const title=document.getElementById('ann-title').value.trim();
+  const body=document.getElementById('ann-body').value.trim();
+  if(!title&&!body){ toast('عنوان یا متن اطلاعیه را بنویس'); return; }
+  const editing=_annEdit;
+  const keepActive=editing?((_anns.find(x=>x.id===editing)||{}).active!==false):true;
+  const r=await rpc('admin_ann_save',{p_token:ADMIN_TOKEN,p_id:editing,p_emoji:emoji,p_title:title,p_body:body,p_active:keepActive});
+  if(r&&r.ok){
+    toast(editing?'✏️ اطلاعیه ویرایش شد':'📢 منتشر شد — از این لحظه به کاربران نمایش داده می‌شود');
+    annCancelEdit(); annLoad();
+  }
+  else if(r&&r.error==='unauthorized')authFail();
+  else if(!_sqlMissing(r,document.getElementById('ann-list'))) toast('❌ خطا در ذخیره اطلاعیه');
+}
+function annEdit(id){
+  const a=_anns.find(x=>x.id===id); if(!a)return;
+  _annEdit=id;
+  document.getElementById('ann-emoji').value=a.emoji;
+  document.getElementById('ann-title').value=a.title;
+  document.getElementById('ann-body').value=a.body;
+  document.getElementById('ann-save-btn').textContent='💾 ذخیره ویرایش';
+  document.getElementById('ann-cancel-btn').style.display='';
+  document.getElementById('ann-title').focus();
+}
+function annCancelEdit(){
+  _annEdit=null;
+  document.getElementById('ann-emoji').value='';
+  document.getElementById('ann-title').value='';
+  document.getElementById('ann-body').value='';
+  document.getElementById('ann-save-btn').textContent='📤 انتشار اطلاعیه';
+  document.getElementById('ann-cancel-btn').style.display='none';
+}
+async function annToggle(id,active){
+  const a=_anns.find(x=>x.id===id); if(!a)return;
+  const r=await rpc('admin_ann_save',{p_token:ADMIN_TOKEN,p_id:id,p_emoji:a.emoji,p_title:a.title,p_body:a.body,p_active:active});
+  if(r&&r.ok){ toast(active?'▶️ نمایش اطلاعیه فعال شد':'⏸ نمایش اطلاعیه متوقف شد'); annLoad(); }
+  else if(r&&r.error==='unauthorized')authFail();
+}
+async function annDel(id){
+  if(!confirm('این اطلاعیه حذف شود؟'))return;
+  const r=await rpc('admin_ann_delete',{p_token:ADMIN_TOKEN,p_id:id});
+  if(r&&r.ok){ toast('🗑 اطلاعیه حذف شد'); annLoad(); }
+  else if(r&&r.error==='unauthorized')authFail();
+}
+
+/* ===== feedback inbox ===== */
+async function fbLoad(){
+  const box=document.getElementById('fb-list');
+  try{
+    const r=await rpc('admin_fb_list',{p_token:ADMIN_TOKEN});
+    if(!r||!r.ok){
+      if(r&&r.error==='unauthorized')authFail(); else _sqlMissing(r,box);
+      return;
+    }
+    const items=r.items||[];
+    const newCount=items.filter(f=>f.status==='new').length;
+    document.getElementById('fb-count').textContent=items.length?(faNum(items.length)+' پیام'+(newCount?' · '+faNum(newCount)+' جدید':'')):'';
+    const KINDS={suggestion:['💡','پیشنهاد','mid'],bug:['🐛','گزارش باگ','ban'],other:['💬','سایر','no']};
+    box.innerHTML=items.length?items.map(f=>{
+      const k=KINDS[f.kind]||KINDS.other;
+      return '<div class="fb-item'+(f.status==='new'?' new':'')+'">'+
+        '<div class="fb-item-head">'+
+          '<span class="badge '+k[2]+'">'+k[0]+' '+k[1]+'</span>'+
+          '<span class="fb-name">'+esc(f.name||'—')+'</span>'+
+          '<span class="item-date">'+faDateTime(f.created_at)+'</span>'+
+        '</div>'+
+        '<div class="fb-msg">'+esc(f.message)+'</div>'+
+        '<div class="item-btns">'+
+          (f.status==='new'?'<button class="act-btn act-pass" onclick="fbSeen('+f.id+')">✓ خوانده شد</button>':'')+
+          '<button class="act-btn act-del" onclick="fbDel('+f.id+')">🗑 حذف</button>'+
+        '</div></div>';
+    }).join(''):'<div class="empty-row">هنوز بازخوردی نرسیده</div>';
+  }catch(e){}
+}
+async function fbSeen(id){
+  const r=await rpc('admin_fb_status',{p_token:ADMIN_TOKEN,p_id:id,p_status:'seen'});
+  if(r&&r.ok){ fbLoad(); loadStatsExtra(); }
+  else if(r&&r.error==='unauthorized')authFail();
+}
+async function fbDel(id){
+  if(!confirm('این بازخورد حذف شود؟'))return;
+  const r=await rpc('admin_fb_delete',{p_token:ADMIN_TOKEN,p_id:id});
+  if(r&&r.ok){ toast('🗑 حذف شد'); fbLoad(); loadStatsExtra(); }
+  else if(r&&r.error==='unauthorized')authFail();
+}
+
 /* ===== boot ===== */
 if(ADMIN_TOKEN){
   rpc('admin_stats',{p_token:ADMIN_TOKEN}).then(r=>{
@@ -590,7 +773,7 @@ if(ADMIN_TOKEN){
     else{ sessionStorage.removeItem(TOKEN_KEY); ADMIN_TOKEN=''; }
   }).catch(()=>{});
 }
-setInterval(()=>{ if(ADMIN_TOKEN&&document.visibilityState==='visible') loadStats(); },60000);
+setInterval(()=>{ if(ADMIN_TOKEN&&document.visibilityState==='visible'){ loadStats(); loadStatsExtra(); } },60000);
 </script>
 </body>
 </html>
