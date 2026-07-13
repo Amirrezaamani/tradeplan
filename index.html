@@ -4922,7 +4922,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title">🗑️ پاک کردن همه داده‌ها</div>
-    <div class="modal-body">تمام داده‌ها از حافظه دستگاه حذف می‌شن. این عمل قابل بازگشت نیست.</div>
+    <div class="modal-body">تمام داده‌ها — ژورنال، روانشناسی، تنظیمات و تریدهای سینک‌شده از متاتریدر — هم از این دستگاه و هم از سرور حذف می‌شن و برنامه از صفر شروع می‌شه.<br><br>اتصال متاتریدر هم قطع می‌شه؛ برای اتصال دوباره (مثلاً حساب جدید)، توکن تازه از همین صفحه ساخته می‌شه و باید یک بار در اکسپرت وارد بشه.<br><br>⚠️ این عمل قابل بازگشت نیست.</div>
     <div class="modal-btns">
       <button class="modal-btn cancel" onclick="closeModal('clear-all-modal')">انصراف</button>
       <button class="modal-btn danger" onclick="clearAllData()">حذف کامل</button>
@@ -5128,6 +5128,7 @@ function loadData(){
 }
 let saveTimer=null;
 function saveData(){
+  if(typeof _wiping!=='undefined'&&_wiping) return; // وسط «پاک کردن همه داده‌ها» هیچ چیزی دوباره ذخیره نشود
   // Write to localStorage IMMEDIATELY — no debounce — so data is never lost
   // if the user navigates away, switches months, or leaves the page quickly.
   localStorage.setItem(DATA_KEY(),JSON.stringify(data));
@@ -8301,6 +8302,14 @@ function saveDayEntry(){
 function deleteDayEntry(){
   if(!activeDayKey)return;
   delete data.journal[activeDayKey];
+  // ردیف‌های همین روز از جدول ابری متاتریدر هم حذف می‌شوند، وگرنه سینک
+  // ۲دقیقه‌ای دوباره روز را برمی‌گرداند. (توجه: اگر اکسپرت روی همان حساب
+  // فعال باشد، در سینک عمیق بعدی دوباره ارسال می‌شود — آمار متاتریدر ملاک است)
+  if(SB&&CURRENT_USER){
+    const day=activeDayKey.replace(/-/g,'.'); // open_time متنی «YYYY.MM.DD HH:MM:SS» است
+    SB.from('mt5_trades').delete().eq('user_id',CURRENT_USER.id).like('open_time',day+'%')
+      .then(()=>{},()=>{});
+  }
   saveData(); closeDayModal(); renderJournalMonth();
   const now2=new Date();
   const chartY=(typeof jYear!=='undefined'&&jYear!==null)?jYear:now2.getFullYear();
@@ -10003,10 +10012,41 @@ function resetChecklist(){
   saveData(); renderChecklist('pre'); renderChecklist('post');
   closeModal('reset-modal'); showToast('✅ چک‌لیست ریست شد'); updateHome();
 }
-function clearAllData(){
-  localStorage.removeItem('tradeplan_v3');
-  closeModal('clear-all-modal'); showToast('🗑️ داده‌ها پاک شدن');
-  setTimeout(()=>location.reload(),1000);
+let _wiping=false;
+async function clearAllData(){
+  if(_wiping) return;
+  _wiping=true;
+  const btn=document.querySelector('#clear-all-modal .modal-btn.danger');
+  if(btn){ btn.disabled=true; btn.textContent='در حال حذف…'; }
+  // اول سرور پاک می‌شود؛ اگر فقط حافظه‌ی دستگاه پاک شود، بعد از رفرش (لود
+  // نسخه‌ی ابری user_data) یا سینک بعدی متاتریدر (mt5_trades) همه‌ی داده‌ها
+  // دوباره برمی‌گردند — باگ قبلی دقیقاً همین بود.
+  if(SB&&CURRENT_USER){
+    try{
+      const uid=CURRENT_USER.id;
+      const results=await Promise.all([
+        SB.from('mt5_trades').delete().eq('user_id',uid),    // تریدهای ارسالی اکسپرت (همه‌ی حساب‌ها)
+        SB.from('mt5_accounts').delete().eq('user_id',uid),  // وضعیت حساب متاتریدر
+        SB.from('mt5_tokens').delete().eq('user_id',uid),    // توکن باطل می‌شود تا اکسپرتِ حساب قبلی دیگر نتواند دیتا بفرستد
+        SB.from('user_data').upsert({user_id:uid,data:{},updated_at:new Date().toISOString()}) // نسخه‌ی ابری دیتای برنامه
+      ]);
+      const bad=results.find(r=>r&&r.error);
+      if(bad) throw bad.error;
+    }catch(e){
+      console.error('clearAllData',e);
+      _wiping=false;
+      if(btn){ btn.disabled=false; btn.textContent='حذف کامل'; }
+      showToast('❌ حذف کامل انجام نشد — اینترنت (یا قند شکن) را چک کن و دوباره بزن',4500);
+      return;
+    }
+  }
+  if(remoteTimer) clearTimeout(remoteTimer); // پوشِ معوقِ دیتای قدیمی به سرور لغو شود
+  localStorage.removeItem(DATA_KEY());
+  localStorage.removeItem('tradeplan_v3');            // کلید قدیمی (حالت بدون لاگین)
+  localStorage.removeItem('tradeplan_chart_view_v3');
+  closeModal('clear-all-modal');
+  showToast('🗑️ همه‌ی داده‌ها از دستگاه و سرور پاک شد — شروع از صفر');
+  setTimeout(()=>location.reload(),900);
 }
 function exportData(){
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -10097,7 +10137,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    APP_VERSION: نسخه‌ی خود برنامه — با هر تغییری که دیپلوی می‌شود یک دهم بالا برود.
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌ی دانلود از همین ثابت ساخته می‌شود. */
-const APP_VERSION='77.2';
+const APP_VERSION='77.3';
 const MT5_EA_VERSION='1.30';
 (function(){
   const av=document.getElementById('auth-version');
@@ -10129,12 +10169,12 @@ function nameToEmail(n){return 'u'+cyrb53(normName(n)).toString(36)+'@'+AUTH_EMA
 
 // ----- remote sync -----
 function scheduleRemotePush(){
-  if(!SB||!CURRENT_USER) return;
+  if(!SB||!CURRENT_USER||_wiping) return;
   if(remoteTimer) clearTimeout(remoteTimer);
   remoteTimer=setTimeout(pushRemote,1500);
 }
 async function pushRemote(){
-  if(!SB||!CURRENT_USER) return;
+  if(!SB||!CURRENT_USER||_wiping) return;
   try{ await SB.from('user_data').upsert({user_id:CURRENT_USER.id,data:data,updated_at:new Date().toISOString()}); }
   catch(e){ /* offline — will retry on the next save */ }
 }
@@ -10159,7 +10199,7 @@ async function logVisit(){
    (mtMergeDays) در ژورنال ثبت می‌شود. */
 let _mtCloudBusy=false;
 async function mtCloudSync(){
-  if(!SB||!CURRENT_USER||_mtCloudBusy||!appStarted||typeof mtMergeDays!=='function') return;
+  if(!SB||!CURRENT_USER||_mtCloudBusy||!appStarted||_wiping||typeof mtMergeDays!=='function') return;
   _mtCloudBusy=true;
   try{
     // فقط ~۲ ماه اخیر بررسی و تصحیح می‌شود (open_time متنی «YYYY.MM.DD …» است؛
