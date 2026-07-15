@@ -102,7 +102,10 @@ th{font-size:11px;color:var(--muted);font-weight:800;text-align:right;padding:10
 .tbl-wrap::-webkit-scrollbar,#ann-list::-webkit-scrollbar,#fb-list::-webkit-scrollbar,#dn-clicks::-webkit-scrollbar{width:6px;height:6px}
 .tbl-wrap::-webkit-scrollbar-thumb,#ann-list::-webkit-scrollbar-thumb,#fb-list::-webkit-scrollbar-thumb,#dn-clicks::-webkit-scrollbar-thumb{background:rgba(232,160,32,.35);border-radius:3px}
 .tbl-wrap::-webkit-scrollbar-track,#ann-list::-webkit-scrollbar-track,#fb-list::-webkit-scrollbar-track,#dn-clicks::-webkit-scrollbar-track{background:rgba(255,255,255,.04)}
-/* جست‌وجوی هوشمند کاربر */
+/* جست‌وجوی هوشمند کاربر + فیلتر فعالیت */
+.u-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:11px}
+.u-toolbar .u-search{margin-bottom:0}
+.u-filter{flex-shrink:0}
 .u-search{
   width:100%;max-width:340px;margin-bottom:11px;display:block;
   background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.1);border-radius:11px;
@@ -127,6 +130,12 @@ tr:hover td{background:rgba(232,160,32,.03)}
 .act-del{color:var(--red);border-color:rgba(239,68,68,.4)}.act-del:hover{background:rgba(239,68,68,.1)}
 .empty-row{text-align:center;color:var(--dim);padding:28px 0!important;font-size:13px}
 .legend{margin-right:auto;font-size:11px;color:var(--muted);font-weight:700}
+
+/* ===== leaderboard ===== */
+.lb-table{min-width:680px}
+.lb-rank{font-size:15px;font-weight:900;color:var(--gold-light);width:52px}
+.lb-score{font-weight:900;color:var(--gold)}
+tr.lb-top td{background:rgba(232,160,32,.045)}
 
 /* ===== announcements & feedback ===== */
 .sc-sub{font-size:10px;color:var(--muted);font-weight:700;margin-top:3px}
@@ -200,6 +209,7 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
   <div class="stats-grid">
     <div class="stat-card c-blue"><div class="sc-icon">🔥</div><div class="sc-val" id="st-visits">—</div><div class="sc-label">کاربر فعال امروز</div></div>
     <div class="stat-card c-blue"><div class="sc-icon">📅</div><div class="sc-val" id="st-active-week">—</div><div class="sc-label">فعال این هفته</div></div>
+    <div class="stat-card c-gold"><div class="sc-icon">⚡</div><div class="sc-val" id="st-active-3d">—</div><div class="sc-label">فعال در ۳ روز اخیر</div><div class="sc-sub" id="st-active-3d-sub"></div></div>
     <div class="stat-card c-gold"><div class="sc-icon">👥</div><div class="sc-val" id="st-users">—</div><div class="sc-label">کل کاربران</div></div>
     <div class="stat-card c-green"><div class="sc-icon">✨</div><div class="sc-val" id="st-signups">—</div><div class="sc-label">ثبت‌نام امروز</div></div>
     <div class="stat-card c-green"><div class="sc-icon">🤖</div><div class="sc-val" id="st-mt5">—</div><div class="sc-label">اتصال متاتریدر</div><div class="sc-sub" id="st-mt5-sub"></div></div>
@@ -233,15 +243,36 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
 
   <div class="card">
     <div class="card-title">👥 مدیریت کاربران <span class="legend" id="u-count"></span></div>
-    <input type="text" id="u-search" class="u-search" placeholder="🔍 جست‌وجوی نام کاربری… حتی با یک حرف" autocomplete="off" oninput="userSearch(this.value)">
+    <div class="u-toolbar">
+      <input type="text" id="u-search" class="u-search" placeholder="🔍 جست‌وجوی نام کاربری… حتی با یک حرف" autocomplete="off" oninput="userSearch(this.value)">
+      <div class="ch-metric u-filter">
+        <button class="ch-chip active" id="uf-all" onclick="userFilter('all')">همه</button>
+        <button class="ch-chip" id="uf-active3" onclick="userFilter('active3')">⚡ فعال ۳ روز</button>
+        <button class="ch-chip" id="uf-idle3" onclick="userFilter('idle3')">💤 غیرفعال ۳ روز</button>
+      </div>
+    </div>
     <div class="tbl-wrap">
       <table>
         <thead><tr>
-          <th>نام کاربری</th><th>ایمیل</th><th>تاریخ عضویت</th><th>اکسپرت</th><th>آخرین بازدید</th><th>وضعیت</th><th>عملیات</th>
+          <th>نام کاربری</th><th>ایمیل</th><th>تاریخ عضویت</th><th>اکسپرت</th><th>آخرین بازدید</th><th>۳ روز اخیر</th><th>وضعیت</th><th>عملیات</th>
         </tr></thead>
-        <tbody id="users-body"><tr><td colspan="7" class="empty-row">در حال بارگذاری…</td></tr></tbody>
+        <tbody id="users-body"><tr><td colspan="8" class="empty-row">در حال بارگذاری…</td></tr></tbody>
       </table>
     </div>
+  </div>
+
+  <!-- ===== leaderboard ===== -->
+  <div class="card">
+    <div class="card-title">🏆 فعال‌ترین کاربران <span class="legend">۳۰ روز اخیر</span></div>
+    <div class="tbl-wrap">
+      <table class="lb-table">
+        <thead><tr>
+          <th>رتبه</th><th>نام کاربری</th><th>روز فعال</th><th>بازدید</th><th>ترید ثبت‌شده</th><th>بازخورد</th><th>آخرین بازدید</th><th>امتیاز</th>
+        </tr></thead>
+        <tbody id="lb-body"><tr><td colspan="8" class="empty-row">در حال بارگذاری…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="dn-hint">امتیاز = روزِ فعال ×۱۰ + بازدید (تا سقف ۹۰) + ترید ثبت‌شده ×۲ (تا سقف ۳۰ ترید) + بازخورد ×۵ — همه در ۳۰ روز اخیر.</div>
   </div>
 
   <!-- ===== announcements ===== -->
@@ -404,7 +435,7 @@ function enterPanel(){
   loadAll();
 }
 async function loadAll(){
-  loadStats(); loadStatsExtra(); loadUsers(); chLoad(true); annLoad(); fbLoad(); donAdmLoad();
+  loadStats(); loadStatsExtra(); loadUsers(); chLoad(true); annLoad(); fbLoad(); donAdmLoad(); lbLoad();
   document.getElementById('p-updated').textContent='آخرین به‌روزرسانی: '+new Intl.DateTimeFormat('fa-IR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
 }
 async function loadStats(){
@@ -641,6 +672,18 @@ async function loadUsers(){
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 let _userQuery='';
 function userSearch(v){ _userQuery=(v||'').trim().toLowerCase(); renderUsers(); }
+/* فعالیت ۳ روز اخیر — بر اساس آخرین بازدید (visit_logs) */
+const DAYS3=3*24*60*60*1000;
+function uActive3(u){ return !!(u.last_visit && (Date.now()-new Date(u.last_visit).getTime())<DAYS3); }
+function uNew3(u){ return !!(u.created_at && (Date.now()-new Date(u.created_at).getTime())<DAYS3); }
+let _userFilter='all';
+function userFilter(f){
+  _userFilter=f;
+  ['all','active3','idle3'].forEach(k=>{
+    document.getElementById('uf-'+k).className='ch-chip'+(k===f?' active':'');
+  });
+  renderUsers();
+}
 function renderUsers(){
   const tb=document.getElementById('users-body');
   // جست‌وجوی هوشمند: اول کسانی که نامشان با عبارت شروع می‌شود، بعد شامل‌شونده‌ها
@@ -652,14 +695,22 @@ function renderUsers(){
     const incl  =_users.filter(u=>!nm(u).startsWith(q)&&nm(u).includes(q));
     list=starts.concat(incl);
   }
-  document.getElementById('u-count').textContent=_userQuery
+  // فیلتر فعالیت ۳ روز اخیر — «غیرفعال» تازه‌واردهای بدون بازدید را نمی‌گیرد
+  // تا کاربری که همین امروز ثبت‌نام کرده، اشتباهی کاندید حذف نشود.
+  if(_userFilter==='active3')      list=list.filter(uActive3);
+  else if(_userFilter==='idle3')   list=list.filter(u=>!uActive3(u)&&!uNew3(u));
+  const filtered=_userQuery||_userFilter!=='all';
+  document.getElementById('u-count').textContent=filtered
     ? faNum(list.length)+' از '+faNum(_users.length)+' کاربر'
     : faNum(_users.length)+' کاربر';
-  if(!list.length){ tb.innerHTML='<tr><td colspan="7" class="empty-row">'+(_userQuery?'کاربری با این نام پیدا نشد':'هنوز کاربری ثبت‌نام نکرده')+'</td></tr>'; return; }
+  if(!list.length){ tb.innerHTML='<tr><td colspan="8" class="empty-row">'+(filtered?'کاربری با این شرایط پیدا نشد':'هنوز کاربری ثبت‌نام نکرده')+'</td></tr>'; return; }
   tb.innerHTML=list.map(u=>{
     const ea = u.trades>0 ? '<span class="badge ok">✅ وصل — '+faNum(u.trades)+' ترید</span>'
              : u.has_token ? '<span class="badge mid">🔑 توکن ساخته</span>'
              : '<span class="badge no">وصل نشده</span>';
+    const act3 = uActive3(u) ? '<span class="badge ok">⚡ فعال</span>'
+               : uNew3(u)    ? '<span class="badge mid">🌱 تازه‌وارد</span>'
+               : '<span class="badge no">💤 غیرفعال</span>';
     const status = u.banned ? '<span class="badge ban">🚫 مسدود</span>' : '<span class="badge ok">فعال</span>';
     const banBtn = u.banned
       ? '<button class="act-btn act-ban" onclick="setBan(\''+u.id+'\',false)">✅ رفع مسدودی</button>'
@@ -670,6 +721,7 @@ function renderUsers(){
       '<td>'+faDate(u.created_at)+'</td>'+
       '<td>'+ea+'</td>'+
       '<td>'+faDateTime(u.last_visit)+'</td>'+
+      '<td>'+act3+'</td>'+
       '<td>'+status+'</td>'+
       '<td>'+banBtn+
         '<button class="act-btn act-pass" onclick="changePass(\''+u.id+'\',\''+esc(u.name)+'\')">🔑 تغییر رمز</button>'+
@@ -710,9 +762,42 @@ async function loadStatsExtra(){
     const r=await rpc('admin_stats_extra',{p_token:ADMIN_TOKEN});
     if(!r||!r.ok)return;
     document.getElementById('st-active-week').textContent=faNum(r.active_week);
+    // فعال ۳ روز اخیر — اگر admin-activity.sql هنوز اجرا نشده باشد این فیلدها نیستند
+    if(r.active_3d_pct!==undefined){
+      document.getElementById('st-active-3d').textContent=faNum(r.active_3d_pct)+'٪';
+      document.getElementById('st-active-3d-sub').textContent=faNum(r.active_3d)+' از '+faNum(r.total_users)+' کاربر';
+    }
     document.getElementById('st-mt5').textContent=faNum(r.mt5_pct)+'٪';
     document.getElementById('st-mt5-sub').textContent=faNum(r.mt5_users)+' از '+faNum(r.total_users)+' کاربر';
     document.getElementById('st-fb').textContent=faNum(r.fb_new);
+  }catch(e){}
+}
+
+/* ===== leaderboard (فعال‌ترین کاربران ۳۰ روز اخیر) ===== */
+async function lbLoad(){
+  const tb=document.getElementById('lb-body');
+  try{
+    const r=await rpc('admin_leaderboard',{p_token:ADMIN_TOKEN});
+    if(!r||!r.ok){
+      if(r&&r.error==='unauthorized'){ authFail(); return; }
+      if(r&&(r.code==='PGRST202'||/could not find the function/i.test(r.message||'')))
+        tb.innerHTML='<tr><td colspan="8" class="empty-row">⚠️ فایل admin-activity.sql هنوز در Supabase اجرا نشده</td></tr>';
+      return;
+    }
+    const items=r.items||[];
+    if(!items.length){ tb.innerHTML='<tr><td colspan="8" class="empty-row">در ۳۰ روز اخیر فعالیتی ثبت نشده</td></tr>'; return; }
+    const MEDALS=['🥇','🥈','🥉'];
+    tb.innerHTML=items.map((u,i)=>
+      '<tr'+(i<3?' class="lb-top"':'')+'>'+
+        '<td class="lb-rank">'+(MEDALS[i]||faNum(i+1))+'</td>'+
+        '<td class="u-name">'+esc(u.name)+'</td>'+
+        '<td>'+faNum(u.days30)+' روز</td>'+
+        '<td>'+faNum(u.visits30)+'</td>'+
+        '<td>'+faNum(u.trades30)+'</td>'+
+        '<td>'+faNum(u.fb30)+'</td>'+
+        '<td>'+faDateTime(u.last_visit)+'</td>'+
+        '<td class="lb-score">'+faNum(u.score)+'</td>'+
+      '</tr>').join('');
   }catch(e){}
 }
 
@@ -741,6 +826,7 @@ async function annLoad(){
           '<span>'+esc(a.emoji)+'</span>'+
           '<span class="ann-item-title">'+esc(a.title)+'</span>'+
           '<span class="badge '+(a.active?'ok':'no')+'">'+(a.active?'در حال نمایش':'متوقف')+'</span>'+
+          (a.reads!==undefined?'<span class="badge mid">👁 '+faNum(a.reads)+' نفر خواندند</span>':'')+
           '<span class="item-date">'+faDateTime(a.created_at)+'</span>'+
         '</div>'+
         '<div class="ann-item-body">'+esc(a.body)+'</div>'+

@@ -3683,6 +3683,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
         <input type="password" id="auth-pass" name="password" class="auth-input" placeholder="رمز عبور" autocomplete="current-password" enterkeyhint="go" onkeydown="if(event.key==='Enter'&&authMode==='signup'){event.preventDefault();document.getElementById('auth-pass2').focus();}">
         <button type="button" class="auth-eye" onclick="toggleAuthEye('auth-pass',this)" tabindex="-1" aria-label="نمایش رمز">👁</button>
       </div>
+      <div class="auth-pass-note" id="auth-pass-note" style="display:none">🔒 یک رمز قوی و یکتا انتخاب کن — حداقل ۸ کاراکتر و ترکیب حروف و عدد؛ رمزی که جای دیگری استفاده نکرده‌ای</div>
       <div id="auth-pass2-row" style="display:none">
         <label class="auth-label" for="auth-pass2">تکرار رمز</label>
         <div class="auth-pass-wrap">
@@ -10249,7 +10250,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='77.5';
+const APP_VERSION='77.6';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
@@ -10483,6 +10484,14 @@ function annDismiss(){
     data.seenAnns=data.seenAnns||[];
     if(!data.seenAnns.includes(a.id)) data.seenAnns.push(a.id);
     saveData();
+    // ثبت «خواندم» در سرور تا در پنل مدیریت تعداد خواننده‌ها دیده شود
+    if(SB&&CURRENT_USER){
+      try{
+        SB.from('ann_reads')
+          .upsert({ann_id:a.id,user_id:CURRENT_USER.id},{onConflict:'ann_id,user_id',ignoreDuplicates:true})
+          .then(()=>{});
+      }catch(e){ /* جدول هنوز ساخته نشده یا آفلاین — مهم نیست */ }
+    }
   }
   if(_annQueue.length){ annShowNext(); return; }
   const ov=document.getElementById('ann-overlay');
@@ -10754,11 +10763,13 @@ function setAuthMode(m){
   document.getElementById('auth-hint').innerHTML = m==='login'
     ? 'حساب نداری؟ <a onclick="setAuthMode(\'signup\')">ثبت‌نام کن</a><br><a class="auth-forgot" onclick="authForgot()">رمزت رو فراموش کردی؟</a>'
     : 'حساب داری؟ <a onclick="setAuthMode(\'login\')">وارد شو</a>';
-  // فیلد «تکرار رمز» و راهنمای انتخاب اسم فقط در ثبت‌نام
+  // فیلد «تکرار رمز» و راهنماهای انتخاب اسم و رمز قوی فقط در ثبت‌نام
   const p2row=document.getElementById('auth-pass2-row');
   if(p2row) p2row.style.display = m==='signup' ? 'block' : 'none';
   const nnote=document.getElementById('auth-name-note');
   if(nnote) nnote.style.display = m==='signup' ? 'block' : 'none';
+  const pnote=document.getElementById('auth-pass-note');
+  if(pnote) pnote.style.display = m==='signup' ? 'block' : 'none';
   if(m==='login'){ const p2=document.getElementById('auth-pass2'); if(p2) p2.value=''; }
   authError('');
 }
