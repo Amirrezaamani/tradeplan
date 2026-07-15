@@ -2,7 +2,7 @@
    Strategy: network-first for page loads (so updates always win when online),
    cache fallback for offline. Supabase and other cross-origin requests are
    never intercepted. Bump CACHE to force-refresh all clients. */
-const CACHE = 'tradeplan-v16';
+const CACHE = 'tradeplan-v17';
 
 self.addEventListener('install', e => {
   e.waitUntil(

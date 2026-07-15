@@ -3012,8 +3012,30 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 .mg-svc{background:rgba(99,179,255,.06);border:1px solid rgba(99,179,255,.28)}
 .mg-svc .mg-step-head{color:#93c5fd}
 .mg-svc .mg-step-body b{color:#93c5fd}
-.mg-num-svc{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#eaf2ff;font-size:14px}
+.mg-svc .mg-li::before{color:#93c5fd}
+.mg-num-svc{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#eaf2ff}
 .mg-dl-svc{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#eaf2ff;box-shadow:0 6px 18px rgba(59,130,246,.3)}
+/* دو روش اتصال — باکس معرفی بالای راهنما */
+.mg-methods{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:13px 15px;margin-bottom:16px}
+.mg-methods-title{font-size:13px;font-weight:900;color:var(--text);margin-bottom:6px}
+.mg-method{display:flex;align-items:flex-start;gap:11px;padding:9px 0;font-size:12.5px;line-height:2;color:var(--text)}
+.mg-method + .mg-method{border-top:1px dashed rgba(255,255,255,.09)}
+.mg-method b{color:var(--gold)}
+.mg-method small{display:block;opacity:.75;font-size:11.5px;line-height:1.9;font-weight:500}
+.mg-method-num{width:26px;height:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#c8881a,#e8a020);color:#081020;border-radius:9px;font-size:13px;font-weight:900;margin-top:5px}
+.mg-method-svc b{color:#93c5fd}
+.mg-method-svc .mg-method-num{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#eaf2ff}
+/* هدر جداکننده‌ی هر روش */
+.mg-sec{display:flex;align-items:center;gap:10px;margin:20px 2px 12px;font-size:13.5px;font-weight:900;color:var(--gold)}
+.mg-sec::before,.mg-sec::after{content:'';height:1px;flex:1;background:rgba(232,160,32,.3)}
+.mg-sec::before{flex:0 0 18px}
+.mg-sec-svc{color:#93c5fd}
+.mg-sec-svc::before,.mg-sec-svc::after{background:rgba(99,179,255,.3)}
+.mg-intro-svc{background:rgba(99,179,255,.07);border-color:rgba(99,179,255,.28)}
+.mg-intro-svc b{color:#93c5fd}
+/* جعبه‌ی راه‌حل تداخل با اکسپرت دیگر */
+.mg-clash{background:rgba(232,160,32,.06);border:1px solid rgba(232,160,32,.32)}
+.mg-clash .mg-step-head{color:var(--gold)}
 /* بنر آموزش تصویری اینستاگرام — بالای راهنما */
 .mg-insta{display:flex;align-items:center;gap:11px;margin-bottom:13px;padding:12px 13px;border-radius:15px;text-decoration:none;background:linear-gradient(135deg,rgba(188,42,141,.18),rgba(253,89,73,.10) 55%,rgba(255,220,128,.08));border:1px solid rgba(228,64,95,.5);box-shadow:0 6px 20px rgba(238,42,123,.12);-webkit-tap-highlight-color:transparent}
 .mg-insta-ic{width:42px;height:42px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:21px;border-radius:13px;background:linear-gradient(45deg,#f9ce34,#ee2a7b 55%,#6228d7);box-shadow:0 4px 14px rgba(238,42,123,.4)}
@@ -3673,7 +3695,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       <button type="submit" class="auth-submit" id="auth-submit">ورود</button>
     </form>
     <div class="auth-hint" id="auth-hint">حساب نداری؟ <a onclick="setAuthMode('signup')">ثبت‌نام کن</a><br><a class="auth-forgot" onclick="authForgot()">رمزت رو فراموش کردی؟</a></div>
-    <div class="auth-ver" id="auth-version">TradePlan v76.1</div>
+    <div class="auth-ver" id="auth-version">TradePlan v77.5</div>
   </div>
 </div>
 
@@ -3696,8 +3718,22 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       </a>
 
       <div class="mg-intro">
-        هر معامله‌ای که در متاتریدر ۵ ببندی، چند ثانیه بعد <b>خودکار</b> در ژورنال ثبت می‌شود. فقط ۵ قدم، یک بار برای همیشه. 🚀
+        هر معامله‌ای که در متاتریدر ۵ ببندی، چند ثانیه بعد <b>خودکار</b> در ژورنال ثبت می‌شود. یک بار راه می‌اندازی، برای همیشه. 🚀
       </div>
+
+      <div class="mg-methods">
+        <div class="mg-methods-title">برای اتصال به متاتریدر دو روش داری — فقط یکی کافی است:</div>
+        <div class="mg-method">
+          <span class="mg-method-num">۱</span>
+          <div><b>نصب اکسپرت</b> — روش ساده و پیشنهادی<small>اکسپرت را روی یک چارت می‌اندازی و تمام؛ برای بیشتر تریدرها همین روش کافی است.</small></div>
+        </div>
+        <div class="mg-method mg-method-svc">
+          <span class="mg-method-num">۲</span>
+          <div><b>نصب فایل سرویس در پس‌زمینه‌ی متاتریدر</b><small>بدون چارت اجرا می‌شود؛ مخصوص وقتی که اکسپرت دیگری (مثل مدیریت سرمایه) داری یا نمی‌خواهی چارتی اشغال شود.</small></div>
+        </div>
+      </div>
+
+      <div class="mg-sec">روش ۱ — نصب اکسپرت (ساده و پیشنهادی)</div>
 
       <div class="mg-step">
         <div class="mg-step-head"><span class="mg-num">۱</span>دانلود اکسپرت</div>
@@ -3745,7 +3781,15 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
           <div class="mg-li">در تب <span class="mg-k">Inputs</span> توکن را جای‌گذاری کن — <b>فقط بار اول</b>؛ بعداً خودش یادش می‌ماند</div>
           <div class="mg-li">در تب <span class="mg-k">Common</span> تیک <span class="mg-k">Allow Algo Trading</span> را بزن و <span class="mg-k">OK</span></div>
           <div class="mg-li">دکمه‌ی <span class="mg-k">Algo Trading</span> بالای متاتریدر هم باید سبز باشد</div>
-          <div class="mg-note">🧩 اکسپرت دیگری (مدیریت سرمایه، پراپ و…) روی چارتت داری؟ هیچ تداخلی پیش نمی‌آید — یک <b>چارت جدید</b> باز کن و TradePlanSync را روی آن بینداز؛ محدودیت متاتریدر «یک اکسپرت روی هر چارت» است، نه کل برنامه. اگر نمی‌خواهی هیچ چارتی اشغال شود، «نصب بدون چارت» را در پایین همین راهنما ببین.</div>
+        </div>
+      </div>
+
+      <div class="mg-step mg-clash">
+        <div class="mg-step-head"><span class="mg-num">⚠️</span>اکسپرت مدیریت سرمایه داری و تداخل پیش آمد؟</div>
+        <div class="mg-step-body">
+          <div style="margin-bottom:6px">نگران نباش — متاتریدر روی هر چارت فقط <b>یک</b> اکسپرت قبول می‌کند؛ همین باعث تداخل می‌شود. دو راه‌حل داری:</div>
+          <div class="mg-li"><span><b>راه‌حل فوری — چارت جدید:</b> یک چارت دیگر باز کن؛ مثلاً دو چارت <span class="mg-k">XAUUSD</span> کنار هم. اکسپرت مدیریت سرمایه روی چارت اول می‌ماند و <span class="mg-k">TradePlanSync</span> را روی چارت دوم بینداز. هر دو بدون هیچ تداخلی کار می‌کنند، چون محدودیت متاتریدر «یک اکسپرت روی هر چارت» است، نه در کل برنامه.</span></div>
+          <div class="mg-li"><span><b>راه‌حل دوم — فایل سرویس:</b> اگر نمی‌خواهی هیچ چارتی اشغال شود، روش ۲ (پایین همین راهنما) را نصب کن؛ در پس‌زمینه‌ی متاتریدر اجرا می‌شود و اصلاً به چارت کاری ندارد.</span></div>
         </div>
       </div>
 
@@ -3768,18 +3812,63 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
         </div>
       </div>
 
+      <div class="mg-sec mg-sec-svc">روش ۲ — نصب فایل سرویس در پس‌زمینه‌ی متاتریدر</div>
+
+      <div class="mg-intro mg-intro-svc">
+        «سرویس» فایلی است شبیه اکسپرت، با یک تفاوت مهم: به‌جای چارت، در <b>پس‌زمینه‌ی خود متاتریدر</b> اجرا می‌شود. نه چارتی اشغال می‌کند، نه با هیچ اکسپرت دیگری تداخل دارد و نه به دکمه‌ی Algo Trading نیاز دارد. اگر روش ۱ را انجام داده‌ای و کار می‌کند، به این روش نیازی نیست.
+      </div>
+
       <div class="mg-step mg-svc">
-        <div class="mg-step-head"><span class="mg-num mg-num-svc">🧩</span>نصب بدون چارت (سرویس) — برای تداخل با اکسپرت دیگر</div>
+        <div class="mg-step-head"><span class="mg-num mg-num-svc">۱</span>دانلود فایل سرویس</div>
         <div class="mg-step-body">
-          <div style="margin-bottom:8px">اگر اکسپرت دیگری (مدیریت سرمایه، پراپ و…) داری یا نمی‌خواهی چارتی اشغال شود، به‌جای اکسپرت، نسخه‌ی <b>سرویس</b> را نصب کن: در پس‌زمینه‌ی خود متاتریدر اجرا می‌شود، <b>نه چارت می‌خواهد و نه با هیچ اکسپرتی تداخل دارد</b>. فقط یکی از دو روش (اکسپرت یا سرویس) کافی است.</div>
           <a class="mg-dl mg-dl-svc" id="mt5-svc-dl" href="TradePlanSyncService.mq5" download="TradePlanSyncService-v1.30.mq5">⬇️ دانلود سرویس TradePlanSyncService v1.30</a>
-          <div class="mg-li">قدم ۳ (اجازه‌ی WebRequest) و قدم ۴ (کپی توکن) مثل بالا لازم است</div>
-          <div class="mg-li"><span class="mg-k">File</span> ← <span class="mg-k">Open Data Folder</span> ← پوشه‌ی <span class="mg-k">MQL5</span> ← <span class="mg-k">Services</span> (نه Experts!) و فایل را همان‌جا کپی کن</div>
+          <div class="mg-note">⚠️ این قدم‌ها را روی همان کامپیوترِ متاتریدر انجام بده.</div>
+        </div>
+      </div>
+
+      <div class="mg-step mg-svc">
+        <div class="mg-step-head"><span class="mg-num mg-num-svc">۲</span>کپی فایل در پوشه‌ی Services</div>
+        <div class="mg-step-body">
+          <div class="mg-li">در متاتریدر: منوی <span class="mg-k">File</span> ← <span class="mg-k">Open Data Folder</span></div>
+          <div class="mg-li">برو داخل پوشه‌ی <span class="mg-k">MQL5</span> ← <span class="mg-k">Services</span> و فایل دانلودشده را همان‌جا کپی کن</div>
           <div class="mg-li">متاتریدر را ببند و دوباره باز کن</div>
-          <div class="mg-li">در پنجره‌ی <span class="mg-k">Navigator</span> روی بخش <span class="mg-k">Services</span> ← <span class="mg-k">TradePlanSyncService</span> راست‌کلیک کن ← <span class="mg-k">Add service</span></div>
-          <div class="mg-li">در پنجره‌ی باز‌شده توکن را در تب <span class="mg-k">Inputs</span> جای‌گذاری کن و <span class="mg-k">OK</span> — سرویس خودش شروع می‌شود (اگر نشد: راست‌کلیک ← <span class="mg-k">Start</span>)</div>
-          <div class="mg-li">نه چارت لازم دارد، نه دکمه‌ی <span class="mg-k">Algo Trading</span> ✅ — بررسی موفقیت: تب <span class="mg-k">Experts</span> پیام <span class="mg-k">started for account</span></div>
-          <div class="mg-note">💡 اگر قبلاً اکسپرت TradePlanSync را با توکن راه انداخته بودی، سرویس همان توکن را خودکار پیدا می‌کند و می‌توانی ورودی توکن را خالی بگذاری. (نیاز به متاتریدر ۵ به‌روز — همه‌ی نسخه‌های چند سال اخیر بخش Services را دارند.)</div>
+          <div class="mg-note">دقت کن: پوشه‌ی <b>Services</b>، نه Experts — تنها تفاوت نصبِ سرویس با اکسپرت همین است.</div>
+        </div>
+      </div>
+
+      <div class="mg-step mg-svc">
+        <div class="mg-step-head"><span class="mg-num mg-num-svc">۳</span>اجازه‌ی اینترنت + کپی توکن</div>
+        <div class="mg-step-body">
+          <div class="mg-li">برو به <span class="mg-k">Tools</span> ← <span class="mg-k">Options</span> ← <span class="mg-k">Expert Advisors</span></div>
+          <div class="mg-li">تیک <span class="mg-k">Allow WebRequest for listed URL</span> را بزن، این آدرس را اضافه کن و <span class="mg-k">OK</span>:</div>
+          <div class="mg-code">
+            <code>https://lrcsbamzdoldopjklnqh.supabase.co</code>
+            <button type="button" onclick="mt5CopyText('https://lrcsbamzdoldopjklnqh.supabase.co')" title="کپی">📋</button>
+          </div>
+          <div class="mg-li">توکن اتصال را از صفحه‌ی تنظیمات همین برنامه کپی کن:</div>
+          <button type="button" class="mg-settings-btn" onclick="mt5GuideGoSettings()">⚙️ برو به تنظیمات و کپی توکن</button>
+          <div class="mg-note">💡 اگر قبلاً روش ۱ (اکسپرت) را راه انداخته بودی، هر دوی این کارها انجام شده — از این قدم رد شو؛ سرویس حتی توکن را هم خودش پیدا می‌کند.</div>
+        </div>
+      </div>
+
+      <div class="mg-step mg-svc">
+        <div class="mg-step-head"><span class="mg-num mg-num-svc">۴</span>روشن کردن سرویس</div>
+        <div class="mg-step-body">
+          <div class="mg-li">در پنجره‌ی <span class="mg-k">Navigator</span> (سمت چپ متاتریدر — اگر بسته است، <span class="mg-k">Ctrl+N</span>) بخش <span class="mg-k">Services</span> را پیدا کن</div>
+          <div class="mg-li">روی <span class="mg-k">TradePlanSyncService</span> راست‌کلیک کن ← <span class="mg-k">Add service</span></div>
+          <div class="mg-li">در پنجره‌ای که باز می‌شود، در تب <span class="mg-k">Inputs</span> توکن را در خانه‌ی «توکن اتصال» جای‌گذاری کن و <span class="mg-k">OK</span> — <b>فقط بار اول</b>؛ بعداً خودش یادش می‌ماند</div>
+          <div class="mg-li">سرویس خودکار روشن می‌شود و کنار اسمش علامت سبز ▶ می‌آید؛ اگر روشن نشد: راست‌کلیک ← <span class="mg-k">Start</span></div>
+        </div>
+      </div>
+
+      <div class="mg-step mg-ok">
+        <div class="mg-step-head"><span class="mg-num">✓</span>از کجا بفهمم سرویس وصل شد؟</div>
+        <div class="mg-step-body">
+          <div class="mg-li">در <span class="mg-k">Navigator</span> کنار <span class="mg-k">TradePlanSyncService</span> علامت سبز ▶ روشن است</div>
+          <div class="mg-li">تب <span class="mg-k">Experts</span> پایین متاتریدر: پیام <span class="mg-k">started for account</span></div>
+          <div class="mg-li">یک معامله ببند — پیام <span class="mg-k">batch sent OK</span> می‌آید و در ژورنال ثبت می‌شود 🎉</div>
+          <div class="mg-li">اگر سرویس بلافاصله خاموش شد (■ خاکستری)، یعنی توکن وارد نشده — راست‌کلیک ← <span class="mg-k">Delete</span> و دوباره <span class="mg-k">Add service</span> با توکن</div>
+          <div class="mg-note">💡 سرویس به چارت و دکمه‌ی Algo Trading نیازی ندارد و تا وقتی متاتریدر باز باشد، در پس‌زمینه کار می‌کند.</div>
         </div>
       </div>
 
@@ -4830,7 +4919,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       </svg>
       <span class="cl-handle">trade.planfx</span>
     </a>
-    <div class="credit-text" id="app-version-line" style="font-size:10px;color:var(--text-dim);margin-top:3px">نسخه برنامه: 77.0 — اکسپرت متاتریدر: v1.20</div>
+    <div class="credit-text" id="app-version-line" style="font-size:10px;color:var(--text-dim);margin-top:3px">نسخه برنامه: 77.5 — اکسپرت متاتریدر: v1.30</div>
   </div>
   </div><!-- /set-cols -->
 </div>
@@ -10160,7 +10249,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='77.4';
+const APP_VERSION='77.5';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
