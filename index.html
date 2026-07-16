@@ -109,11 +109,17 @@ textarea::placeholder,input::placeholder{color:var(--text-dim)}
 .scale-btn{flex:1;aspect-ratio:1;border-radius:7px;border:1px solid rgba(255,255,255,.08);background:transparent;font-family:'Vazirmatn',sans-serif;font-size:12px;font-weight:700;color:var(--text-muted);cursor:pointer;transition:all var(--tr)}
 .scale-btn.active{background:var(--gold);color:#0b1628;border-color:var(--gold)}
 
-/* SETUP TABS */
-.setup-tabs{display:flex;padding:11px 15px 0;gap:7px;overflow-x:auto;scrollbar-width:none}
-.setup-tabs::-webkit-scrollbar{display:none}
-.setup-tab{flex-shrink:0;padding:7px 13px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.08);background:transparent;color:var(--text-muted);transition:all var(--tr)}
-.setup-tab.active{background:var(--gold);color:#0b1628;border-color:var(--gold)}
+/* SETUP TABS (+ JOURNAL TABS — همان استایل) */
+.setup-tabs,.journal-tabs{display:flex;padding:11px 15px 0;gap:7px;overflow-x:auto;scrollbar-width:none}
+.setup-tabs::-webkit-scrollbar,.journal-tabs::-webkit-scrollbar{display:none}
+.setup-tab,.journal-tab{flex-shrink:0;padding:7px 13px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.08);background:transparent;color:var(--text-muted);transition:all var(--tr)}
+.setup-tab.active,.journal-tab.active{background:var(--gold);color:#0b1628;border-color:var(--gold)}
+
+/* JOURNAL PANELS */
+.journal-panel{display:none}
+.journal-panel.active{display:block}
+.jpanel-empty{margin:26px 15px;padding:52px 20px;border-radius:18px;border:1px dashed rgba(255,255,255,.14);background:rgba(255,255,255,.03);text-align:center;font-size:15px;font-weight:800;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:8px}
+.jpanel-empty span{font-size:12px;font-weight:600;color:var(--text-muted)}
 
 /* ===== STRATEGY (Setup) — selection-based luxury redesign ===== */
 .strat-section{margin:16px 14px 0}
@@ -1148,14 +1154,14 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
    SETUP PAGE — Premium Redesign
    ══════════════════════════════════════════════ */
 
-/* Tabs — pill glassmorphism */
-.setup-tabs{
+/* Tabs — pill glassmorphism (setup + journal) */
+.setup-tabs,.journal-tabs{
   display:flex;padding:12px 14px 0;gap:6px;
   overflow-x:auto;scrollbar-width:none;
   background:linear-gradient(to bottom,rgba(11,22,40,0),rgba(11,22,40,0));
 }
-.setup-tabs::-webkit-scrollbar{display:none}
-.setup-tab{
+.setup-tabs::-webkit-scrollbar,.journal-tabs::-webkit-scrollbar{display:none}
+.setup-tab,.journal-tab{
   flex-shrink:0;padding:8px 16px;border-radius:22px;
   font-family:'Vazirmatn',sans-serif;font-size:12px;font-weight:800;
   cursor:pointer;border:1px solid rgba(255,255,255,.1);
@@ -1164,13 +1170,13 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   white-space:nowrap;
 }
-.setup-tab.active{
+.setup-tab.active,.journal-tab.active{
   background:linear-gradient(135deg,#F4C86A,#e8a020);
   color:#0b1628;border-color:transparent;
   box-shadow:0 4px 18px rgba(232,160,32,.5),inset 0 1px 0 rgba(255,255,255,.35);
   transform:translateY(-1px);
 }
-.setup-tab:active{transform:scale(.96)}
+.setup-tab:active,.journal-tab:active{transform:scale(.96)}
 
 /* Panel */
 .setup-panel{display:none;padding:12px 14px 16px;flex-direction:column;gap:12px}
@@ -4132,6 +4138,16 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
     </div>
   </div>
 
+  <!-- JOURNAL TABS (مثل تب‌های پلن ترید) -->
+  <div class="journal-tabs">
+    <button class="journal-tab active" onclick="switchJournalTab(0)">📒 معاملات</button>
+    <button class="journal-tab" onclick="switchJournalTab(1)">🖼 گالری معاملات</button>
+    <button class="journal-tab" onclick="switchJournalTab(2)">📈 آمار معاملات</button>
+  </div>
+
+  <!-- Panel 0: TRADES — کل محتوای فعلی ژورنال -->
+  <div class="journal-panel active" id="jpanel-trades">
+
   <!-- MT5 ACCOUNT — live balance / deposit / last sync (from MetaTrader) -->
   <div class="acct-card waiting" id="acct-card">
     <div class="acct-top">
@@ -4290,6 +4306,18 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 
   <!-- YEAR CUMULATIVE HERO -->
   <div class="year-hero" id="year-hero"></div>
+
+  </div><!-- /jpanel-trades -->
+
+  <!-- Panel 1: GALLERY -->
+  <div class="journal-panel" id="jpanel-gallery">
+    <div class="jpanel-empty">🖼 گالری معاملات<span>به‌زودی…</span></div>
+  </div>
+
+  <!-- Panel 2: STATS -->
+  <div class="journal-panel" id="jpanel-stats">
+    <div class="jpanel-empty">📈 آمار معاملات<span>به‌زودی…</span></div>
+  </div>
 </div>
 
 <!-- ===== SETUP ===== -->
@@ -5287,6 +5315,13 @@ function switchSetupTab(idx){
   // panel-prop is index 2 in the DOM now (panel-plan=0, panel-checklist=1, panel-prop=2)
   document.querySelectorAll('.setup-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
   if(idx===2){ initPropPanel(); setTimeout(()=>{ propDrawEquityChart(); propSyncFromJournal(); }, 150); }
+}
+
+// ===== JOURNAL TABS =====
+function switchJournalTab(idx){
+  // idx 0=معاملات (محتوای فعلی ژورنال), 1=گالری معاملات, 2=آمار معاملات
+  document.querySelectorAll('.journal-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('.journal-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
 }
 
 // ===== PLAN FIELDS =====
@@ -10206,7 +10241,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='77.7';
+const APP_VERSION='77.8';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
