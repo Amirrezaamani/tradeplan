@@ -4868,24 +4868,6 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 
   <div class="psy-cols">
 
-  <div class="day-nav">
-    <button class="dnav-btn" onclick="psychChangeDay(-1)">‹</button>
-    <button class="dnav-today-btn" onclick="psychGoToday()">امروز</button>
-    <button class="dnav-btn" onclick="psychChangeDay(1)">›</button>
-  </div>
-
-  <div class="psych-date-hero" onclick="openPsychCalendarModal()">
-    <div class="pdh-icon" id="psych-icon">🗓️</div>
-    <div class="pdh-label" id="psych-today-label">امروز</div>
-    <div class="pdh-shamsi" id="psych-date-shamsi"></div>
-    <div class="pdh-greg" id="psych-date-greg"></div>
-    <div class="pdh-pnl-row" id="psych-pnl-row" style="display:none">
-      <span class="pdh-pnl-label" id="psych-pnl-label">سود / ضرر این روز:</span>
-      <span class="pdh-pnl-value" id="psych-pnl-value"></span>
-    </div>
-    <div class="pdh-history-hint">📜 تاریخچه احساسات — برای مشاهده روزهای دیگه لمس کن</div>
-  </div>
-
   <!-- WEEKLY REVIEW — the ritual: last-7-days digest -->
   <div class="week-review" id="week-review"></div>
 
@@ -4894,6 +4876,28 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 
   <!-- MISTAKE HEATMAP — frequency matrix across all recorded trades -->
   <div class="heatmap-card" id="mistake-heatmap"></div>
+
+  <!-- DAY PICKER + EMOTION-HISTORY CALENDAR — below the heatmap.
+       wrapper keeps the ‹امروز› nav and the date hero in the same masonry column on desktop -->
+  <div class="psy-day-block">
+    <div class="day-nav">
+      <button class="dnav-btn" onclick="psychChangeDay(-1)">‹</button>
+      <button class="dnav-today-btn" onclick="psychGoToday()">امروز</button>
+      <button class="dnav-btn" onclick="psychChangeDay(1)">›</button>
+    </div>
+
+    <div class="psych-date-hero" onclick="openPsychCalendarModal()">
+      <div class="pdh-icon" id="psych-icon">🗓️</div>
+      <div class="pdh-label" id="psych-today-label">امروز</div>
+      <div class="pdh-shamsi" id="psych-date-shamsi"></div>
+      <div class="pdh-greg" id="psych-date-greg"></div>
+      <div class="pdh-pnl-row" id="psych-pnl-row" style="display:none">
+        <span class="pdh-pnl-label" id="psych-pnl-label">سود / ضرر این روز:</span>
+        <span class="pdh-pnl-value" id="psych-pnl-value"></span>
+      </div>
+      <div class="pdh-history-hint">📜 تاریخچه احساسات — برای مشاهده روزهای دیگه لمس کن</div>
+    </div>
+  </div>
 
   <div class="positions-section">
     <div class="positions-section-title">
@@ -10796,7 +10800,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='79.0';
+const APP_VERSION='79.1';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
