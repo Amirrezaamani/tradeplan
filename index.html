@@ -507,6 +507,26 @@ input[type="datetime-local"]{width:100%;background:rgba(255,255,255,.05);border:
 .gp-empty{text-align:center;font-size:11px;color:var(--text-dim);line-height:1.8;padding:4px}
 .gp-empty b{color:var(--gold)}
 
+/* HOME — overall stats rings: کل معاملات / روز فعال / وین‌ریت / سود و ضرر */
+.stat-rings{margin:14px 14px 0;padding:15px 14px 16px;border-radius:18px;position:relative;overflow:hidden;background:linear-gradient(150deg,#15233f,#0d1b30 60%,#0a1626);border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 28px rgba(0,0,0,.4)}
+.stat-rings::before{content:'';position:absolute;top:-46px;left:50%;transform:translateX(-50%);width:240px;height:130px;background:radial-gradient(ellipse,rgba(240,184,64,.08),transparent 70%);pointer-events:none}
+.sr-head{font-size:12px;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:7px;position:relative}
+.sr-head-note{font-size:9.5px;font-weight:700;color:var(--text-dim)}
+.sr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 10px;position:relative}
+.sr-item{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
+.sr-ring{position:relative;width:98px;height:98px}
+.sr-ring svg{width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.sr-track{fill:none;stroke:rgba(255,255,255,.07);stroke-width:8}
+.sr-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1.15s cubic-bezier(.33,.85,.3,1)}
+.sr-center{position:absolute;inset:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;border-radius:50%}
+.sr-val{font-size:21px;font-weight:900;line-height:1;direction:ltr;font-variant-numeric:tabular-nums;filter:drop-shadow(0 1px 8px rgba(0,0,0,.6));animation:srPop .55s cubic-bezier(.34,1.4,.4,1) both}
+.sr-val-money{font-size:16.5px}
+.sr-sub{font-size:8.5px;font-weight:700;color:var(--text-dim);line-height:1.4;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-label{font-size:10.5px;font-weight:800;color:var(--text-warm-dim)}
+@keyframes srPop{0%{transform:scale(.5);opacity:0}100%{transform:scale(1);opacity:1}}
+/* تبلت و دسکتاپ باریک (تک‌ستونه): چهار حلقه در یک ردیف */
+@media (min-width:600px) and (max-width:1179px){.sr-grid{grid-template-columns:repeat(4,1fr)}}
+
 /* HOME — open loops (Zeigarnik) */
 .open-loops{margin:14px 14px 0;border-radius:18px;overflow:hidden;cursor:pointer;border:1px solid rgba(245,200,80,.28);box-shadow:0 10px 28px rgba(0,0,0,.4);position:relative}
 .open-loops.done{border-color:rgba(34,197,94,.28)}
@@ -2367,27 +2387,6 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 
 
 /* ── Settings Stats Grid ── */
-.settings-stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:0 14px}
-.ssg-card{
-  border-radius:16px;padding:13px 9px;text-align:center;
-  position:relative;overflow:hidden;
-  border:1px solid;
-  box-shadow:0 4px 14px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.07);
-}
-.ssg-card::before{
-  content:'';position:absolute;top:-16px;left:50%;transform:translateX(-50%);
-  width:56px;height:56px;border-radius:50%;
-  background:radial-gradient(circle,currentColor,transparent 70%);opacity:.12;pointer-events:none;
-}
-.ssg-card.gold{background:linear-gradient(150deg,rgba(40,30,10,.9),rgba(10,24,40,.95));border-color:rgba(244,200,106,.3);color:#F4C86A}
-.ssg-card.blue{background:linear-gradient(150deg,rgba(16,26,54,.9),rgba(10,24,40,.95));border-color:rgba(99,179,255,.3);color:#93c5fd}
-.ssg-card.green{background:linear-gradient(150deg,rgba(10,40,20,.9),rgba(10,24,40,.95));border-color:rgba(52,211,153,.3);color:#34d399}
-.ssg-card.purple{background:linear-gradient(150deg,rgba(30,10,55,.9),rgba(10,24,40,.95));border-color:rgba(168,85,247,.3);color:#c77dff}
-.ssg-card.teal{background:linear-gradient(150deg,rgba(5,38,40,.9),rgba(10,24,40,.95));border-color:rgba(34,197,180,.3);color:#5eead4}
-.ssg-card.red{background:linear-gradient(150deg,rgba(40,8,8,.9),rgba(10,24,40,.95));border-color:rgba(248,113,113,.3);color:#fca5a5}
-.ssg-icon{font-size:16px;margin-bottom:6px;position:relative;z-index:1}
-.ssg-val{font-size:18px;font-weight:900;direction:ltr;position:relative;z-index:1;margin-bottom:3px;filter:drop-shadow(0 1px 4px currentColor)}
-.ssg-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.45);position:relative;z-index:1}
 
 
 /* ── Prop Sync Summary ── */
@@ -3721,16 +3720,6 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
   #panel-plan .strat-section-rules{grid-column:2;grid-row:1/span 3}
   #panel-checklist.active{display:grid;grid-template-columns:1fr 1fr;gap:13px;align-items:start}
   .settings-section{break-after:avoid}
-  /* آمار در دسکتاپ: grid داخل ستون‌های masonry کلیپ می‌شود (باگ fragmentation
-     کروم) — inline-grid عنصر را اتمیک می‌کند تا همیشه دیده شود. باکس هم جمع‌وجورتر. */
-  #page-settings .settings-stats-grid{
-    display:inline-grid;vertical-align:top;box-sizing:border-box;
-    width:calc(100% - 28px);
-    grid-template-columns:repeat(4,1fr);gap:8px;
-  }
-  #page-settings .ssg-card{padding:10px 7px;border-radius:13px}
-  #page-settings .ssg-icon{font-size:14px;margin-bottom:4px}
-  #page-settings .ssg-val{font-size:16px}
 }
 /* mouse niceties — touch devices unaffected */
 @media (hover:hover) and (pointer:fine){
@@ -4094,6 +4083,9 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       <span class="ibb-arrow">›</span>
     </button>
   </div>
+
+  <!-- OVERALL STATS RINGS — کل معاملات / روز فعال / وین‌ریت / سود و ضرر (زیر نمودار عنکبوتی) -->
+  <div class="stat-rings home-rise" id="stat-rings"></div>
 
   <!-- TODAY STATUS — hero card with traffic-light risk guard -->
   <div class="home-today home-rise" id="home-today-card">
@@ -4972,30 +4964,6 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
     <div class="gc-hint">📊 میزان پیشرفت هر هدف به‌صورت زنده در صفحه‌ی خانه نمایش داده می‌شود.</div>
   </div>
 
-  <div class="settings-section"><h2>آمار</h2></div>
-  <div class="settings-stats-grid">
-    <div class="ssg-card gold">
-      <div class="ssg-icon">📊</div>
-      <div class="ssg-val" id="s-total">۰</div>
-      <div class="ssg-label">کل معاملات</div>
-    </div>
-    <div class="ssg-card blue">
-      <div class="ssg-icon">📅</div>
-      <div class="ssg-val" id="s-days">۰</div>
-      <div class="ssg-label">روز فعال</div>
-    </div>
-    <div class="ssg-card green">
-      <div class="ssg-icon">🎯</div>
-      <div class="ssg-val" id="s-winrate">۰٪</div>
-      <div class="ssg-label">وین‌ریت</div>
-    </div>
-    <div class="ssg-card purple">
-      <div class="ssg-icon">💰</div>
-      <div class="ssg-val" id="s-total-pnl">$0</div>
-      <div class="ssg-label">سود / ضرر کل</div>
-    </div>
-  </div>
-
   <div class="settings-section"><h2>🤖 اتصال خودکار متاتریدر ۵</h2></div>
   <div class="mt5link-card" id="mt5-token-wrap">
     <div class="mt5link-desc">با اکسپرت <b>TradePlanSync</b> هر پوزیشنی که در متاتریدر ۵ بسته شود، خودکار با تمام جزئیات (نماد، نوع، حجم، قیمت‌ها، زمان و سود/ضرر خالص شامل کمیسیون و سواپ) در ژورنال ثبت می‌شود. با هر بار روشن شدن متاتریدر، کل ۲ ماه اخیر هم دوباره بررسی می‌شود — پوزیشن‌های موبایل و حتی ثبت‌های دستی اشتباه، با ارقام دقیق متاتریدر تصحیح می‌شوند.</div>
@@ -5517,7 +5485,7 @@ function showPage(name){
   document.getElementById('nav-'+name).classList.add('active');
   currentPage=name;
   if(name==='home') updateHome();
-  if(name==='settings'){ updateSettings(); if(typeof mt5LoadToken==='function') mt5LoadToken(); if(typeof donateLoad==='function') donateLoad(); }
+  if(name==='settings'){ if(typeof mt5LoadToken==='function') mt5LoadToken(); if(typeof donateLoad==='function') donateLoad(); }
   if(name==='setup') renderStrategy();
   if(name==='journal'){ renderJournal(); renderYearCumulative(true); animateMonthlyPnl(); if(typeof updateMt5Banner==='function') updateMt5Banner(); if(typeof mtCloudSync==='function') mtCloudSync(); if(typeof renderMt5Account==='function'){ renderMt5Account(); mt5LoadAccount(); } }
   if(name==='psychology') renderPsychology();
@@ -8267,7 +8235,8 @@ function updateHome(){
   renderGoldenRules();
   const qEl=document.getElementById('daily-quote'); if(qEl) qEl.textContent=QUOTES[currentQuoteIndex];
 
-  // ----- GOALS PROGRESS + BEST DAY -----
+  // ----- STAT RINGS + GOALS PROGRESS + BEST DAY -----
+  renderStatRings(true);
   renderGoalsProgress(true);
   renderOpenLoops();
   renderBestDay();
@@ -8968,10 +8937,8 @@ function liveSaveDay(){
   const chartM=(typeof jMonth!=='undefined'&&jMonth!==null)?jMonth:now2.getMonth();
   chartViewYear=chartY; chartViewMonth=chartM;
   drawChart(chartY,chartM);
-  // also refresh home chart if viewing home
+  // also refresh home chart + stat rings if viewing home
   if(currentPage==='home') updateHome();
-  // keep Settings win-rate/stats live too, in case it's somehow the active page
-  if(currentPage==='settings') updateSettings();
   // if the psychology page happens to be open on this exact same date, refresh it live
   if(currentPage==='psychology'&&typeof getPsychDateKey==='function'&&getPsychDateKey()===activeDayKey){
     renderPsychology();
@@ -9018,7 +8985,6 @@ function deleteDayEntry(){
   const chartM=(typeof jMonth!=='undefined'&&jMonth!==null)?jMonth:now2.getMonth();
   drawChart(chartY,chartM);
   if(currentPage==='home') updateHome();
-  if(currentPage==='settings') updateSettings();
   showToast('🗑️ حذف شد');
 }
 
@@ -10567,64 +10533,103 @@ function roundRect(ctx,x,y,w,h,r){
   ctx.closePath();
 }
 
-// ===== SETTINGS =====
-// Counts winning vs losing POSITIONS across all dates recorded in the
-// Psychology page (based on each position's own pnlSign/pnlValue, not the
-// Journal's daily aggregate) — only counts positions where an actual amount
-// was entered.
-// Position stats sourced directly from journal: counts all individual trade
-// days as "positions". Win = day with positive pnl. Loss = day with negative pnl.
-// This ensures the counts always match exactly what's visible in the journal.
-function getAllTimePositionStats(){
-  let winPositions=0,lossPositions=0;
-  Object.values(data.journal||{}).forEach(entry=>{
-    if(!entry||entry.trades===undefined) return;
-    const t=entry.trades||0;
-    if(t<=0) return;
-    if(entry.pnl>0) winPositions+=t;
-    else if(entry.pnl<0) lossPositions+=t;
-  });
-  return{winPositions,lossPositions};
-}
-
-function updateSettings(){
-  // آمار کامل از ژورنال — محاسبه مستقیم از data.journal
+// ===== OVERALL STATS (حلقه‌های آمار داشبورد — زیر نمودار عنکبوتی) =====
+// آمار کامل از ژورنال — محاسبه مستقیم از data.journal (همان منطق دقیقی که
+// قبلاً در تنظیمات بود): اگر روزی پوزیشن‌های جزئی دارد از خودشان، وگرنه از
+// جمع روزانه. برد/باخت هر پوزیشن از pnlSign خودش.
+function computeAllTimeStats(){
   let totalTrades=0, winTrades=0, lossTrades=0;
-  let totalPnl=0, activeDays=0;
+  let totalPnl=0, activeDays=0, grossWin=0, grossLoss=0;
 
   Object.values(data.journal||{}).forEach(entry=>{
     if(!entry||entry.trades<=0) return;
     activeDays++;
-    totalPnl += (entry.pnl||0);
+    const pnl=entry.pnl||0;
+    totalPnl+=pnl;
+    if(pnl>0) grossWin+=pnl; else if(pnl<0) grossLoss+=-pnl;
     const positions = entry.positions||[];
     if(positions.length>0){
       positions.forEach(pos=>{
         totalTrades++;
-        const val=parseFloat(pos.pnlValue)||0;
         if(pos.pnlSign==='profit') winTrades++;
         else lossTrades++;
       });
     } else {
       const cnt=entry.trades||1;
       totalTrades+=cnt;
-      if((entry.pnl||0)>0)      winTrades+=cnt;
-      else if((entry.pnl||0)<0) lossTrades+=cnt;
+      if(pnl>0)      winTrades+=cnt;
+      else if(pnl<0) lossTrades+=cnt;
     }
   });
 
   const winRate=totalTrades>0?Math.round(winTrades/totalTrades*100):0;
+  return {totalTrades,winTrades,lossTrades,activeDays,totalPnl,grossWin,grossLoss,winRate};
+}
 
-  const setText=(id,v)=>{ const el=document.getElementById(id); if(el) el.textContent=v; };
-  setText('s-total',    toFA(totalTrades));
-  setText('s-days',     toFA(activeDays));
-  setText('s-winrate',  toFA(winRate)+'٪');
+// پرشدگی حلقه‌های شمارشی: پیشرفت تا نقطه‌عطف بعدی (۱۰، ۲۵، ۵۰، …)
+function nextStatMilestone(v,steps){ for(const s of steps){ if(v<s) return s; } return null; }
 
-  // سود/ضرر کل
-  const pnlEl=document.getElementById('s-total-pnl');
-  if(pnlEl){
-    pnlEl.textContent=fmtUSD(totalPnl);
-    pnlEl.style.color=totalPnl>=0?'#34d399':'#fca5a5';
-  }
+function renderStatRings(animate){
+  const el=document.getElementById('stat-rings'); if(!el) return;
+  const s=computeAllTimeStats();
+
+  const tradeGoal=nextStatMilestone(s.totalTrades,[10,25,50,100,250,500,1000,2500,5000,10000]);
+  const dayGoal  =nextStatMilestone(s.activeDays, [7,14,30,60,90,180,270,365,730,1500]);
+  // حلقه‌ی سود/ضرر: سهم سود ناخالص از کل گردش (سود + قدرمطلق ضرر)
+  const gross=s.grossWin+s.grossLoss;
+  const pnlPos=s.totalPnl>=0;
+  const pnlShare=gross>0?Math.round((pnlPos?s.grossWin:s.grossLoss)/gross*100):0;
+
+  const rings=[
+    {icon:'📊',label:'کل معاملات',val:toFA(s.totalTrades),valCls:'',
+     sub:tradeGoal?`تا نشانِ بعدی: ${toFA(tradeGoal)}`:'فراتر از همه‌ی نشان‌ها 🚀',
+     pct:tradeGoal?s.totalTrades/tradeGoal*100:100,
+     g:['#7cc4ff','#2563eb'],glow:'rgba(59,130,246,.55)',c:'#93c5fd'},
+    {icon:'📅',label:'روز فعال',val:toFA(s.activeDays),valCls:'',
+     sub:dayGoal?`تا نشانِ بعدی: ${toFA(dayGoal)}`:'فراتر از همه‌ی نشان‌ها 🚀',
+     pct:dayGoal?s.activeDays/dayGoal*100:100,
+     g:['#ffd97a','#e8a020'],glow:'rgba(240,184,64,.5)',c:'#F4C86A'},
+    {icon:'🎯',label:'وین‌ریت',val:toFA(s.winRate)+'٪',valCls:'',
+     sub:s.totalTrades>0?`${toFA(s.winTrades)} برد از ${toFA(s.totalTrades)}`:'هنوز معامله‌ای نیست',
+     pct:s.winRate,
+     g:['#6ee7b7','#059669'],glow:'rgba(52,211,153,.5)',c:'#34d399'},
+    {icon:'💰',label:'سود / ضرر کل',val:fmtUSDshort(s.totalPnl),valCls:'sr-val-money',
+     sub:gross>0?`${toFA(pnlShare)}٪ ${pnlPos?'سودِ ناخالص':'ضررِ ناخالص'}`:'هنوز معامله‌ای نیست',
+     pct:gross>0?pnlShare:0,
+     g:pnlPos?['#6ee7b7','#059669']:['#fca5a5','#dc2626'],
+     glow:pnlPos?'rgba(52,211,153,.5)':'rgba(248,113,113,.5)',
+     c:pnlPos?'#34d399':'#f87171'}
+  ];
+
+  const C=2*Math.PI*42;
+  let grid='';
+  rings.forEach((r,i)=>{
+    const pct=Math.max(0,Math.min(100,r.pct));
+    const off=C*(1-pct/100);
+    grid+=`<div class="sr-item">
+      <div class="sr-ring">
+        <svg viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="srg${i}" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="${r.g[0]}"/>
+              <stop offset="100%" stop-color="${r.g[1]}"/>
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="50" r="42" class="sr-track"></circle>
+          <circle cx="50" cy="50" r="42" class="sr-fill" data-off="${off.toFixed(1)}"
+            style="stroke:url(#srg${i});filter:drop-shadow(0 0 5px ${r.glow});stroke-dasharray:${C.toFixed(1)};stroke-dashoffset:${animate?C.toFixed(1):off.toFixed(1)}"></circle>
+        </svg>
+        <div class="sr-center">
+          <div class="sr-val ${r.valCls}" style="color:${r.c}">${r.val}</div>
+          <div class="sr-sub">${r.sub}</div>
+        </div>
+      </div>
+      <div class="sr-label">${r.icon} ${r.label}</div>
+    </div>`;
+  });
+
+  el.innerHTML=`<div class="sr-head">📈 آمار کل عملکرد <span class="sr-head-note">از ابتدای فعالیت · همه‌ی معاملات</span></div><div class="sr-grid">${grid}</div>`;
+  if(animate) requestAnimationFrame(()=>{ el.querySelectorAll('.sr-fill[data-off]').forEach(c=>{ c.style.strokeDashoffset=c.dataset.off; }); });
 }
 
 // name bind
@@ -10791,7 +10796,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='78.1';
+const APP_VERSION='79.0';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
