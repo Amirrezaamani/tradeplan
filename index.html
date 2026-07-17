@@ -3710,8 +3710,6 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
   #page-journal .wsc-label{font-size:12px}
   #page-journal .wsc-val{font-size:clamp(18px,1.9vw,27px)}
   #page-journal .wsc-trades{font-size:12px}
-  /* نمودار سود تجمعی: باکس محدودتر و وسط‌چین تا حتی با زوم هم کامل دیده شود */
-  #page-journal .year-hero{max-width:740px;margin-left:auto;margin-right:auto}
   /* setup page (پلن ترید): two-column desktop layout.
      NOTE: panels are flex containers, so column-count is ignored — grid is used instead. */
   .setup-panel.active{padding-bottom:26px}
@@ -4123,6 +4121,28 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
     <div class="ht-message" id="ht-message"></div>
   </div>
 
+  <!-- HERO CHART — monthly P&L with prev/next month navigation (below the today card) -->
+  <div class="home-chart-hero home-rise">
+    <div class="hch-top-row">
+      <div class="hch-label">📊 عملکرد ماهانه</div>
+      <div class="hch-top-controls">
+        <button class="hch-today-btn" onclick="chartGoToToday()">امروز</button>
+        <div class="hch-month-nav">
+          <button class="hch-nav-btn" onclick="chartChangeMonth(-1)" title="ماه قبل" aria-label="ماه قبل">‹</button>
+          <div class="hch-month-badge" id="chart-month-label"></div>
+          <button class="hch-nav-btn" onclick="chartChangeMonth(1)" title="ماه بعد" aria-label="ماه بعد">›</button>
+        </div>
+      </div>
+    </div>
+    <div class="hch-total-row">
+      <span class="hch-total-value zero" id="chart-total-label">$0.00</span>
+    </div>
+    <canvas id="pnl-chart"></canvas>
+  </div>
+
+  <!-- YEAR CUMULATIVE HERO — moved here from the journal page -->
+  <div class="year-hero" id="year-hero"></div>
+
   <!-- GOALS PROGRESS — daily/weekly/monthly/yearly rings -->
   <div class="goals-progress home-rise" id="goals-progress"></div>
 
@@ -4172,25 +4192,6 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 
   <!-- BEST DAY — personal record -->
   <div class="best-day home-rise" id="best-day"></div>
-
-  <!-- HERO CHART — monthly P&L with prev/next month navigation -->
-  <div class="home-chart-hero home-rise">
-    <div class="hch-top-row">
-      <div class="hch-label">📊 عملکرد ماهانه</div>
-      <div class="hch-top-controls">
-        <button class="hch-today-btn" onclick="chartGoToToday()">امروز</button>
-        <div class="hch-month-nav">
-          <button class="hch-nav-btn" onclick="chartChangeMonth(-1)" title="ماه قبل" aria-label="ماه قبل">‹</button>
-          <div class="hch-month-badge" id="chart-month-label"></div>
-          <button class="hch-nav-btn" onclick="chartChangeMonth(1)" title="ماه بعد" aria-label="ماه بعد">›</button>
-        </div>
-      </div>
-    </div>
-    <div class="hch-total-row">
-      <span class="hch-total-value zero" id="chart-total-label">$0.00</span>
-    </div>
-    <canvas id="pnl-chart"></canvas>
-  </div>
 
   <!-- INSIGHT CARD — smart, data-driven -->
   <div class="home-insight home-rise" id="home-insight">
@@ -4401,9 +4402,6 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
     <div class="jstat"><div class="jstat-val green" id="js-total-profit">$0</div><div class="jstat-label">سود کل ماه</div></div>
     <div class="jstat"><div class="jstat-val red" id="js-total-loss">$0</div><div class="jstat-label">ضرر کل ماه</div></div>
   </div>
-
-  <!-- YEAR CUMULATIVE HERO -->
-  <div class="year-hero" id="year-hero"></div>
 
   </div><!-- /jpanel-trades -->
 
@@ -5491,7 +5489,7 @@ function showPage(name){
   if(name==='home') updateHome();
   if(name==='settings'){ if(typeof mt5LoadToken==='function') mt5LoadToken(); if(typeof donateLoad==='function') donateLoad(); }
   if(name==='setup') renderStrategy();
-  if(name==='journal'){ renderJournal(); renderYearCumulative(true); animateMonthlyPnl(); if(typeof updateMt5Banner==='function') updateMt5Banner(); if(typeof mtCloudSync==='function') mtCloudSync(); if(typeof renderMt5Account==='function'){ renderMt5Account(); mt5LoadAccount(); } }
+  if(name==='journal'){ renderJournal(); animateMonthlyPnl(); if(typeof updateMt5Banner==='function') updateMt5Banner(); if(typeof mtCloudSync==='function') mtCloudSync(); if(typeof renderMt5Account==='function'){ renderMt5Account(); mt5LoadAccount(); } }
   if(name==='psychology') renderPsychology();
 }
 
@@ -8229,6 +8227,9 @@ function updateHome(){
   }
   drawChart(chartViewYear,chartViewMonth);
 
+  // ----- YEAR CUMULATIVE (moved from journal) -----
+  renderYearCumulative(true);
+
   // ----- INSIGHT -----
   const hiText=document.getElementById('hi-text'); if(hiText) hiText.textContent=generateInsight();
 
@@ -10800,7 +10801,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='79.1';
+const APP_VERSION='79.2';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
@@ -10914,7 +10915,7 @@ async function mtCloudSync(){
     updateMt5Banner();
     if(res.imported+res.updated>0){
       showToast('📥 '+toFA(res.imported+res.updated)+' روز از متاتریدر همگام شد',3500);
-      if(currentPage==='journal'){ renderJournal(); renderYearCumulative(true); }
+      if(currentPage==='journal'){ renderJournal(); }
       if(currentPage==='home') updateHome();
       if(currentPage==='psychology') renderPsychology();
       if(typeof drawChart==='function'&&typeof chartViewYear!=='undefined'&&chartViewYear!==null) drawChart(chartViewYear,chartViewMonth);
