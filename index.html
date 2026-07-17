@@ -1086,15 +1086,35 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
    HOME DASHBOARD — v33 redesign
    ============================ */
 @keyframes homeRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-#page-home>.home-rise{opacity:0;animation:homeRise .5s cubic-bezier(.4,0,.2,1) forwards}
-#page-home>.home-rise:nth-child(2){animation-delay:.04s}
-#page-home>.home-rise:nth-child(3){animation-delay:.09s}
-#page-home>.home-rise:nth-child(4){animation-delay:.14s}
-#page-home>.home-rise:nth-child(5){animation-delay:.19s}
-#page-home>.home-rise:nth-child(6){animation-delay:.24s}
-#page-home>.home-rise:nth-child(7){animation-delay:.29s}
-#page-home>.home-rise:nth-child(8){animation-delay:.34s}
-#page-home>.home-rise:nth-child(9){animation-delay:.39s}
+.home-cols>.home-rise{opacity:0;animation:homeRise .5s cubic-bezier(.4,0,.2,1) forwards}
+.home-cols>.home-rise:nth-child(2){animation-delay:.04s}
+.home-cols>.home-rise:nth-child(3){animation-delay:.09s}
+.home-cols>.home-rise:nth-child(4){animation-delay:.14s}
+.home-cols>.home-rise:nth-child(5){animation-delay:.19s}
+.home-cols>.home-rise:nth-child(6){animation-delay:.24s}
+.home-cols>.home-rise:nth-child(7){animation-delay:.29s}
+.home-cols>.home-rise:nth-child(8){animation-delay:.34s}
+.home-cols>.home-rise:nth-child(9){animation-delay:.39s}
+
+/* ===== ADVANCED STATS (dashboard analytics: time / quality / psychology) ===== */
+.adv-stats{margin:0 14px;background:var(--navy-card);border:1px solid var(--gold-border);border-radius:16px;padding:14px 13px 13px;position:relative;overflow:hidden}
+.as-head{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:800;color:var(--gold)}
+.as-head .as-note{font-size:9px;font-weight:600;color:var(--text-dim);margin-right:auto;letter-spacing:.2px}
+.as-empty{padding:16px 8px 8px;text-align:center;color:var(--text-muted);font-size:12px;line-height:1.8}
+.as-empty .as-empty-ic{font-size:26px;display:block;margin-bottom:6px;opacity:.85}
+.as-group{margin-top:13px}
+.as-group-title{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:800;color:var(--text-warm-dim);margin-bottom:8px}
+.as-group-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold-border),transparent)}
+.as-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(82px,1fr));gap:7px}
+.as-tile{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:11px;padding:8px 9px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.as-t-label{font-size:9.5px;font-weight:700;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.as-t-val{font-size:15px;font-weight:800;color:var(--text);line-height:1.12;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:right}
+.as-t-sub{font-size:9px;font-weight:600;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.as-t-val.pos{color:#34d399}.as-t-val.neg{color:#f87171}.as-t-val.gold{color:var(--gold)}
+.as-t-val.dim{color:var(--text-muted);font-size:12.5px}
+.as-tile.span2{grid-column:span 2}
+.as-wr-bar{height:6px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:5px}
+.as-wr-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#22c55e,#6ee7b7);box-shadow:0 0 8px rgba(52,211,153,.45);transition:width .9s cubic-bezier(.4,0,.2,1)}
 
 @keyframes lightPulse{0%{box-shadow:0 0 0 0 var(--pulse-c)}70%,100%{box-shadow:0 0 0 7px transparent}}
 
@@ -3685,7 +3705,11 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
   /* full-width strips above the columns */
   .home-brand-bar,.journal-header,.psych-header,.page-header,.setup-tabs{column-span:all}
   /* masonry column layouts per page */
-  #page-home{column-count:3;column-gap:2px;padding:0 10px 26px}
+  /* داشبورد: ستون‌بندی روی wrapper داخلی (.home-cols) با ارتفاع آزاد — مثل
+     روانشناسی و تنظیمات — تا محتوای بلند به‌جای رفتن به ستون نامرئیِ بیرونِ
+     صفحه‌ی ارتفاع‌ثابت، به‌صورت عمودی اسکرول شود و همه‌ی کارت‌ها دیده شوند */
+  #page-home{padding:0 10px 26px}
+  #page-home .home-cols{column-count:3;column-gap:2px}
   /* روانشناسی: ستون‌بندی روی wrapper با ارتفاع آزاد (مثل تنظیمات) تا
      محتوای اضافه اسکرول شود، نه اینکه به ستون نامرئی بیرون صفحه برود */
   #page-psychology{padding:0 10px 26px}
@@ -3695,7 +3719,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
      بیرون صفحه می‌رود و آخرِ صفحه (دونیت و…) دیده نمی‌شود. */
   #page-settings{padding:0 10px 26px}
   #page-settings .set-cols{column-count:2;column-gap:2px}
-  #page-home>*,#page-psychology .psy-cols>*,#page-settings .set-cols>*{break-inside:avoid}
+  #page-home .home-cols>*,#page-psychology .psy-cols>*,#page-settings .set-cols>*{break-inside:avoid}
   /* ژورنال در دسکتاپ: تک‌ستونه مثل موبایل — تقویم تمام‌عرض با خانه‌های بزرگ،
      بقیه‌ی بخش‌ها زیرش با اسکرول عادی */
   #page-journal{padding:0 12px 30px}
@@ -4000,6 +4024,8 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
     </div>
   </div>
 
+  <div class="home-cols">
+
   <!-- TRADING IDENTITY CARD — dashboard hero, tap to flip, tier theme by level -->
   <div class="id-card-wrap home-rise">
     <div class="id-card tier-navy" id="id-card" onclick="flipIdCard()">
@@ -4202,7 +4228,8 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
     </div>
   </div>
 
-
+  <!-- ADVANCED STATS — data-driven analytics (time / quality / psychology). Rendered by renderAdvancedStats() -->
+  <div class="adv-stats home-rise" id="adv-stats"></div>
 
   <!-- MOTIVATIONAL QUOTE (bottom) -->
   <div class="home-quote-box home-rise">
@@ -4210,6 +4237,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
     <div class="welcome-quote" id="daily-quote"></div>
   </div>
 
+  </div><!-- /home-cols -->
 </div>
 
 <!-- ===== JOURNAL ===== -->
@@ -8237,6 +8265,7 @@ function updateHome(){
 
   // ----- STAT RINGS + GOALS PROGRESS + BEST DAY -----
   renderStatRings(true);
+  renderAdvancedStats();
   renderGoalsProgress(true);
   renderOpenLoops();
   renderBestDay();
@@ -10632,6 +10661,136 @@ function renderStatRings(animate){
   if(animate) requestAnimationFrame(()=>{ el.querySelectorAll('.sr-fill[data-off]').forEach(c=>{ c.style.strokeDashoffset=c.dataset.off; }); });
 }
 
+// ═══════════════ ADVANCED STATS — تحلیل هوشمند عملکرد (زمان / کیفیت / روانشناسی) ═══════════════
+// همه‌ی داده‌ها زنده از data.journal (کیفیت و زمان) و data.psychology (روانشناسی)
+// خوانده می‌شود؛ با هر تغییرِ داده، از داخل updateHome() دوباره رندر می‌شود.
+function renderAdvancedStats(){
+  const el=document.getElementById('adv-stats'); if(!el) return;
+
+  const bump=(o,k,v)=>{ o[k]=(o[k]||0)+v; };
+  const parseMt=s=>{ // "YYYY.MM.DD HH:MM:SS" → ms (اسلش + فاصله برای پارس مطمئن در مرورگر)
+    if(!s||s.length<10) return NaN;
+    return Date.parse(s.slice(0,10).replace(/\./g,'/')+' '+((s.slice(11)||'00:00:00').trim()||'00:00:00'));
+  };
+
+  // ── جمع‌آوری معاملات (کیفیت + زمان) ──
+  let winC=0, lossC=0, grossWin=0, grossLoss=0;
+  const hourPnl={}, dowPnl={}, monPnl={};
+  let holdSum=0, holdN=0;
+
+  Object.entries(data.journal||{}).forEach(([k,e])=>{
+    if(!e||!(e.trades>0)) return;
+    const pos=e.positions||[];
+    if(pos.length){
+      pos.forEach(p=>{
+        const v=parseFloat(p.pnlValue)||0;
+        const loss=(p.pnlSign==='loss');
+        const pnl=loss?-v:v;
+        if(v>0){ if(loss){lossC++;grossLoss+=v;} else {winC++;grossWin+=v;} }
+        const ot=p.mtOpenTime; let d=null;
+        if(ot&&/^\d{4}\.\d{2}\.\d{2}/.test(ot)){
+          const hh=parseInt(ot.substr(11,2),10);
+          if(hh>=0&&hh<=23) bump(hourPnl,hh,pnl);
+          d=new Date(ot.slice(0,10).replace(/\./g,'-')+'T00:00:00');
+          const o=parseMt(p.mtOpenTime), c=parseMt(p.mtCloseTime);
+          if(isFinite(o)&&isFinite(c)&&c>o){ const m=(c-o)/60000; if(m<60*24*45){ holdSum+=m; holdN++; } }
+        } else { d=new Date(k+'T00:00:00'); }
+        if(d&&!isNaN(d)){
+          bump(dowPnl,d.toLocaleDateString('fa-IR',{weekday:'long'}),pnl);
+          bump(monPnl,d.toLocaleDateString('fa-IR',{month:'long'}),pnl);
+        }
+      });
+    } else {
+      // روزهای بدون جزئیاتِ معامله: کل روز = یک معامله‌ی فرضی
+      const pnl=e.pnl||0;
+      if(pnl>0){ winC++; grossWin+=pnl; } else if(pnl<0){ lossC++; grossLoss+=-pnl; }
+      const d=new Date(k+'T00:00:00');
+      if(!isNaN(d)){
+        bump(dowPnl,d.toLocaleDateString('fa-IR',{weekday:'long'}),pnl);
+        bump(monPnl,d.toLocaleDateString('fa-IR',{month:'long'}),pnl);
+      }
+    }
+  });
+
+  const total=winC+lossC;
+  if(total<1){
+    el.innerHTML=`<div class="as-head">📊 تحلیل هوشمند عملکرد</div>`+
+      `<div class="as-empty"><span class="as-empty-ic">📈</span>هنوز معامله‌ای ثبت نشده.<br>`+
+      `به‌محض ثبتِ معاملات، تحلیل کاملِ زمان، کیفیت و روانشناسیِ معاملاتت همین‌جا ظاهر می‌شود.</div>`;
+    return;
+  }
+
+  // ── کیفیت ──
+  const winRate=Math.round(winC/total*100);
+  const avgWin=winC?grossWin/winC:0;
+  const avgLoss=lossC?grossLoss/lossC:0;
+  const pf=grossLoss>0?grossWin/grossLoss:(grossWin>0?null:0); // null → ∞
+  const expc=(grossWin-grossLoss)/total;
+  const rr=avgLoss>0?avgWin/avgLoss:(avgWin>0?null:0);
+
+  // ── زمان ──
+  const pick=(o,better)=>{ let bk=null,bv=null; Object.entries(o).forEach(([k,v])=>{ if(bk===null||better(v,bv)){bk=k;bv=v;} }); return bk===null?null:[bk,bv]; };
+  const maxOf=o=>pick(o,(a,b)=>a>b), minOf=o=>pick(o,(a,b)=>a<b);
+  const bestHour=maxOf(hourPnl), worstHour=minOf(hourPnl);
+  const bestDow=maxOf(dowPnl), bestMon=maxOf(monPnl);
+  const fmtHour=h=>h===null?'—':toFA(String(h[0]).padStart(2,'0'))+':۰۰';
+  const avgHold=holdN?holdSum/holdN:0;
+  const fmtDur=m=>{
+    if(!m) return '—';
+    if(m<60) return toFA(Math.round(m))+' دقیقه';
+    const h=Math.floor(m/60), mm=Math.round(m%60);
+    return toFA(h)+' ساعت'+(mm?' '+toFA(mm)+'د':'');
+  };
+
+  // ── روانشناسی ──
+  const mkAll={}, mkLoss={};
+  Object.values(data.psychology||{}).forEach(day=>{
+    (day.positions||[]).forEach(p=>{
+      const loss=(p.pnlSign==='loss');
+      (p.mistakes||[]).forEach(m=>{
+        if(!m||m==='none') return;
+        mkAll[m]=(mkAll[m]||0)+1;
+        if(loss) mkLoss[m]=(mkLoss[m]||0)+1;
+      });
+    });
+  });
+  const mkLabel=key=>{ const L=(typeof MISTAKE_LABELS!=='undefined')&&MISTAKE_LABELS[key]; return L?`${L.emoji} ${L.text}`:'—'; };
+  const topAll=maxOf(mkAll), topLoss=maxOf(mkLoss);
+
+  // ── ساخت HTML ──
+  const pfTxt=pf===null?'∞':pf.toFixed(2);
+  const pfCls=pf===null?'pos':(pf>=1.5?'pos':pf>=1?'gold':'neg');
+  const rrTxt=rr===null?'∞':rr.toFixed(2);
+  const expCls=expc>0?'pos':expc<0?'neg':'';
+  const wrCls=winRate>=50?'pos':winRate>=40?'gold':'neg';
+  const tile=(label,val,cls,sub)=>`<div class="as-tile"><div class="as-t-label">${label}</div><div class="as-t-val ${cls||''}">${val}</div>${sub?`<div class="as-t-sub">${sub}</div>`:''}</div>`;
+
+  const timeHTML=
+    tile('بهترین ساعت', fmtHour(bestHour), 'pos', bestHour?fmtUSD(bestHour[1]):'')+
+    tile('بدترین ساعت', fmtHour(worstHour), 'neg', worstHour?fmtUSD(worstHour[1]):'')+
+    tile('بهترین روز هفته', bestDow?bestDow[0]:'—', 'gold', bestDow?fmtUSD(bestDow[1]):'')+
+    tile('بهترین ماه', bestMon?bestMon[0]:'—', 'gold', bestMon?fmtUSD(bestMon[1]):'')+
+    tile('میانگین نگهداری', fmtDur(avgHold), 'dim', holdN?toFA(holdN)+' معامله':'بدون زمان');
+
+  const qualHTML=
+    `<div class="as-tile span2"><div class="as-t-label">Win Rate — نرخ برد</div><div class="as-t-val ${wrCls}">${toFA(winRate)}٪</div><div class="as-wr-bar"><div class="as-wr-fill" style="width:${Math.max(0,Math.min(100,winRate))}%"></div></div></div>`+
+    tile('Profit Factor', pfTxt, pfCls)+
+    tile('Expectancy', fmtUSD(expc), expCls, 'هر معامله')+
+    tile('میانگین سود', fmtUSD(avgWin), 'pos')+
+    tile('میانگین ضرر', fmtUSD(-avgLoss), 'neg')+
+    tile('R:R واقعی', rrTxt, (rr!==null&&rr>=1)?'pos':'gold');
+
+  const psyHTML=
+    tile('بیشترین دلیل ضرر', topLoss?mkLabel(topLoss[0]):'—', 'neg', topLoss?toFA(topLoss[1])+' بار در ضررها':'ضرری ثبت نشده')+
+    tile('اشتباه تکرارشونده', topAll?mkLabel(topAll[0]):'—', 'gold', topAll?toFA(topAll[1])+' بار':'اشتباهی ثبت نشده');
+
+  el.innerHTML=
+    `<div class="as-head">📊 تحلیل هوشمند عملکرد <span class="as-note">همه‌ی معاملات · زنده</span></div>`+
+    `<div class="as-group"><div class="as-group-title">⏱ تحلیل زمان معامله</div><div class="as-grid">${timeHTML}</div></div>`+
+    `<div class="as-group"><div class="as-group-title">🎯 تحلیل کیفیت معاملات</div><div class="as-grid">${qualHTML}</div></div>`+
+    `<div class="as-group"><div class="as-group-title">🧠 تحلیل روانشناسی</div><div class="as-grid">${psyHTML}</div></div>`;
+}
+
 // name bind
 const nameInput=document.getElementById('settings-name-input');
 nameInput.addEventListener('input',()=>{data.name=nameInput.value;saveData();updateHome();if(typeof renderStrategyIdentity==='function')renderStrategyIdentity();});
@@ -10796,7 +10955,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='79.3';
+const APP_VERSION='79.4';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
