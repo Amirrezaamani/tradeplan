@@ -1120,6 +1120,73 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 .as-wr-bar{height:6px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:5px}
 .as-wr-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#22c55e,#6ee7b7);box-shadow:0 0 8px rgba(52,211,153,.45);transition:width .9s cubic-bezier(.4,0,.2,1)}
 
+/* ===== SIGNALS TAB (سیگنال) ===== */
+#jpanel-signals{padding-bottom:8px}
+.sig-loading,.sig-empty{padding:40px 18px;text-align:center;color:var(--text-muted);font-size:13px;line-height:1.9}
+.sig-locked{margin:16px 14px;background:linear-gradient(135deg,rgba(232,160,32,.1),rgba(232,160,32,.03));border:1px solid var(--gold-border);border-radius:18px;padding:26px 20px;text-align:center;position:relative;overflow:hidden}
+.sig-locked .sl-ic{font-size:40px;display:block;margin-bottom:10px;filter:drop-shadow(0 0 14px rgba(232,160,32,.4))}
+.sig-locked .sl-title{font-size:15px;font-weight:800;color:var(--gold);margin-bottom:7px}
+.sig-locked .sl-desc{font-size:12.5px;color:var(--text-muted);line-height:2}
+/* hero */
+.sig-hero{margin:14px 14px 0;display:flex;align-items:center;gap:10px}
+.sig-hero-ic{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,rgba(232,160,32,.2),rgba(232,160,32,.06));border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.sig-hero-tt{font-size:15px;font-weight:800;color:var(--text)}
+.sig-hero-sub{font-size:10.5px;color:var(--text-dim);font-weight:600;margin-top:1px}
+.sig-live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;margin-left:5px;animation:sigPulse 1.8s ease-in-out infinite;vertical-align:middle}
+@keyframes sigPulse{0%,100%{opacity:1}50%{opacity:.35}}
+/* stats box */
+.sig-stats{margin:12px 14px 0;background:var(--navy-card);border:1px solid var(--gold-border);border-radius:16px;padding:13px}
+.sig-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:11px}
+.sig-stat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:9px 6px;text-align:center;min-width:0}
+.sig-stat-val{font-size:17px;font-weight:800;color:var(--text);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sig-stat-val.pos{color:#34d399}.sig-stat-val.neg{color:#f87171}.sig-stat-val.gold{color:var(--gold)}
+.sig-stat-label{font-size:9.5px;font-weight:700;color:var(--text-dim);margin-top:3px}
+.sig-sum-chips{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:2px}
+.sig-sum-chip{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);direction:ltr}
+.sig-sum-chip.pos{color:#34d399;border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.08)}
+.sig-sum-chip.neg{color:#f87171;border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.08)}
+/* equity sparkline */
+.sig-equity{margin-top:4px;border-top:1px dashed rgba(255,255,255,.09);padding-top:10px}
+.sig-equity-head{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:700;color:var(--text-dim);margin-bottom:4px}
+.sig-equity svg{width:100%;height:52px;display:block;overflow:visible}
+/* section titles */
+.sig-sec{display:flex;align-items:center;gap:7px;margin:16px 16px 8px;font-size:12px;font-weight:800;color:var(--text-warm-dim)}
+.sig-sec .sig-sec-count{font-size:10px;font-weight:700;color:var(--gold);background:rgba(232,160,32,.12);border:1px solid var(--gold-border);padding:1px 8px;border-radius:10px}
+.sig-sec::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold-border),transparent)}
+/* active signal card */
+.sig-card{margin:0 14px 11px;background:var(--navy-card);border:1px solid rgba(52,211,153,.28);border-radius:16px;padding:13px;position:relative;overflow:hidden}
+.sig-card.sell{border-color:rgba(248,113,113,.28)}
+.sig-card::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:linear-gradient(180deg,#34d399,#059669)}
+.sig-card.sell::before{background:linear-gradient(180deg,#f87171,#dc2626)}
+.sig-card-head{display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.sig-sym{font-size:16px;font-weight:800;color:var(--text);letter-spacing:.3px;direction:ltr}
+.sig-dir{font-size:11px;font-weight:800;padding:3px 10px;border-radius:9px;display:inline-flex;align-items:center;gap:3px}
+.sig-dir.buy{color:#34d399;background:rgba(52,211,153,.13);border:1px solid rgba(52,211,153,.35)}
+.sig-dir.sell{color:#f87171;background:rgba(248,113,113,.13);border:1px solid rgba(248,113,113,.35)}
+.sig-time{font-size:10px;color:var(--text-dim);font-weight:600;margin-right:auto}
+.sig-levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(74px,1fr));gap:7px;margin-bottom:10px}
+.sig-lvl{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:7px 8px;min-width:0}
+.sig-lvl-label{font-size:9px;font-weight:700;color:var(--text-dim);margin-bottom:2px}
+.sig-lvl-val{font-size:13px;font-weight:800;color:var(--text);direction:ltr;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sig-lvl.sl .sig-lvl-val{color:#f8a0a0}
+.sig-lvl.tp .sig-lvl-val{color:#7fe6ab}
+.sig-note{font-size:12.5px;color:var(--text-warm);line-height:1.9;background:rgba(255,255,255,.03);border-radius:10px;padding:9px 11px;margin-bottom:10px;white-space:pre-wrap;word-break:break-word}
+.sig-img{width:100%;border-radius:12px;margin-bottom:10px;display:block;border:1px solid rgba(255,255,255,.08)}
+.sig-copy{width:100%;background:rgba(232,160,32,.1);border:1px solid var(--gold-border);border-radius:11px;padding:10px;color:var(--gold);font-family:'Vazirmatn',sans-serif;font-size:12.5px;font-weight:800;cursor:pointer;transition:background .2s}
+.sig-copy:active{background:rgba(232,160,32,.2)}
+/* history (memory) chips */
+.sig-hist{margin:0 14px}
+.sig-hist-row{display:flex;align-items:center;gap:9px;background:var(--navy-card);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:9px 11px;margin-bottom:7px}
+.sig-hist-dir{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.sig-hist-dir.buy{color:#34d399;background:rgba(52,211,153,.12)}
+.sig-hist-dir.sell{color:#f87171;background:rgba(248,113,113,.12)}
+.sig-hist-sym{font-size:13px;font-weight:800;color:var(--text);direction:ltr}
+.sig-hist-date{font-size:9.5px;color:var(--text-dim);font-weight:600;margin-top:1px}
+.sig-hist-res{margin-right:auto;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:9px;white-space:nowrap;direction:ltr}
+.sig-hist-res.win{color:#34d399;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3)}
+.sig-hist-res.loss{color:#f87171;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3)}
+.sig-hist-res.breakeven{color:var(--text-muted);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+
 @keyframes lightPulse{0%{box-shadow:0 0 0 0 var(--pulse-c)}70%,100%{box-shadow:0 0 0 7px transparent}}
 
 /* TODAY HERO — risk-guard traffic light */
@@ -4273,6 +4340,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
   <div class="journal-tabs">
     <button class="journal-tab active" onclick="switchJournalTab(0)">📒 معاملات</button>
     <button class="journal-tab" onclick="switchJournalTab(1)">🖼 گالری معاملات</button>
+    <button class="journal-tab" onclick="switchJournalTab(2)">📡 سیگنال</button>
   </div>
 
   <!-- Panel 0: TRADES — کل محتوای فعلی ژورنال -->
@@ -4360,6 +4428,11 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
       <div class="gal-count" id="gal-count"></div>
     </div>
     <div class="gal-grid" id="gal-grid"></div>
+  </div>
+
+  <!-- Panel 2: SIGNALS — سیگنال‌های VIP (فقط برای اعضای گروه؛ RLS سمت سرور) -->
+  <div class="journal-panel" id="jpanel-signals">
+    <div id="sig-root"><div class="sig-loading">در حال بارگذاری سیگنال‌ها…</div></div>
   </div>
 </div>
 
@@ -5561,10 +5634,172 @@ function switchSetupTab(idx){
 
 // ===== JOURNAL TABS =====
 function switchJournalTab(idx){
-  // idx 0=معاملات (محتوای فعلی ژورنال), 1=گالری معاملات
+  // idx 0=معاملات (محتوای فعلی ژورنال), 1=گالری معاملات, 2=سیگنال
   document.querySelectorAll('.journal-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
   document.querySelectorAll('.journal-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
   if(idx===1) renderGallery();
+  if(idx===2 && typeof loadSignals==='function') loadSignals();
+}
+
+/* ═══════════════ SIGNALS (سیگنال VIP) ═══════════════
+   RLS سمت سرور تضمین می‌کند فقط سیگنالِ گروه‌های معتبرِ همین کاربر برگردد.
+   عضویت VIP از user_groups (ردیف خودِ کاربر) چک می‌شود تا «قفل» از «VIP ولی
+   بدون سیگنال» تفکیک شود. رندر با هر باز شدن تب تازه می‌شود. */
+let _sigItems=[], _sigVip=false, _sigBusy=false;
+
+function sigLockedHTML(msg){
+  return `<div class="sig-locked">
+    <span class="sl-ic">🔒</span>
+    <div class="sl-title">بخش سیگنال ویژه‌ی اعضای VIP است</div>
+    <div class="sl-desc">${msg||'برای دریافت سیگنال‌های دقیق و لحظه‌ای، عضویت VIP را از پشتیبانی فعال کن. 💛'}</div>
+  </div>`;
+}
+function sigEsc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function sigMemberValid(g){ return !g.expires_at || new Date(g.expires_at)>new Date(); }
+function sigUnitLabel(u){ return u==='pip'?'پیپ':u==='percent'?'٪':u==='r'?'R':''; }
+function sigFmtSigned(v,u){
+  if(v==null||isNaN(v)) return '';
+  const n=Number(v), s=n>0?'+':(n<0?'−':''), body=(Math.abs(n)%1===0)?Math.abs(n).toFixed(0):Math.abs(n).toFixed(1);
+  return u==='percent' ? (s+toFA(body)+'٪') : (s+toFA(body)+(sigUnitLabel(u)?' '+sigUnitLabel(u):''));
+}
+function sigResLabel(r){ return r==='win'?'✅ سود':r==='loss'?'❌ ضرر':r==='breakeven'?'➖ سربه‌سر':''; }
+function sigDateChip(iso){ const d=new Date(iso); return isNaN(d)?'':d.toLocaleDateString('fa-IR',{day:'numeric',month:'long'})+' · '+d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'}); }
+
+async function loadSignals(){
+  const root=document.getElementById('sig-root'); if(!root||_sigBusy) return;
+  _sigBusy=true;
+  try{
+    if(!SB||!CURRENT_USER){ root.innerHTML=sigLockedHTML('برای دیدن سیگنال‌ها باید وارد حساب و به اینترنت وصل باشی.'); return; }
+    // عضویت VIP (ردیف خودِ کاربر — RLS اجازه می‌دهد)
+    let vip=false;
+    try{
+      const {data:gs,error:ge}=await SB.from('user_groups').select('group_name,expires_at').eq('user_id',CURRENT_USER.id);
+      if(!ge) vip=(gs||[]).some(sigMemberValid);
+    }catch(e){ /* جدول ساخته نشده → غیرVIP */ }
+    _sigVip=vip;
+    if(!vip){ root.innerHTML=sigLockedHTML(); return; }
+    // سیگنال‌ها (RLS فقط سیگنالِ گروه‌های معتبرِ کاربر را برمی‌گرداند)
+    const {data:rows,error}=await SB.from('signals').select('*').order('id',{ascending:false}).limit(200);
+    if(error){ root.innerHTML=sigLockedHTML('سرور سیگنال هنوز آماده نیست (فایل signals.sql باید در Supabase اجرا شود).'); return; }
+    _sigItems=rows||[];
+    renderSignals();
+  }catch(e){ root.innerHTML='<div class="sig-empty">خطا در بارگذاری سیگنال‌ها 😕</div>'; }
+  finally{ _sigBusy=false; }
+}
+
+function renderSignals(){
+  const root=document.getElementById('sig-root'); if(!root) return;
+  const items=_sigItems;
+  const active=items.filter(s=>s.status!=='closed');
+  const closed=items.filter(s=>s.status==='closed');
+
+  const wins=closed.filter(s=>s.result==='win').length;
+  const losses=closed.filter(s=>s.result==='loss').length;
+  const winRate=(wins+losses)>0?Math.round(wins/(wins+losses)*100):0;
+  const sums={pip:0,percent:0,r:0};
+  closed.forEach(s=>{ if(s.result_unit&&s.result_value!=null){ const v=Math.abs(Number(s.result_value)||0); sums[s.result_unit]+=(s.result==='loss'?-v:s.result==='win'?v:0); } });
+  const sumChips=Object.entries(sums).filter(([,v])=>v!==0).map(([u,v])=>`<span class="sig-sum-chip ${v>0?'pos':'neg'}">${sigFmtSigned(v,u)}</span>`).join('')||'<span class="sig-sum-chip">بدون نتیجه‌ی بسته‌شده</span>';
+  const equity=sigEquity(closed);
+
+  let html='';
+  html+=`<div class="sig-hero"><div class="sig-hero-ic">📡</div><div><div class="sig-hero-tt">سیگنال‌های VIP <span class="sig-live"></span></div><div class="sig-hero-sub">سیگنال‌های دقیق، لحظه‌ای و اختصاصی</div></div></div>`;
+  html+=`<div class="sig-stats">
+    <div class="sig-stat-row">
+      <div class="sig-stat"><div class="sig-stat-val gold">${toFA(items.length)}</div><div class="sig-stat-label">کل سیگنال</div></div>
+      <div class="sig-stat"><div class="sig-stat-val ${winRate>=50?'pos':winRate>0?'gold':''}">${toFA(winRate)}٪</div><div class="sig-stat-label">نرخ برد</div></div>
+      <div class="sig-stat"><div class="sig-stat-val ${wins>=losses?'pos':'neg'}">${toFA(wins)}/${toFA(losses)}</div><div class="sig-stat-label">برد / باخت</div></div>
+    </div>
+    <div class="sig-sum-chips">${sumChips}</div>
+    ${equity}
+  </div>`;
+
+  if(active.length){
+    html+=`<div class="sig-sec">🟢 سیگنال‌های فعال <span class="sig-sec-count">${toFA(active.length)}</span></div>`;
+    html+=active.map(sigCardHTML).join('');
+  }
+  if(closed.length){
+    html+=`<div class="sig-sec">📜 تاریخچه <span class="sig-sec-count">${toFA(closed.length)}</span></div>`;
+    html+='<div class="sig-hist">'+closed.map(sigHistHTML).join('')+'</div>';
+  }
+  if(!active.length && !closed.length){
+    html+=`<div class="sig-empty">🕊️ هنوز سیگنالی ثبت نشده.<br>به‌زودی اینجا سیگنال‌های دقیق و اختصاصی می‌بینی.</div>`;
+  }
+  root.innerHTML=html;
+}
+
+function sigCardHTML(s){
+  const dir=s.direction==='sell'?'sell':'buy';
+  const dirTxt=dir==='sell'?'🔻 فروش':'🔺 خرید';
+  const lv=[];
+  if(s.entry) lv.push(`<div class="sig-lvl"><div class="sig-lvl-label">ورود</div><div class="sig-lvl-val">${sigEsc(s.entry)}</div></div>`);
+  if(s.sl)    lv.push(`<div class="sig-lvl sl"><div class="sig-lvl-label">حد ضرر</div><div class="sig-lvl-val">${sigEsc(s.sl)}</div></div>`);
+  if(s.tp1)   lv.push(`<div class="sig-lvl tp"><div class="sig-lvl-label">TP1</div><div class="sig-lvl-val">${sigEsc(s.tp1)}</div></div>`);
+  if(s.tp2)   lv.push(`<div class="sig-lvl tp"><div class="sig-lvl-label">TP2</div><div class="sig-lvl-val">${sigEsc(s.tp2)}</div></div>`);
+  if(s.tp3)   lv.push(`<div class="sig-lvl tp"><div class="sig-lvl-label">TP3</div><div class="sig-lvl-val">${sigEsc(s.tp3)}</div></div>`);
+  return `<div class="sig-card ${dir}">
+    <div class="sig-card-head">
+      <span class="sig-sym">${sigEsc(s.symbol)}</span>
+      <span class="sig-dir ${dir}">${dirTxt}</span>
+      <span class="sig-time">${sigDateChip(s.created_at)}</span>
+    </div>
+    ${lv.length?`<div class="sig-levels">${lv.join('')}</div>`:''}
+    ${s.image_url?`<img class="sig-img" src="${sigEsc(s.image_url)}" alt="chart" loading="lazy" onerror="this.style.display='none'">`:''}
+    ${s.note?`<div class="sig-note">${sigEsc(s.note)}</div>`:''}
+    <button type="button" class="sig-copy" onclick="sigCopy(${s.id})">📋 کپی سیگنال</button>
+  </div>`;
+}
+
+function sigHistHTML(s){
+  const dir=s.direction==='sell'?'sell':'buy';
+  const res=s.result||'breakeven';
+  const val=(s.result_value!=null)?(' · '+sigFmtSigned((res==='loss'?-Math.abs(s.result_value):Math.abs(s.result_value)),s.result_unit)):'';
+  return `<div class="sig-hist-row">
+    <div class="sig-hist-dir ${dir}">${dir==='sell'?'🔻':'🔺'}</div>
+    <div style="min-width:0"><div class="sig-hist-sym">${sigEsc(s.symbol)}</div><div class="sig-hist-date">${sigDateChip(s.closed_at||s.created_at)}</div></div>
+    <div class="sig-hist-res ${res}">${sigResLabel(res)}${val}</div>
+  </div>`;
+}
+
+function sigCopy(id){
+  const s=_sigItems.find(x=>x.id===id); if(!s) return;
+  const dirTxt=s.direction==='sell'?'فروش (Sell)':'خرید (Buy)';
+  let t='📡 '+s.symbol+' | '+dirTxt+'\n';
+  if(s.entry) t+='ورود: '+s.entry+'\n';
+  if(s.sl)    t+='حد ضرر (SL): '+s.sl+'\n';
+  if(s.tp1)   t+='TP1: '+s.tp1+'\n';
+  if(s.tp2)   t+='TP2: '+s.tp2+'\n';
+  if(s.tp3)   t+='TP3: '+s.tp3+'\n';
+  if(s.note)  t+='\n'+s.note+'\n';
+  t+='\n— TradePlan';
+  const done=()=>showToast('✅ سیگنال کپی شد');
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done).catch(done); }
+  else{ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} ta.remove(); done(); }
+}
+
+// نمودار equity ساده (SVG، بدون وابستگی به rAF): مجموع تجمعیِ نتیجه‌ها (برد +، باخت −).
+function sigEquity(closed){
+  if(!closed || closed.length<2) return '';
+  const arr=closed.slice().sort((a,b)=>new Date(a.closed_at||a.created_at)-new Date(b.closed_at||b.created_at));
+  const unitCount={}; arr.forEach(s=>{ if(s.result_unit) unitCount[s.result_unit]=(unitCount[s.result_unit]||0)+1; });
+  const domUnit=Object.entries(unitCount).sort((a,b)=>b[1]-a[1])[0];
+  let cum=0; const pts=[0];
+  arr.forEach(s=>{ const v=Math.abs(Number(s.result_value)||0); cum+=(s.result==='loss'?-v:s.result==='win'?v:0); pts.push(cum); });
+  const min=Math.min(...pts), max=Math.max(...pts), span=(max-min)||1;
+  const W=300,H=52,n=pts.length;
+  const x=i=>n<=1?0:(i/(n-1))*W;
+  const y=v=>H-((v-min)/span)*(H-6)-3;
+  const dPath=pts.map((v,i)=>(i===0?'M':'L')+x(i).toFixed(1)+' '+y(v).toFixed(1)).join(' ');
+  const col=cum>=0?'#34d399':'#f87171';
+  const area='M0 '+H+' L'+pts.map((v,i)=>x(i).toFixed(1)+' '+y(v).toFixed(1)).join(' L')+' L'+W+' '+H+' Z';
+  const label=domUnit?('بر حسب '+sigUnitLabel(domUnit[0])):'';
+  return `<div class="sig-equity">
+    <div class="sig-equity-head"><span>📈 منحنی رشد نتایج</span><span>${label}</span></div>
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <defs><linearGradient id="sigEqG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".28"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>
+      <path d="${area}" fill="url(#sigEqG)"/>
+      <path d="${dPath}" fill="none" stroke="${col}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>`;
 }
 
 /* ═══════════════ TRADE GALLERY (گالری معاملات) ═══════════════
@@ -11011,7 +11246,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='79.5';
+const APP_VERSION='79.6';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
