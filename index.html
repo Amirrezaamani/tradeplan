@@ -866,6 +866,34 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 .modal-btn.primary{background:var(--gold);color:#0b1628}
 .modal-btn.cancel{background:rgba(255,255,255,.06);color:var(--text-muted)}
 .modal-btn.danger{background:var(--red);color:white}
+
+/* ═══════════ SHARE PERFORMANCE CARD — کارت عملکرد قابل اشتراک ═══════════ */
+.share-cta{margin:14px 14px 0;width:calc(100% - 28px);display:flex;align-items:center;gap:12px;padding:15px 16px;border:none;border-radius:17px;cursor:pointer;
+  background:linear-gradient(115deg,#f5c65a,#e8a020 46%,#c47f16);color:#0b1628;font-family:'Vazirmatn',sans-serif;text-align:right;
+  box-shadow:0 10px 30px rgba(232,160,32,.30);position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;transition:transform var(--tr)}
+.share-cta:active{transform:scale(.985)}
+.share-cta::after{content:'';position:absolute;top:-20%;bottom:-20%;width:34%;left:-60%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-18deg);animation:shareShine 4.2s ease-in-out infinite}
+@keyframes shareShine{0%,66%{left:-60%}100%{left:135%}}
+.share-cta .sc-ico{font-size:22px;line-height:1;flex-shrink:0;position:relative;z-index:1}
+.share-cta .sc-txt{flex:1;min-width:0;position:relative;z-index:1}
+.share-cta .sc-main{display:block;font-size:14px;font-weight:900;line-height:1.3}
+.share-cta .sc-sub{display:block;font-size:10.5px;font-weight:700;opacity:.7;margin-top:3px;line-height:1.4}
+.share-cta .sc-arrow{font-size:17px;font-weight:900;opacity:.55;flex-shrink:0;position:relative;z-index:1}
+
+.sharec-sheet{max-width:500px}
+.sharec-nav{display:flex;align-items:center;gap:9px;margin:2px 0 13px;direction:ltr}
+.sharec-arw{width:36px;height:36px;flex-shrink:0;border-radius:11px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);
+  color:var(--text);font-size:15px;font-weight:900;cursor:pointer;transition:all var(--tr);-webkit-tap-highlight-color:transparent}
+.sharec-arw:active{background:rgba(255,255,255,.12)}
+.sharec-arw:disabled{opacity:.25;cursor:default}
+.sharec-month{flex:1;text-align:center;font-size:13px;font-weight:900;color:var(--gold-light);line-height:1.4}
+.sharec-month small{display:block;font-size:10px;font-weight:700;color:var(--text-muted);margin-top:2px}
+.sharec-stage{position:relative;border-radius:16px;overflow:hidden;background:#070f1e;border:1px solid rgba(255,255,255,.08);
+  max-height:min(50vh,470px);display:flex;align-items:center;justify-content:center}
+#sharec-canvas{display:block;width:auto;height:auto;max-width:100%;max-height:min(50vh,470px)}
+.sharec-empty{padding:44px 22px;text-align:center;color:var(--text-muted);font-size:12.5px;font-weight:700;line-height:2}
+.sharec-hint{margin-top:11px;text-align:center;font-size:10.5px;font-weight:700;color:var(--text-dim);line-height:1.9}
 .modal-form{display:flex;flex-direction:column;gap:10px;margin-top:8px}
 .modal-row{display:flex;gap:9px}
 .modal-row input{flex:1}
@@ -4385,6 +4413,16 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
   <!-- ADVANCED STATS — data-driven analytics (time / quality / psychology). Rendered by renderAdvancedStats() -->
   <div class="adv-stats home-rise" id="adv-stats"></div>
 
+  <!-- SHARE PERFORMANCE CARD — تولید تصویر آمار ماهانه برای استوری -->
+  <button class="share-cta home-rise" onclick="openShareCard()">
+    <span class="sc-ico">📤</span>
+    <span class="sc-txt">
+      <span class="sc-main">اشتراک‌گذاری کارت عملکرد</span>
+      <span class="sc-sub">یک تصویر حرفه‌ای از آمار ماهت بساز و توی استوری بذار</span>
+    </span>
+    <span class="sc-arrow">‹</span>
+  </button>
+
   <!-- MOTIVATIONAL QUOTE (bottom) -->
   <div class="home-quote-box home-rise">
     <span class="hq-mark">&#10077;</span>
@@ -5689,6 +5727,31 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
     <div class="ann-body" id="pm-body"></div>
     <div class="ann-date" id="pm-date"></div>
     <button type="button" class="ann-ok" onclick="pmDismiss()">متوجه شدم ✅</button>
+  </div>
+</div>
+
+<!-- ═══ SHARE PERFORMANCE CARD — preview + share/download ═══ -->
+<div class="modal-overlay" id="sharec-modal">
+  <div class="modal-sheet sharec-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📤 کارت عملکرد ماهانه</div>
+
+    <div class="sharec-nav">
+      <button class="sharec-arw" id="sharec-prev" onclick="shareCardNav(-1)">‹</button>
+      <div class="sharec-month" id="sharec-month">—</div>
+      <button class="sharec-arw" id="sharec-next" onclick="shareCardNav(1)">›</button>
+    </div>
+
+    <div class="sharec-stage" id="sharec-stage">
+      <canvas id="sharec-canvas"></canvas>
+    </div>
+
+    <div class="sharec-hint" id="sharec-hint">تصویر با کیفیت بالا (۱۰۸۰×۱۹۲۰) ساخته می‌شود — مناسب استوری</div>
+
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeModal('sharec-modal')">بستن</button>
+      <button class="modal-btn primary" id="sharec-share-btn" onclick="shareCardSend()">اشتراک‌گذاری 📤</button>
+    </div>
   </div>
 </div>
 
@@ -11600,6 +11663,414 @@ function ensureGoals(){ if(!data.goals) data.goals={daily:'',weekly:'',monthly:d
 // ===== MODALS =====
 function showResetModal(){document.getElementById('reset-modal').classList.add('show');}
 function showClearAllModal(){document.getElementById('clear-all-modal').classList.add('show');}
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHARE PERFORMANCE CARD — کارت عملکرد ماهانه‌ی قابل اشتراک
+   یک تصویر ۱۰۸۰×۱۹۲۰ (نسبت استوری) کاملاً روی canvas کشیده می‌شود: بدون
+   کتابخانه‌ی بیرونی، پس آفلاین و داخل PWA هم کار می‌کند. همه‌ی اعداد زنده از
+   data.journal و computeSkillRadar() خوانده می‌شوند.
+   قرارداد اعداد مثل بقیه‌ی برنامه: مبالغ دلاری با رقم لاتین (fmtUSD) و
+   شمارش/درصد با رقم فارسی (toFA).
+   ═══════════════════════════════════════════════════════════════════════════ */
+const SC_W=1080, SC_H=1920;
+let scYear=null, scMonth=null, scMonths=[];
+
+// آمار یک ماه در سطح «معامله» (نه روز) + منحنی سرمایه‌ی همان ماه
+function scMonthStats(y,m){
+  const prefix=`${y}-${String(m+1).padStart(2,'0')}-`;
+  let totalPnl=0,totalTrades=0,winTrades=0,lossTrades=0;
+  let activeDays=0,greenDays=0,redDays=0,grossWin=0,grossLoss=0,best=null;
+  const curve=[];
+  Object.keys(data.journal||{}).filter(k=>k.startsWith(prefix)).sort().forEach(k=>{
+    const e=data.journal[k];
+    if(!e||!(e.trades>0)) return;
+    const dayPnl=e.pnl||0;
+    activeDays++; totalPnl+=dayPnl;
+    if(dayPnl>0) greenDays++; else if(dayPnl<0) redDays++;
+    if(best===null||dayPnl>best) best=dayPnl;
+    curve.push(totalPnl);
+    const positions=e.positions||[];
+    if(positions.length>0){
+      // همان قرارداد getAllTimeJournalStats: سودِ صفر هم «برد» حساب می‌شود
+      positions.forEach(p=>{
+        totalTrades++;
+        const val=parseFloat(p.pnlValue)||0;
+        if(p.pnlSign==='loss' && val>0){ lossTrades++; grossLoss+=val; }
+        else { winTrades++; grossWin+=val; }
+      });
+    } else {
+      const cnt=e.trades||1;
+      totalTrades+=cnt;
+      if(dayPnl>0){ winTrades+=cnt; grossWin+=dayPnl; }
+      else if(dayPnl<0){ lossTrades+=cnt; grossLoss+=Math.abs(dayPnl); }
+    }
+  });
+  const winRate=totalTrades>0?Math.round(winTrades/totalTrades*100):0;
+  const profitFactor=grossLoss>0?grossWin/grossLoss:(grossWin>0?99:0);
+  return {totalPnl,totalTrades,winTrades,lossTrades,winRate,activeDays,
+          greenDays,redDays,grossWin,grossLoss,profitFactor,best,curve};
+}
+
+// برچسب شمسی ماه میلادی — چون یک ماه میلادی معمولاً روی دو ماه شمسی می‌افتد،
+// اگر بازه دو ماه شمسی را پوشش دهد هر دو نمایش داده می‌شود تا گمراه‌کننده نباشد.
+function scMonthLabel(y,m){
+  const first=new Date(y,m,1), last=new Date(y,m+1,0);
+  const fa=(d,o)=>d.toLocaleDateString('fa-IR',o);
+  const m1=fa(first,{month:'long'}), m2=fa(last,{month:'long'});
+  const yr=fa(last,{year:'numeric'});
+  if(m1===m2) return `${m1} ${yr}`;
+  return `${fa(first,{day:'numeric'})} ${m1} تا ${fa(last,{day:'numeric'})} ${m2} ${yr}`;
+}
+
+// ماه‌های قابل انتخاب: هر ماهی که معامله‌ای در آن ثبت شده + همیشه ماه جاری
+function scBuildMonths(){
+  const set=new Set();
+  Object.keys(data.journal||{}).forEach(k=>{
+    const e=data.journal[k];
+    if(e&&e.trades>0) set.add(k.slice(0,7));
+  });
+  const now=new Date();
+  set.add(`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`);
+  return [...set].sort().map(s=>({y:+s.slice(0,4), m:+s.slice(5,7)-1}));
+}
+
+// ── canvas helpers ──
+function scRoundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);     ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+function scText(ctx,txt,x,y,o){
+  o=o||{};
+  ctx.save();
+  const fam=o.font||"Vazirmatn";
+  ctx.font=`${o.weight||700} ${o.size||30}px '${fam}', sans-serif`;
+  ctx.textAlign=o.align||'center';
+  ctx.textBaseline=o.baseline||'middle';
+  ctx.direction=(o.rtl===false)?'ltr':'rtl';
+  ctx.fillStyle=o.color||'#ffffff';
+  if(o.spacing && 'letterSpacing' in ctx) ctx.letterSpacing=o.spacing+'px';
+  if(o.glow){ ctx.shadowColor=o.glowColor||o.color||'#fff'; ctx.shadowBlur=o.glow; }
+  ctx.fillText(txt,x,y);
+  ctx.restore();
+}
+function scMeasure(ctx,txt,size,weight,fam,spacing){
+  ctx.save();
+  ctx.font=`${weight||700} ${size}px '${fam||"Vazirmatn"}', sans-serif`;
+  if(spacing && 'letterSpacing' in ctx) ctx.letterSpacing=spacing+'px';
+  const w=ctx.measureText(txt).width;
+  ctx.restore();
+  return w;
+}
+async function scEnsureFonts(){
+  if(!document.fonts||!document.fonts.load) return;
+  try{
+    await Promise.all([
+      document.fonts.load("900 120px 'Vazirmatn'"),
+      document.fonts.load("800 40px 'Vazirmatn'"),
+      document.fonts.load("700 28px 'Vazirmatn'"),
+      document.fonts.load("700 110px 'Rajdhani'")
+    ]);
+  }catch(e){/* فونت پیش‌فرض هم قابل قبول است */}
+}
+
+// ═══ نقاشیِ کارت ═══
+function scDrawCard(ctx,s){
+  const GOLD='#e8a020', GOLDL='#f5c65a', MUTED='#8397b8', DIM='#5b6d8c';
+  const up = s.totalPnl>=0;
+  const ACC = up?'#3ddc84':'#ff5f56';
+  const radar=computeSkillRadar();
+  let g;
+
+  // ── پس‌زمینه ──
+  g=ctx.createLinearGradient(0,0,0,SC_H);
+  g.addColorStop(0,'#0d1f3a'); g.addColorStop(.45,'#0a1830'); g.addColorStop(1,'#060d1c');
+  ctx.fillStyle=g; ctx.fillRect(0,0,SC_W,SC_H);
+
+  // شبکه‌ی محو (حس چارت)
+  ctx.strokeStyle='rgba(255,255,255,.026)'; ctx.lineWidth=2;
+  for(let x=0;x<=SC_W;x+=72){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,SC_H); ctx.stroke(); }
+  for(let y=0;y<=SC_H;y+=72){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(SC_W,y); ctx.stroke(); }
+
+  // هاله‌ی طلایی بالا + هاله‌ی رنگِ نتیجه پایین
+  g=ctx.createRadialGradient(SC_W/2,150,0,SC_W/2,150,880);
+  g.addColorStop(0,'rgba(232,160,32,.22)'); g.addColorStop(1,'rgba(232,160,32,0)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,SC_W,1100);
+  g=ctx.createRadialGradient(SC_W/2,700,0,SC_W/2,700,720);
+  g.addColorStop(0, up?'rgba(61,220,132,.16)':'rgba(255,95,86,.15)');
+  g.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=g; ctx.fillRect(0,260,SC_W,900);
+
+  // وینیت
+  g=ctx.createRadialGradient(SC_W/2,SC_H/2,420,SC_W/2,SC_H/2,1180);
+  g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,.55)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,SC_W,SC_H);
+
+  // قاب طلایی
+  g=ctx.createLinearGradient(0,0,SC_W,SC_H);
+  g.addColorStop(0,'rgba(245,198,90,.75)'); g.addColorStop(.5,'rgba(232,160,32,.22)');
+  g.addColorStop(1,'rgba(245,198,90,.6)');
+  ctx.strokeStyle=g; ctx.lineWidth=3;
+  scRoundRect(ctx,30,30,SC_W-60,SC_H-60,54); ctx.stroke();
+
+  // ── هدر: لوگو + وردمارک ──
+  const logo=document.querySelector('.brand-svg');
+  const wordW=scMeasure(ctx,'TradePlan',48,900,'Vazirmatn');
+  const hasLogo = logo && logo.complete && logo.naturalWidth>0;
+  const logoSize=86, gap=20;
+  const totalW=(hasLogo?logoSize+gap:0)+wordW;
+  let hx=(SC_W-totalW)/2;
+  if(hasLogo){
+    ctx.save(); ctx.shadowColor='rgba(232,160,32,.55)'; ctx.shadowBlur=26;
+    try{ ctx.drawImage(logo,hx,132-logoSize/2,logoSize,logoSize); }catch(e){}
+    ctx.restore();
+    hx+=logoSize+gap;
+  }
+  scText(ctx,'TradePlan',hx,134,{size:48,weight:900,color:'#fff',align:'left',rtl:false,glow:18,glowColor:'rgba(232,160,32,.5)'});
+  scText(ctx,'MONTHLY PERFORMANCE CARD',SC_W/2,200,{size:19,weight:700,color:DIM,rtl:false,spacing:5});
+
+  g=ctx.createLinearGradient(SC_W/2-110,0,SC_W/2+110,0);
+  g.addColorStop(0,'rgba(232,160,32,0)'); g.addColorStop(.5,'rgba(245,198,90,.9)'); g.addColorStop(1,'rgba(232,160,32,0)');
+  ctx.fillStyle=g; ctx.fillRect(SC_W/2-110,236,220,2);
+
+  // ── هویت تریدر ──
+  const xp=computeXP(), lv=levelFromXP(xp);
+  scText(ctx,data.name||'تریدر',SC_W/2,300,{size:54,weight:900,color:'#fff',glow:16,glowColor:'rgba(0,0,0,.6)'});
+  const chip=`${traderAlias()}  ·  Lv.${lv.level}`;
+  const chipW=scMeasure(ctx,chip,24,800,'Vazirmatn')+52;
+  ctx.fillStyle='rgba(255,255,255,.055)'; ctx.strokeStyle='rgba(245,198,90,.3)'; ctx.lineWidth=2;
+  scRoundRect(ctx,(SC_W-chipW)/2,336,chipW,44,22); ctx.fill(); ctx.stroke();
+  scText(ctx,chip,SC_W/2,359,{size:24,weight:800,color:GOLDL});
+
+  // ── پیل ماه ──
+  const mLabel=scMonthLabel(scYear,scMonth);
+  const mW=Math.min(SC_W-160,scMeasure(ctx,mLabel,26,800,'Vazirmatn')+60);
+  ctx.fillStyle='rgba(232,160,32,.12)'; ctx.strokeStyle='rgba(232,160,32,.4)'; ctx.lineWidth=2;
+  scRoundRect(ctx,(SC_W-mW)/2,414,mW,50,25); ctx.fill(); ctx.stroke();
+  scText(ctx,mLabel,SC_W/2,440,{size:26,weight:800,color:GOLDL});
+
+  // ── قهرمان: سود خالص ──
+  scText(ctx,'سود خالص این ماه',SC_W/2,524,{size:28,weight:700,color:MUTED});
+  const heroTxt=(up?'+':'−')+'$'+Math.abs(s.totalPnl).toFixed(1);
+  scText(ctx,heroTxt,SC_W/2,614,{size:112,weight:700,font:'Rajdhani',color:ACC,rtl:false,glow:46,glowColor:up?'rgba(61,220,132,.55)':'rgba(255,95,86,.5)'});
+  // بدون جداکننده‌ی «·» — کنارِ رقم فارسی شبیه یک صفرِ اضافه دیده می‌شد
+  scText(ctx,`${toFA(s.totalTrades)} معامله در ${toFA(s.activeDays)} روز معاملاتی`,SC_W/2,686,{size:25,weight:700,color:MUTED});
+
+  // ── منحنی سرمایه ──
+  const cx0=90, cx1=SC_W-90, cy0=756, cy1=1016;
+  ctx.strokeStyle='rgba(255,255,255,.05)'; ctx.lineWidth=2;
+  ctx.setLineDash([9,10]);
+  ctx.beginPath(); ctx.moveTo(cx0,cy1); ctx.lineTo(cx1,cy1); ctx.stroke();
+  ctx.setLineDash([]);
+  if(s.curve.length>=2){
+    const pts=[0].concat(s.curve);                 // شروع از صفر
+    const max=Math.max(...pts), min=Math.min(...pts);
+    const span=(max-min)||1;
+    const px=i=>cx0+(cx1-cx0)*(i/(pts.length-1));
+    const py=v=>cy1-((v-min)/span)*(cy1-cy0);
+    // خط پایه‌ی صفر
+    if(min<0 && max>0){
+      const z=py(0);
+      ctx.strokeStyle='rgba(255,255,255,.14)'; ctx.lineWidth=2; ctx.setLineDash([7,9]);
+      ctx.beginPath(); ctx.moveTo(cx0,z); ctx.lineTo(cx1,z); ctx.stroke(); ctx.setLineDash([]);
+    }
+    // ناحیه‌ی زیر نمودار
+    ctx.beginPath(); ctx.moveTo(px(0),py(pts[0]));
+    for(let i=1;i<pts.length;i++) ctx.lineTo(px(i),py(pts[i]));
+    ctx.lineTo(cx1,cy1); ctx.lineTo(cx0,cy1); ctx.closePath();
+    g=ctx.createLinearGradient(0,cy0,0,cy1);
+    g.addColorStop(0, up?'rgba(61,220,132,.42)':'rgba(255,95,86,.38)');
+    g.addColorStop(1, up?'rgba(61,220,132,0)':'rgba(255,95,86,0)');
+    ctx.fillStyle=g; ctx.fill();
+    // خط
+    ctx.save();
+    ctx.shadowColor=ACC; ctx.shadowBlur=26;
+    ctx.strokeStyle=ACC; ctx.lineWidth=6; ctx.lineJoin='round'; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(px(0),py(pts[0]));
+    for(let i=1;i<pts.length;i++) ctx.lineTo(px(i),py(pts[i]));
+    ctx.stroke();
+    ctx.restore();
+    // نقطه‌ی انتهایی
+    const ex=px(pts.length-1), ey=py(pts[pts.length-1]);
+    ctx.fillStyle='rgba(255,255,255,.16)'; ctx.beginPath(); ctx.arc(ex,ey,22,0,Math.PI*2); ctx.fill();
+    ctx.save(); ctx.shadowColor=ACC; ctx.shadowBlur=24;
+    ctx.fillStyle=ACC; ctx.beginPath(); ctx.arc(ex,ey,12,0,Math.PI*2); ctx.fill(); ctx.restore();
+    ctx.fillStyle='#08111f'; ctx.beginPath(); ctx.arc(ex,ey,5,0,Math.PI*2); ctx.fill();
+  } else {
+    scText(ctx,'برای رسم منحنی سرمایه حداقل دو روز معاملاتی لازم است',SC_W/2,(cy0+cy1)/2,{size:23,weight:700,color:DIM});
+  }
+
+  // ── سه کاشی آمار ──
+  const tiles=[
+    {l:'نرخ برد',   v:toFA(s.winRate)+'٪', c: s.winRate>=50?'#3ddc84':GOLDL},
+    {l:'پروفیت فاکتور', v:(s.profitFactor>=99?'∞':toFA(s.profitFactor.toFixed(2))), c: s.profitFactor>=1?'#3ddc84':'#ff5f56'},
+    {l:'روزهای سبز', v:toFA(s.greenDays)+'/'+toFA(s.activeDays), c:GOLDL}
+  ];
+  const tGap=18, tX=80, tW=(SC_W-160-tGap*2)/3, tY=1068, tH=158;
+  tiles.forEach((t,i)=>{
+    const x=tX+i*(tW+tGap);
+    ctx.fillStyle='rgba(255,255,255,.045)';
+    ctx.strokeStyle='rgba(255,255,255,.075)'; ctx.lineWidth=2;
+    scRoundRect(ctx,x,tY,tW,tH,26); ctx.fill(); ctx.stroke();
+    scText(ctx,t.v,x+tW/2,tY+62,{size:52,weight:900,color:t.c,glow:16,glowColor:t.c});
+    scText(ctx,t.l,x+tW/2,tY+116,{size:23,weight:700,color:MUTED});
+  });
+
+  // ── پنل مهارت: حلقه‌ی روانشناسی + پنج نوار ──
+  const pX=80, pY=1268, pW=SC_W-160, pH=292;
+  ctx.fillStyle='rgba(255,255,255,.035)';
+  ctx.strokeStyle='rgba(255,255,255,.07)'; ctx.lineWidth=2;
+  scRoundRect(ctx,pX,pY,pW,pH,30); ctx.fill(); ctx.stroke();
+  scText(ctx,'پروفایل مهارت',pX+pW-30,pY+40,{size:24,weight:800,color:MUTED,align:'right'});
+
+  // حلقه‌ی امتیاز روانی
+  const rcx=pX+pW-135, rcy=pY+172, rr=80;
+  const emo=radar.emotion;
+  const ringC = emo>=70?'#3ddc84' : emo>=45?GOLDL : '#ff5f56';
+  ctx.strokeStyle='rgba(255,255,255,.09)'; ctx.lineWidth=17;
+  ctx.beginPath(); ctx.arc(rcx,rcy,rr,0,Math.PI*2); ctx.stroke();
+  ctx.save();
+  ctx.shadowColor=ringC; ctx.shadowBlur=22;
+  ctx.strokeStyle=ringC; ctx.lineWidth=17; ctx.lineCap='round';
+  ctx.beginPath(); ctx.arc(rcx,rcy,rr,-Math.PI/2,-Math.PI/2+Math.PI*2*(emo/100)); ctx.stroke();
+  ctx.restore();
+  scText(ctx,toFA(emo),rcx,rcy-8,{size:52,weight:900,color:'#fff'});
+  scText(ctx,'امتیاز روانی',rcx,rcy+34,{size:19,weight:700,color:MUTED});
+
+  // نوارها
+  const bars=[
+    {n:'انضباط', v:radar.discipline, c:'#ff6b6b'},
+    {n:'ریسک',   v:radar.risk,       c:'#f5c84f'},
+    {n:'ثبات',   v:radar.consistency,c:'#4da3ff'},
+    {n:'احساسات',v:radar.emotion,    c:'#c77dff'},
+    {n:'عملکرد', v:radar.profit,     c:'#5fe896'}
+  ];
+  const bRight=pX+pW-345, bLeft=pX+40, bW=bRight-bLeft, bH=13;
+  bars.forEach((b,i)=>{
+    const by=pY+92+i*34;
+    scText(ctx,b.n,bRight+95,by+6,{size:22,weight:800,color:'#cfdbee',align:'right'});
+    ctx.fillStyle='rgba(255,255,255,.07)';
+    scRoundRect(ctx,bLeft,by,bW,bH,bH/2); ctx.fill();
+    const fw=Math.max(bH,bW*(b.v/100));
+    ctx.save(); ctx.shadowColor=b.c; ctx.shadowBlur=14; ctx.fillStyle=b.c;
+    scRoundRect(ctx,bRight-fw,by,fw,bH,bH/2); ctx.fill();
+    ctx.restore();
+  });
+
+  // ── نوار دعوت به کانال تلگرام ──
+  const cY=1622, cH=152;
+  g=ctx.createLinearGradient(80,cY,SC_W-80,cY+cH);
+  g.addColorStop(0,'#f5c65a'); g.addColorStop(.5,'#e8a020'); g.addColorStop(1,'#c47f16');
+  ctx.save(); ctx.shadowColor='rgba(232,160,32,.4)'; ctx.shadowBlur=40;
+  ctx.fillStyle=g; scRoundRect(ctx,80,cY,SC_W-160,cH,32); ctx.fill();
+  ctx.restore();
+  scText(ctx,'@tradeplann',SC_W/2,cY+58,{size:50,weight:900,color:'#0b1628',rtl:false});
+  scText(ctx,'کانال تلگرام TradePlan — ژورنال، پلن و روانشناسی معامله‌گری',SC_W/2,cY+110,{size:22,weight:800,color:'rgba(11,22,40,.72)'});
+
+  // ── فوتر ──
+  scText(ctx,'این کارت با اپلیکیشن TradePlan ساخته شده است',SC_W/2,1840,{size:21,weight:700,color:DIM});
+}
+
+// رندر پیش‌نمایش داخل مودال
+async function shareCardRender(){
+  const cv=document.getElementById('sharec-canvas');
+  const stage=document.getElementById('sharec-stage');
+  const btn=document.getElementById('sharec-share-btn');
+  const hint=document.getElementById('sharec-hint');
+  if(!cv||!stage) return;
+
+  const s=scMonthStats(scYear,scMonth);
+  setText('sharec-month',scMonthLabel(scYear,scMonth));
+
+  // پیمایش: فقط بین ماه‌هایی که در فهرست هستند
+  const idx=scMonths.findIndex(x=>x.y===scYear&&x.m===scMonth);
+  const prev=document.getElementById('sharec-prev'), next=document.getElementById('sharec-next');
+  if(prev) prev.disabled = idx<=0;
+  if(next) next.disabled = idx<0 || idx>=scMonths.length-1;
+
+  if(s.activeDays===0){
+    cv.style.display='none';
+    let empty=document.getElementById('sharec-empty');
+    if(!empty){
+      empty=document.createElement('div');
+      empty.id='sharec-empty'; empty.className='sharec-empty';
+      stage.appendChild(empty);
+    }
+    empty.textContent='برای این ماه هنوز معامله‌ای ثبت نشده.\nاول ژورنال این ماه را پر کن.';
+    empty.style.display='block';
+    if(btn){ btn.disabled=true; btn.style.opacity='.4'; }
+    if(hint) hint.textContent='ماه دیگری را انتخاب کن یا معاملات این ماه را ثبت کن';
+    return;
+  }
+
+  const empty=document.getElementById('sharec-empty');
+  if(empty) empty.style.display='none';
+  cv.style.display='block';
+  if(btn){ btn.disabled=false; btn.style.opacity=''; }
+  if(hint) hint.textContent='تصویر با کیفیت ۱۰۸۰×۱۹۲۰ ساخته می‌شود — مناسب استوری';
+
+  await scEnsureFonts();
+  cv.width=SC_W; cv.height=SC_H;
+  const ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,SC_W,SC_H);
+  scDrawCard(ctx,s);
+}
+
+function openShareCard(){
+  scMonths=scBuildMonths();
+  const now=new Date();
+  // پیش‌فرض: ماه جاری اگر داده دارد، وگرنه آخرین ماهِ دارای معامله
+  const cur=scMonths.find(x=>x.y===now.getFullYear()&&x.m===now.getMonth());
+  const curHasData=scMonthStats(now.getFullYear(),now.getMonth()).activeDays>0;
+  let pick = (cur&&curHasData) ? cur : null;
+  if(!pick){
+    for(let i=scMonths.length-1;i>=0;i--){
+      if(scMonthStats(scMonths[i].y,scMonths[i].m).activeDays>0){ pick=scMonths[i]; break; }
+    }
+  }
+  if(!pick) pick = cur || scMonths[scMonths.length-1];
+  scYear=pick.y; scMonth=pick.m;
+  document.getElementById('sharec-modal').classList.add('show');
+  shareCardRender();
+}
+
+// همان قرارداد month-nav خود برنامه: «‹» ماه قبل، «›» ماه بعد (کانتینر ltr)
+function shareCardNav(dir){
+  const idx=scMonths.findIndex(x=>x.y===scYear&&x.m===scMonth);
+  const n=idx+dir;
+  if(idx<0||n<0||n>=scMonths.length) return;
+  scYear=scMonths[n].y; scMonth=scMonths[n].m;
+  shareCardRender();
+}
+
+async function shareCardSend(){
+  const cv=document.getElementById('sharec-canvas');
+  if(!cv||cv.style.display==='none') return;
+  const fname=`tradeplan-${scYear}-${String(scMonth+1).padStart(2,'0')}.png`;
+  const blob=await new Promise(r=>{ try{ cv.toBlob(r,'image/png'); }catch(e){ r(null); } });
+  if(!blob){ showToast('ساخت تصویر ناموفق بود'); return; }
+
+  const text='کارت عملکرد ماهانه‌ی من در TradePlan 📊\nhttps://t.me/tradeplann';
+  try{
+    const file=new File([blob],fname,{type:'image/png'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file], text});
+      return;
+    }
+  }catch(e){
+    if(e && e.name==='AbortError') return;   // کاربر خودش لغو کرد
+  }
+
+  // فالبک: دانلود مستقیم (دسکتاپ یا مرورگرهای بدون Web Share)
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=fname;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),5000);
+  showToast('تصویر ذخیره شد ✅');
+}
+
 function closeModal(id){document.getElementById(id).classList.remove('show');}
 document.querySelectorAll('.modal-overlay').forEach(m=>{
   m.addEventListener('click',e=>{
@@ -11742,7 +12213,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='80.1';
+const APP_VERSION='80.2';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
