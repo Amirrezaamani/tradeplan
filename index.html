@@ -11965,8 +11965,10 @@ function scDrawCard(ctx,s){
   ctx.save(); ctx.shadowColor='rgba(232,160,32,.4)'; ctx.shadowBlur=40;
   ctx.fillStyle=g; scRoundRect(ctx,80,cY,SC_W-160,cH,32); ctx.fill();
   ctx.restore();
-  scText(ctx,'@tradeplann',SC_W/2,cY+58,{size:50,weight:900,color:'#0b1628',rtl:false});
-  scText(ctx,'کانال تلگرام TradePlan — ژورنال، پلن و روانشناسی معامله‌گری',SC_W/2,cY+110,{size:22,weight:800,color:'rgba(11,22,40,.72)'});
+  scText(ctx,'tradeplan.site',SC_W/2,cY+56,{size:50,weight:900,color:'#0b1628',rtl:false});
+  // این خط عمداً rtl است (با rtl:false نشانه‌گذاری جابه‌جا می‌شد)، ولی هندل تلگرام
+  // با LRM (‎) ایزوله شده تا «@» سمت درست بچسبد نه انتهای کلمه.
+  scText(ctx,'ژورنال، پلن و روانشناسی معامله‌گری  ·  تلگرام ‎@tradeplann‎',SC_W/2,cY+108,{size:22,weight:800,color:'rgba(11,22,40,.72)'});
 
   // ── فوتر ──
   scText(ctx,'این کارت با اپلیکیشن TradePlan ساخته شده است',SC_W/2,1840,{size:21,weight:700,color:DIM});
@@ -12051,7 +12053,7 @@ async function shareCardSend(){
   const blob=await new Promise(r=>{ try{ cv.toBlob(r,'image/png'); }catch(e){ r(null); } });
   if(!blob){ showToast('ساخت تصویر ناموفق بود'); return; }
 
-  const text='کارت عملکرد ماهانه‌ی من در TradePlan 📊\nhttps://t.me/tradeplann';
+  const text='کارت عملکرد ماهانه‌ی من در TradePlan 📊\nhttps://tradeplan.site';
   try{
     const file=new File([blob],fname,{type:'image/png'});
     if(navigator.canShare && navigator.canShare({files:[file]})){
@@ -12213,7 +12215,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='80.2';
+const APP_VERSION='80.3';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
