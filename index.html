@@ -227,6 +227,84 @@ input[type="datetime-local"]{width:100%;background:rgba(255,255,255,.05);border:
 .gv-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;font-size:13px;font-weight:800;color:#fff}
 .gv-note{max-width:620px;text-align:center;font-size:12px;color:var(--text-muted);line-height:1.8}
 
+/* ===== SIGNAL CARDS (سبک گالری: عکس + جزئیات با کلیک) ===== */
+.sig-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;padding:12px 14px 28px}
+.sigc{border-radius:16px;overflow:hidden;background:linear-gradient(160deg,#122540,#0a1830);border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 26px rgba(0,0,0,.4);transition:transform var(--tr),box-shadow var(--tr);position:relative}
+.sigc.buy{border-color:rgba(34,197,94,.3)}
+.sigc.sell{border-color:rgba(239,68,68,.3)}
+.sigc.closed{opacity:.86}
+.sigc:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(0,0,0,.5)}
+.sigc-img-wrap{position:relative;aspect-ratio:16/9;background:#0a1424;cursor:zoom-in;overflow:hidden}
+.sigc-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s ease}
+.sigc:hover .sigc-img{transform:scale(1.04)}
+/* بدون عکس: پس‌زمینه‌ی ملایمِ جهت‌دار تا کارت خالی نباشد */
+.sigc-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:30px;opacity:.5}
+.sigc-when{position:absolute;bottom:6px;right:6px;left:6px;display:flex;justify-content:space-between;gap:6px;pointer-events:none}
+.sigc-chip{padding:3px 8px;border-radius:11px;font-size:9.5px;font-weight:800;background:rgba(5,12,24,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.12);color:#fff;white-space:nowrap}
+.sigc-chip.time{direction:ltr;font-variant-numeric:tabular-nums}
+.sigc-dirbadge{position:absolute;top:6px;right:6px;padding:3px 9px;border-radius:9px;font-size:10px;font-weight:900;border:1px solid;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.sigc-dirbadge.buy{background:rgba(34,197,94,.22);color:#4ade80;border-color:rgba(34,197,94,.5)}
+.sigc-dirbadge.sell{background:rgba(239,68,68,.22);color:#f87171;border-color:rgba(239,68,68,.5)}
+.sigc-resbadge{position:absolute;top:6px;left:6px;padding:3px 8px;border-radius:9px;font-size:9.5px;font-weight:900;background:rgba(5,12,24,.78);border:1px solid rgba(255,255,255,.14);color:#fff}
+.sigc-resbadge.win{color:#4ade80;border-color:rgba(34,197,94,.5)}
+.sigc-resbadge.loss{color:#f87171;border-color:rgba(239,68,68,.5)}
+.sigc-body{padding:8px 9px 9px;display:flex;flex-direction:column;gap:6px}
+.sigc-row1{display:flex;align-items:center;gap:7px}
+.sigc-sym{font-size:13px;font-weight:900;color:#fff;direction:ltr;letter-spacing:.3px}
+.sigc-author{margin-inline-start:auto;font-size:9.5px;font-weight:800;color:var(--text-muted);max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sigc-note{font-size:10.5px;color:var(--text-muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sigc-btns{display:flex;gap:4px;align-items:center}
+.sigc-btn{flex:1;padding:6px 0;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--text-muted);font-family:'Vazirmatn',sans-serif;font-size:10px;font-weight:800;cursor:pointer;transition:all var(--tr)}
+.sigc-btn:hover{color:#fff;border-color:rgba(255,255,255,.25)}
+.sigc-btn.gold{color:var(--gold);border-color:rgba(232,160,32,.35);background:rgba(232,160,32,.07)}
+.sigc-btn.del:hover{color:#f87171;border-color:rgba(239,68,68,.5);background:rgba(239,68,68,.1)}
+.sigc-icbtn{width:26px;height:26px;flex:0 0 auto;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px}
+/* نوار عکس‌های نتیجه — اسکرول افقی داخل خود کارت */
+.sigc-results{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+.sigc-results::-webkit-scrollbar{height:4px}
+.sigc-results::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:4px}
+.sigc-rthumb{flex:0 0 auto;width:62px;height:40px;border-radius:7px;object-fit:cover;border:1px solid rgba(255,255,255,.14);cursor:zoom-in}
+.sigc-radd{flex:0 0 auto;width:62px;height:40px;border-radius:7px;border:1.5px dashed rgba(232,160,32,.45);background:rgba(232,160,32,.05);color:var(--gold);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.sigc-rlabel{font-size:9px;font-weight:800;color:var(--text-muted);display:flex;align-items:center;gap:4px}
+/* کارت «ثبت سیگنال جدید» — فقط برای کاربران دارای مجوز */
+.sig-add-card{border:1.5px dashed rgba(232,160,32,.45);border-radius:16px;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;background:rgba(232,160,32,.03);transition:all var(--tr);text-align:center;padding:12px}
+.sig-add-card:hover{background:rgba(232,160,32,.07);border-color:var(--gold)}
+.sig-add-card:active{transform:scale(.98)}
+.sig-add-plus{width:50px;height:50px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--gold);border:1px solid rgba(232,160,32,.5);background:rgba(232,160,32,.08)}
+.sig-add-title{font-size:13.5px;font-weight:900;color:var(--gold)}
+.sig-add-sub{font-size:11px;color:var(--text-muted)}
+/* مودال جزئیات سیگنال */
+#sig-view{position:fixed;inset:0;z-index:99500;background:rgba(3,8,18,.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+#sig-view.show{display:flex}
+.sv-box{width:100%;max-width:560px;background:linear-gradient(160deg,#122540,#0a1830);border:1px solid rgba(255,255,255,.12);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7);max-height:94vh;overflow-y:auto}
+.sv-img{width:100%;max-height:44vh;object-fit:contain;background:#0a1424;display:block;cursor:zoom-in}
+.sv-pad{padding:12px 14px 16px;display:flex;flex-direction:column;gap:10px}
+.sv-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sv-sym{font-size:17px;font-weight:900;color:#fff;direction:ltr}
+.sv-when{font-size:11px;font-weight:800;color:var(--text-muted);margin-inline-start:auto;direction:rtl}
+.sv-lvls{display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:6px}
+.sv-lvl{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:7px 9px}
+.sv-lvl.sl{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.07)}
+.sv-lvl.tp{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.07)}
+.sv-lvl-lbl{font-size:9.5px;font-weight:800;color:var(--text-muted)}
+.sv-lvl-val{font-size:13.5px;font-weight:900;color:#fff;direction:ltr;font-variant-numeric:tabular-nums}
+.sv-note{font-size:12px;color:var(--text-muted);line-height:1.85;white-space:pre-wrap}
+.sv-sec{font-size:11px;font-weight:900;color:var(--gold);margin-top:2px}
+.sv-results{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.sv-rimg{flex:0 0 auto;width:190px;border-radius:10px;border:1px solid rgba(255,255,255,.14);cursor:zoom-in}
+@media (max-width:700px){
+  .sig-grid{grid-template-columns:repeat(2,1fr);gap:9px;padding:10px 12px 26px}
+  .sigc-body{padding:6px 7px 7px;gap:5px}
+  .sigc-sym{font-size:11.5px}
+  .sigc-chip{font-size:8.5px;padding:2px 6px}
+  .sigc-note{font-size:9.5px}
+  .sigc-btn{font-size:9px}
+  .sig-add-card{min-height:140px}
+  .sig-add-plus{width:40px;height:40px;font-size:19px;border-radius:12px}
+  .sig-add-title{font-size:11.5px}
+  .sig-add-sub{font-size:9.5px}
+}
+
 /* ===== STRATEGY (Setup) — selection-based luxury redesign ===== */
 .strat-section{margin:16px 14px 0}
 .strat-q{font-size:13px;font-weight:800;color:var(--text);margin-bottom:11px;display:flex;align-items:center;gap:8px}
@@ -5258,6 +5336,103 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
   </div>
 </div>
 
+<!-- ═══════ SIGNAL: ثبت / ویرایش سیگنال (فقط کاربران دارای مجوز) ═══════ -->
+<div class="modal-overlay" id="signal-modal">
+  <div class="modal-sheet gal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="sigf-title">📡 ثبت سیگنال جدید</div>
+
+    <div class="gal-drop" id="sigf-drop"
+      onclick="document.getElementById('sigf-file').click()"
+      ondragover="event.preventDefault();this.classList.add('drag-over')"
+      ondragleave="this.classList.remove('drag-over')"
+      ondrop="event.preventDefault();this.classList.remove('drag-over');sigPickFile(event.dataTransfer.files[0])">
+      <div class="gal-drop-empty" id="sigf-drop-empty">
+        <div class="gal-drop-icon">📈</div>
+        <div class="gal-drop-title">عکس چارت سیگنال را بارگذاری کن</div>
+        <div class="gal-drop-sub">کلیک کن یا فایل را بکش و رها کن · خودکار فشرده و در سرور ذخیره می‌شود</div>
+      </div>
+      <img id="sigf-preview" alt="">
+      <div class="gal-size-badge" id="sigf-size-badge"></div>
+    </div>
+    <input type="file" id="sigf-file" accept="image/*" style="display:none" onchange="sigPickFile(this.files[0]);this.value=''">
+
+    <div class="modal-form">
+      <div class="modal-row">
+        <div style="flex:1">
+          <div class="modal-label">نماد</div>
+          <input type="text" id="sigf-symbol" dir="ltr" placeholder="XAUUSD" maxlength="40">
+        </div>
+        <div style="flex:1">
+          <div class="modal-label">جهت معامله</div>
+          <div class="gal-res-toggle">
+            <button type="button" class="gal-res-btn win active" id="sigf-dir-buy" onclick="sigSetDir('buy')">🔺 خرید</button>
+            <button type="button" class="gal-res-btn loss" id="sigf-dir-sell" onclick="sigSetDir('sell')">🔻 فروش</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-row">
+        <div style="flex:1">
+          <div class="modal-label">ورود</div>
+          <input type="text" id="sigf-entry" dir="ltr" placeholder="2650 یا 2650-2648" maxlength="60">
+        </div>
+        <div style="flex:1">
+          <div class="modal-label">حد ضرر (SL)</div>
+          <input type="text" id="sigf-sl" dir="ltr" placeholder="2642" maxlength="60">
+        </div>
+      </div>
+      <div class="modal-row">
+        <div style="flex:1"><div class="modal-label">TP1</div><input type="text" id="sigf-tp1" dir="ltr" maxlength="60"></div>
+        <div style="flex:1"><div class="modal-label">TP2</div><input type="text" id="sigf-tp2" dir="ltr" maxlength="60"></div>
+        <div style="flex:1"><div class="modal-label">TP3</div><input type="text" id="sigf-tp3" dir="ltr" maxlength="60"></div>
+      </div>
+      <div>
+        <div class="modal-label">توضیحات سیگنال</div>
+        <textarea id="sigf-note" rows="2" placeholder="مثلاً: از این ناحیه با تایید ساختار وارد شوید…" maxlength="2000"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeSignalSheet()">انصراف</button>
+      <button class="modal-btn primary" id="sigf-save" onclick="signalSave()">انتشار سیگنال 📡</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL: افزودن عکس نتیجه -->
+<div class="modal-overlay" id="sigres-modal">
+  <div class="modal-sheet gal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🎯 افزودن عکس نتیجه</div>
+    <div class="gal-drop" id="sigr-drop" onclick="document.getElementById('sigr-file').click()">
+      <div class="gal-drop-empty" id="sigr-drop-empty">
+        <div class="gal-drop-icon">🖼</div>
+        <div class="gal-drop-title">عکس نتیجه‌ی این سیگنال</div>
+        <div class="gal-drop-sub">به عکس‌های قبلیِ همین سیگنال اضافه می‌شود</div>
+      </div>
+      <img id="sigr-preview" alt="">
+      <div class="gal-size-badge" id="sigr-size-badge"></div>
+    </div>
+    <input type="file" id="sigr-file" accept="image/*" style="display:none" onchange="sigPickResFile(this.files[0]);this.value=''">
+    <div class="modal-form">
+      <div>
+        <div class="modal-label">توضیح نتیجه (اختیاری)</div>
+        <input type="text" id="sigr-note" placeholder="مثلاً: TP1 زده شد، ۴۵ پیپ سود" maxlength="200">
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeModal('sigres-modal')">انصراف</button>
+      <button class="modal-btn primary" onclick="sigResultSave()">ذخیره نتیجه ✅</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL: جزئیات کامل سیگنال -->
+<div id="sig-view" onclick="if(event.target===this)sigCloseView()">
+  <button type="button" class="gv-close" onclick="sigCloseView()">✕</button>
+  <div class="sv-box" id="sig-view-box"></div>
+</div>
+
 <!-- GALLERY: fullscreen lightbox -->
 <div id="gal-view" onclick="if(event.target===this)galCloseView()">
   <button type="button" class="gv-close" onclick="galCloseView()">✕</button>
@@ -5646,6 +5821,9 @@ function switchJournalTab(idx){
    عضویت VIP از user_groups (ردیف خودِ کاربر) چک می‌شود تا «قفل» از «VIP ولی
    بدون سیگنال» تفکیک شود. رندر با هر باز شدن تب تازه می‌شود. */
 let _sigItems=[], _sigVip=false, _sigBusy=false;
+// مجوز «سیگنال دادن» — ادمین از پنل فعال می‌کند (جدول signal_access)
+let _sigCanPost=false, _sigPostChecked=false;
+function SIG_POST_KEY(){ return CURRENT_USER?('tradeplan_sigpost:'+CURRENT_USER.id):'tradeplan_sigpost'; }
 
 function sigLockedHTML(msg){
   return `<div class="sig-locked">
@@ -5677,8 +5855,11 @@ async function loadSignals(){
       if(!ge) vip=(gs||[]).some(sigMemberValid);
     }catch(e){ /* جدول ساخته نشده → غیرVIP */ }
     _sigVip=vip;
-    if(!vip){ root.innerHTML=sigLockedHTML(); return; }
-    // سیگنال‌ها (RLS فقط سیگنالِ گروه‌های معتبرِ کاربر را برمی‌گرداند)
+    // مجوز سیگنال‌دهی — از کش (آفلاین) و بعد از سرور
+    await sigCheckPostAccess();
+    // کسی که اجازه‌ی سیگنال دادن دارد، حتی اگر VIP نباشد به بخش دسترسی دارد
+    if(!vip && !_sigCanPost){ root.innerHTML=sigLockedHTML(); return; }
+    // سیگنال‌ها (RLS فقط سیگنالِ گروه‌های معتبرِ کاربر + سیگنال‌های خودش را برمی‌گرداند)
     const {data:rows,error}=await SB.from('signals').select('*').order('id',{ascending:false}).limit(200);
     if(error){ root.innerHTML=sigLockedHTML('سرور سیگنال هنوز آماده نیست (فایل signals.sql باید در Supabase اجرا شود).'); return; }
     _sigItems=rows||[];
@@ -5713,53 +5894,136 @@ function renderSignals(){
     ${equity}
   </div>`;
 
-  if(active.length){
-    html+=`<div class="sig-sec">🟢 سیگنال‌های فعال <span class="sig-sec-count">${toFA(active.length)}</span></div>`;
-    html+=active.map(sigCardHTML).join('');
+  // شبکه‌ی کارت‌ها — دقیقاً به سبک گالری معاملات: عکس بالا، جزئیات با کلیک
+  let grid='';
+  if(_sigCanPost){
+    grid+=`<div class="sig-add-card" onclick="openSignalSheet()">
+      <div class="sig-add-plus">＋</div>
+      <div class="sig-add-title">ثبت سیگنال جدید</div>
+      <div class="sig-add-sub">عکس چارت و جزئیات سیگنالت را وارد کن</div>
+    </div>`;
   }
-  if(closed.length){
-    html+=`<div class="sig-sec">📜 تاریخچه <span class="sig-sec-count">${toFA(closed.length)}</span></div>`;
-    html+='<div class="sig-hist">'+closed.map(sigHistHTML).join('')+'</div>';
+  grid+=items.map(sigCardHTML).join('');
+  if(!items.length){
+    grid+=`<div class="gal-empty">🕊️ هنوز سیگنالی ثبت نشده.<br>به‌زودی اینجا سیگنال‌های دقیق و اختصاصی می‌بینی.</div>`;
   }
-  if(!active.length && !closed.length){
-    html+=`<div class="sig-empty">🕊️ هنوز سیگنالی ثبت نشده.<br>به‌زودی اینجا سیگنال‌های دقیق و اختصاصی می‌بینی.</div>`;
-  }
+  html+=`<div class="sig-grid">${grid}</div>`;
   root.innerHTML=html;
 }
 
+/* تاریخ و ساعت دقیقِ ثبت سیگنال — روی خود کارت دیده می‌شود */
+function sigDateOnly(iso){ const d=new Date(iso); return isNaN(d)?'':d.toLocaleDateString('fa-IR',{day:'numeric',month:'long'}); }
+function sigTimeOnly(iso){ const d=new Date(iso); return isNaN(d)?'':d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'}); }
+// ترتیب اجزا را دستی می‌چینیم تا در همه‌ی مرورگرها یکسان باشد
+// (toLocaleDateString با weekday در بعضی محیط‌ها «۱۴۰۵ تیر ۲۷, شنبه» می‌دهد)
+function sigFullWhen(iso){
+  const d=new Date(iso); if(isNaN(d)) return '';
+  const wd=d.toLocaleDateString('fa-IR',{weekday:'long'});
+  const dm=d.toLocaleDateString('fa-IR',{day:'numeric',month:'long'});
+  const yr=d.toLocaleDateString('fa-IR',{year:'numeric'});
+  const tm=d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+  return wd+' '+dm+' '+yr+' · ساعت '+tm;
+}
+function sigIsMine(s){ return !!(CURRENT_USER && s.author_id===CURRENT_USER.id); }
+function sigResults(s){ try{ return Array.isArray(s.result_imgs)?s.result_imgs:JSON.parse(s.result_imgs||'[]'); }catch(e){ return []; } }
+
 function sigCardHTML(s){
   const dir=s.direction==='sell'?'sell':'buy';
-  const dirTxt=dir==='sell'?'🔻 فروش':'🔺 خرید';
-  const lv=[];
-  if(s.entry) lv.push(`<div class="sig-lvl"><div class="sig-lvl-label">ورود</div><div class="sig-lvl-val">${sigEsc(s.entry)}</div></div>`);
-  if(s.sl)    lv.push(`<div class="sig-lvl sl"><div class="sig-lvl-label">حد ضرر</div><div class="sig-lvl-val">${sigEsc(s.sl)}</div></div>`);
-  if(s.tp1)   lv.push(`<div class="sig-lvl tp"><div class="sig-lvl-label">TP1</div><div class="sig-lvl-val">${sigEsc(s.tp1)}</div></div>`);
-  if(s.tp2)   lv.push(`<div class="sig-lvl tp"><div class="sig-lvl-label">TP2</div><div class="sig-lvl-val">${sigEsc(s.tp2)}</div></div>`);
-  if(s.tp3)   lv.push(`<div class="sig-lvl tp"><div class="sig-lvl-label">TP3</div><div class="sig-lvl-val">${sigEsc(s.tp3)}</div></div>`);
-  return `<div class="sig-card ${dir}">
-    <div class="sig-card-head">
-      <span class="sig-sym">${sigEsc(s.symbol)}</span>
-      <span class="sig-dir ${dir}">${dirTxt}</span>
-      <span class="sig-time">${sigDateChip(s.created_at)}</span>
+  const img=s.img||s.image_url||'';
+  const res=sigResults(s);
+  const mine=sigIsMine(s);
+  const resBadge=s.status==='closed'&&s.result
+    ? `<span class="sigc-resbadge ${s.result}">${sigResLabel(s.result)}</span>` : '';
+  return `<div class="sigc ${dir}${s.status==='closed'?' closed':''}">
+    <div class="sigc-img-wrap" onclick="sigOpenView(${s.id})">
+      ${img?`<img class="sigc-img" src="${sigEsc(img)}" alt="chart" loading="lazy">`
+           :`<div class="sigc-noimg">${dir==='sell'?'🔻':'🔺'}</div>`}
+      <span class="sigc-dirbadge ${dir}">${dir==='sell'?'🔻 فروش':'🔺 خرید'}</span>
+      ${resBadge}
+      <div class="sigc-when">
+        <span class="sigc-chip">${sigDateOnly(s.created_at)}</span>
+        <span class="sigc-chip time">🕐 ${sigTimeOnly(s.created_at)}</span>
+      </div>
     </div>
-    ${lv.length?`<div class="sig-levels">${lv.join('')}</div>`:''}
-    ${s.image_url?`<img class="sig-img" src="${sigEsc(s.image_url)}" alt="chart" loading="lazy" onerror="this.style.display='none'">`:''}
-    ${s.note?`<div class="sig-note">${sigEsc(s.note)}</div>`:''}
-    <button type="button" class="sig-copy" onclick="sigCopy(${s.id})">📋 کپی سیگنال</button>
+    <div class="sigc-body">
+      <div class="sigc-row1">
+        <span class="sigc-sym">${sigEsc(s.symbol)}</span>
+        <span class="sigc-author">✍️ ${sigEsc(s.author_name||'ادمین')}</span>
+      </div>
+      ${s.note?`<div class="sigc-note">${sigEsc(s.note)}</div>`:''}
+      ${(res.length||mine)?`
+        <div class="sigc-rlabel">🎯 نتیجه‌ها ${res.length?`<span>(${toFA(res.length)})</span>`:''}</div>
+        <div class="sigc-results">
+          ${mine?`<button type="button" class="sigc-radd" onclick="sigOpenResult(${s.id})" title="افزودن عکس نتیجه">＋</button>`:''}
+          ${res.map((r,i)=>`<img class="sigc-rthumb" src="${sigEsc(r.img)}" alt="result" loading="lazy" onclick="sigOpenView(${s.id},${i})">`).join('')}
+        </div>`:''}
+      <div class="sigc-btns">
+        <button type="button" class="sigc-btn gold" onclick="sigCopy(${s.id})">📋 کپی عددها</button>
+        <button type="button" class="sigc-btn" onclick="sigOpenView(${s.id})">جزئیات</button>
+        ${mine?`<button type="button" class="sigc-btn del sigc-icbtn" onclick="sigDelete(${s.id})" title="حذف سیگنال">🗑</button>`:''}
+      </div>
+    </div>
   </div>`;
 }
 
-function sigHistHTML(s){
+/* ---------- مودال جزئیات ---------- */
+function sigOpenView(id,scrollToRes){
+  const s=_sigItems.find(x=>x.id===id); if(!s) return;
   const dir=s.direction==='sell'?'sell':'buy';
-  const res=s.result||'breakeven';
-  const val=(s.result_value!=null)?(' · '+sigFmtSigned((res==='loss'?-Math.abs(s.result_value):Math.abs(s.result_value)),s.result_unit)):'';
-  return `<div class="sig-hist-row">
-    <div class="sig-hist-dir ${dir}">${dir==='sell'?'🔻':'🔺'}</div>
-    <div style="min-width:0"><div class="sig-hist-sym">${sigEsc(s.symbol)}</div><div class="sig-hist-date">${sigDateChip(s.closed_at||s.created_at)}</div></div>
-    <div class="sig-hist-res ${res}">${sigResLabel(res)}${val}</div>
-  </div>`;
+  const img=s.img||s.image_url||'';
+  const res=sigResults(s);
+  const lv=[];
+  if(s.entry) lv.push(`<div class="sv-lvl"><div class="sv-lvl-lbl">ورود</div><div class="sv-lvl-val">${sigEsc(s.entry)}</div></div>`);
+  if(s.sl)    lv.push(`<div class="sv-lvl sl"><div class="sv-lvl-lbl">حد ضرر</div><div class="sv-lvl-val">${sigEsc(s.sl)}</div></div>`);
+  if(s.tp1)   lv.push(`<div class="sv-lvl tp"><div class="sv-lvl-lbl">TP1</div><div class="sv-lvl-val">${sigEsc(s.tp1)}</div></div>`);
+  if(s.tp2)   lv.push(`<div class="sv-lvl tp"><div class="sv-lvl-lbl">TP2</div><div class="sv-lvl-val">${sigEsc(s.tp2)}</div></div>`);
+  if(s.tp3)   lv.push(`<div class="sv-lvl tp"><div class="sv-lvl-lbl">TP3</div><div class="sv-lvl-val">${sigEsc(s.tp3)}</div></div>`);
+  const resVal=(s.result_value!=null)
+    ? ' · '+sigFmtSigned((s.result==='loss'?-Math.abs(s.result_value):Math.abs(s.result_value)),s.result_unit) : '';
+  document.getElementById('sig-view-box').innerHTML=
+    (img?`<img class="sv-img" src="${sigEsc(img)}" alt="chart" onclick="galOpenImg('${sigEsc(img).replace(/'/g,"\\'")}')">`:'')+
+    `<div class="sv-pad">
+      <div class="sv-head">
+        <span class="sigc-dirbadge ${dir}" style="position:static">${dir==='sell'?'🔻 فروش':'🔺 خرید'}</span>
+        <span class="sv-sym">${sigEsc(s.symbol)}</span>
+        ${s.status==='closed'&&s.result?`<span class="sigc-resbadge ${s.result}" style="position:static">${sigResLabel(s.result)}${resVal}</span>`:'<span class="sigc-resbadge win" style="position:static">🟢 فعال</span>'}
+      </div>
+      <div class="sv-head">
+        <span class="sigc-author" style="margin:0">✍️ ${sigEsc(s.author_name||'ادمین')}</span>
+        <span class="sv-when">🕐 ${sigFullWhen(s.created_at)}</span>
+      </div>
+      ${lv.length?`<div class="sv-lvls">${lv.join('')}</div>`:''}
+      ${s.note?`<div class="sv-note">${sigEsc(s.note)}</div>`:''}
+      ${res.length?`<div class="sv-sec">🎯 نتیجه‌های این سیگنال (${toFA(res.length)})</div>
+        <div class="sv-results" id="sv-results">
+          ${res.map(r=>`<div style="flex:0 0 auto">
+            <img class="sv-rimg" src="${sigEsc(r.img)}" alt="result" onclick="galOpenImg('${sigEsc(r.img).replace(/'/g,"\\'")}')">
+            ${r.note?`<div class="sigc-rlabel" style="margin-top:4px;max-width:190px">${sigEsc(r.note)}</div>`:''}
+            ${r.at?`<div class="sigc-rlabel" style="opacity:.7">${sigDateOnly(r.at)} · ${sigTimeOnly(r.at)}</div>`:''}
+          </div>`).join('')}
+        </div>`:''}
+      <div class="sigc-btns">
+        <button type="button" class="sigc-btn gold" onclick="sigCopy(${s.id})">📋 کپی دیتای سیگنال</button>
+        ${sigIsMine(s)?`<button type="button" class="sigc-btn" onclick="sigOpenResult(${s.id})">🎯 افزودن نتیجه</button>`:''}
+        ${sigIsMine(s)?`<button type="button" class="sigc-btn" onclick="openSignalSheet(${s.id})">✏️ ویرایش</button>`:''}
+      </div>
+    </div>`;
+  document.getElementById('sig-view').classList.add('show');
+  if(scrollToRes!=null){
+    const box=document.getElementById('sv-results');
+    if(box) setTimeout(()=>{ const el=box.children[scrollToRes]; if(el) el.scrollIntoView({inline:'center',block:'nearest'}); },60);
+  }
+}
+function sigCloseView(){ document.getElementById('sig-view').classList.remove('show'); }
+/* عکس تمام‌صفحه — از همان لایت‌باکس گالری استفاده می‌کنیم */
+function galOpenImg(src){
+  document.getElementById('gal-view-img').src=src;
+  document.getElementById('gal-view-meta').innerHTML='';
+  document.getElementById('gal-view-note').textContent='';
+  document.getElementById('gal-view').classList.add('show');
 }
 
+/* کپی دیتای عددیِ سیگنال */
 function sigCopy(id){
   const s=_sigItems.find(x=>x.id===id); if(!s) return;
   const dirTxt=s.direction==='sell'?'فروش (Sell)':'خرید (Buy)';
@@ -5770,10 +6034,164 @@ function sigCopy(id){
   if(s.tp2)   t+='TP2: '+s.tp2+'\n';
   if(s.tp3)   t+='TP3: '+s.tp3+'\n';
   if(s.note)  t+='\n'+s.note+'\n';
+  t+='\n🕐 '+sigFullWhen(s.created_at);
+  t+='\n✍️ '+(s.author_name||'ادمین');
   t+='\n— TradePlan';
-  const done=()=>showToast('✅ سیگنال کپی شد');
+  const done=()=>showToast('✅ دیتای سیگنال کپی شد');
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done).catch(done); }
   else{ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} ta.remove(); done(); }
+}
+
+/* ═══════ سیگنال دادن از داخل برنامه (فقط با مجوز ادمین) ═══════ */
+let _sigEditId=null, _sigPendingImg=null, _sigResId=null, _sigPendingResImg=null;
+
+// وضعیت مجوز: اول کش (برای آفلاین)، بعد تازه‌سازی از سرور
+async function sigCheckPostAccess(){
+  _sigCanPost = localStorage.getItem(SIG_POST_KEY())==='1';
+  if(!SB||!CURRENT_USER) return;
+  try{
+    const {data:row,error}=await SB.from('signal_access').select('enabled')
+      .eq('user_id',CURRENT_USER.id).maybeSingle();
+    if(!error){
+      _sigCanPost=!!(row&&row.enabled);
+      localStorage.setItem(SIG_POST_KEY(),_sigCanPost?'1':'0');
+    }
+  }catch(e){ /* آفلاین یا signals-v2.sql اجرا نشده — همان کش می‌ماند */ }
+  _sigPostChecked=true;
+}
+
+function sigSetDir(d){
+  _sigFormDir=(d==='sell')?'sell':'buy';
+  document.getElementById('sigf-dir-buy').classList.toggle('active',_sigFormDir==='buy');
+  document.getElementById('sigf-dir-sell').classList.toggle('active',_sigFormDir==='sell');
+}
+let _sigFormDir='buy';
+
+function openSignalSheet(id){
+  if(!_sigCanPost){ showToast('🔒 اجازه‌ی سیگنال دادن برایت فعال نشده'); return; }
+  const s=id?_sigItems.find(x=>x.id===id):null;
+  _sigEditId=s?s.id:null;
+  _sigPendingImg=null;
+  document.getElementById('sigf-title').textContent=s?'✏️ ویرایش سیگنال':'📡 ثبت سیگنال جدید';
+  document.getElementById('sigf-save').textContent=s?'ذخیره تغییرات 💾':'انتشار سیگنال 📡';
+  document.getElementById('sigf-symbol').value=s?(s.symbol||''):'';
+  document.getElementById('sigf-entry').value =s?(s.entry||''):'';
+  document.getElementById('sigf-sl').value    =s?(s.sl||''):'';
+  document.getElementById('sigf-tp1').value   =s?(s.tp1||''):'';
+  document.getElementById('sigf-tp2').value   =s?(s.tp2||''):'';
+  document.getElementById('sigf-tp3').value   =s?(s.tp3||''):'';
+  document.getElementById('sigf-note').value  =s?(s.note||''):'';
+  sigSetDir(s?(s.direction==='sell'?'sell':'buy'):'buy');
+  // پیش‌نمایش عکس فعلی (در حالت ویرایش)
+  const prev=document.getElementById('sigf-preview'), empty=document.getElementById('sigf-drop-empty'),
+        badge=document.getElementById('sigf-size-badge');
+  const cur=s?(s.img||''):'';
+  if(cur){ prev.src=cur; prev.style.display='block'; empty.style.display='none'; }
+  else{ prev.removeAttribute('src'); prev.style.display='none'; empty.style.display='flex'; }
+  badge.style.display='none';
+  sigCloseView();
+  document.getElementById('signal-modal').classList.add('show');
+}
+function closeSignalSheet(){ document.getElementById('signal-modal').classList.remove('show'); }
+
+// عکس سیگنال — با همان فشرده‌سازیِ گالری (وب‌پی/جی‌پگ، ~۱۸۵KB)
+async function sigPickFile(file){
+  if(!file||!/^image\//.test(file.type)){ showToast('⚠️ فقط فایل عکس'); return; }
+  showToast('⏳ در حال فشرده‌سازی عکس…');
+  try{
+    const out=await galCompressImage(file);
+    _sigPendingImg=out;
+    const prev=document.getElementById('sigf-preview'), badge=document.getElementById('sigf-size-badge');
+    prev.src=out; prev.style.display='block';
+    document.getElementById('sigf-drop-empty').style.display='none';
+    badge.textContent=galKB(file.size)+' → '+galKB(out.length*3/4);
+    badge.style.display='block';
+  }catch(e){ showToast('❌ خواندن عکس ناموفق بود'); }
+}
+
+async function signalSave(){
+  if(!SB||!CURRENT_USER){ showToast('برای ثبت سیگنال باید آنلاین باشی'); return; }
+  const symbol=document.getElementById('sigf-symbol').value.trim();
+  if(!symbol){ showToast('نماد سیگنال را وارد کن'); return; }
+  const payload={
+    symbol:symbol.slice(0,40), direction:_sigFormDir,
+    entry:document.getElementById('sigf-entry').value.trim().slice(0,60),
+    sl:document.getElementById('sigf-sl').value.trim().slice(0,60),
+    tp1:document.getElementById('sigf-tp1').value.trim().slice(0,60),
+    tp2:document.getElementById('sigf-tp2').value.trim().slice(0,60),
+    tp3:document.getElementById('sigf-tp3').value.trim().slice(0,60),
+    note:document.getElementById('sigf-note').value.trim().slice(0,2000)
+  };
+  if(_sigPendingImg) payload.img=_sigPendingImg;
+  showToast('⏳ در حال ارسال…');
+  try{
+    let error;
+    if(_sigEditId){ ({error}=await SB.from('signals').update(payload).eq('id',_sigEditId)); }
+    else{ ({error}=await SB.from('signals').insert(payload)); }
+    if(error){
+      showToast(/permission|policy|row-level/i.test(error.message||'')
+        ? '🔒 اجازه‌ی سیگنال دادن برایت فعال نیست'
+        : '❌ ثبت سیگنال ناموفق بود');
+      return;
+    }
+    showToast(_sigEditId?'✅ سیگنال ویرایش شد':'📡 سیگنال منتشر شد');
+    closeSignalSheet();
+    _sigEditId=null; _sigPendingImg=null;
+    _sigBusy=false; loadSignals();
+  }catch(e){ showToast('❌ خطا در ارتباط با سرور'); }
+}
+
+async function sigDelete(id){
+  if(!confirm('این سیگنال برای همیشه حذف شود؟')) return;
+  try{
+    const {error}=await SB.from('signals').delete().eq('id',id);
+    if(error){ showToast('❌ حذف ناموفق بود'); return; }
+    showToast('🗑 سیگنال حذف شد');
+    sigCloseView();
+    _sigBusy=false; loadSignals();
+  }catch(e){ showToast('❌ خطا در حذف'); }
+}
+
+/* ---------- عکس نتیجه (اسکرولی داخل کارت) ---------- */
+function sigOpenResult(id){
+  _sigResId=id; _sigPendingResImg=null;
+  const prev=document.getElementById('sigr-preview');
+  prev.removeAttribute('src'); prev.style.display='none';
+  document.getElementById('sigr-drop-empty').style.display='flex';
+  document.getElementById('sigr-size-badge').style.display='none';
+  document.getElementById('sigr-note').value='';
+  document.getElementById('sigres-modal').classList.add('show');
+}
+async function sigPickResFile(file){
+  if(!file||!/^image\//.test(file.type)){ showToast('⚠️ فقط فایل عکس'); return; }
+  showToast('⏳ در حال فشرده‌سازی عکس…');
+  try{
+    const out=await galCompressImage(file);
+    _sigPendingResImg=out;
+    const prev=document.getElementById('sigr-preview'), badge=document.getElementById('sigr-size-badge');
+    prev.src=out; prev.style.display='block';
+    document.getElementById('sigr-drop-empty').style.display='none';
+    badge.textContent=galKB(file.size)+' → '+galKB(out.length*3/4);
+    badge.style.display='block';
+  }catch(e){ showToast('❌ خواندن عکس ناموفق بود'); }
+}
+async function sigResultSave(){
+  if(!_sigPendingResImg){ showToast('اول عکس نتیجه را انتخاب کن'); return; }
+  const s=_sigItems.find(x=>x.id===_sigResId); if(!s) return;
+  const list=sigResults(s).concat([{
+    img:_sigPendingResImg,
+    note:document.getElementById('sigr-note').value.trim().slice(0,200),
+    at:new Date().toISOString()
+  }]);
+  showToast('⏳ در حال ارسال…');
+  try{
+    const {error}=await SB.from('signals').update({result_imgs:list}).eq('id',_sigResId);
+    if(error){ showToast('❌ ثبت نتیجه ناموفق بود'); return; }
+    showToast('🎯 عکس نتیجه اضافه شد');
+    closeModal('sigres-modal');
+    _sigPendingResImg=null;
+    _sigBusy=false; loadSignals();
+  }catch(e){ showToast('❌ خطا در ارتباط با سرور'); }
 }
 
 // نمودار equity ساده (SVG، بدون وابستگی به rAF): مجموع تجمعیِ نتیجه‌ها (برد +، باخت −).
@@ -11246,7 +11664,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='79.6';
+const APP_VERSION='80.0';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){

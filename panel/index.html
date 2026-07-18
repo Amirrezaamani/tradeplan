@@ -106,6 +106,18 @@ th{font-size:11px;color:var(--muted);font-weight:800;text-align:right;padding:10
 .u-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:11px}
 .u-toolbar .u-search{margin-bottom:0}
 .u-filter{flex-shrink:0}
+/* فیلترهای کشویی مدیریت کاربران */
+.u-filter-grid{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap;width:100%}
+.u-fl{display:flex;flex-direction:column;gap:4px}
+.u-fl-lbl{font-size:10.5px;font-weight:800;color:var(--dim);padding-inline-start:3px}
+.u-fl-sel{
+  background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:10px;
+  color:var(--text);font-family:inherit;font-size:12px;font-weight:700;padding:8px 10px;
+  outline:none;cursor:pointer;min-width:150px;transition:border-color .15s
+}
+.u-fl-sel:focus{border-color:rgba(232,160,32,.6)}
+.u-fl-sel.on{border-color:rgba(232,160,32,.55);background:rgba(232,160,32,.1)}
+.u-fl-clear{align-self:flex-end}
 .u-search{
   width:100%;max-width:340px;margin-bottom:11px;display:block;
   background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.1);border-radius:11px;
@@ -304,17 +316,66 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
         <button class="ch-chip" id="uf-active3" onclick="userFilter('active3')">⚡ فعال ۳ روز</button>
         <button class="ch-chip" id="uf-idle3" onclick="userFilter('idle3')">💤 غیرفعال ۳ روز</button>
       </div>
+      <!-- فیلترهای دقیق‌تر: عضویت / بازدید / اکسپرت / فعالیت امروز -->
+      <div class="u-filter-grid">
+        <label class="u-fl">
+          <span class="u-fl-lbl">📅 تاریخ عضویت</span>
+          <select class="u-fl-sel" id="uf-join" onchange="userFilter2('join',this.value)">
+            <option value="all">همه</option>
+            <option value="today">امروز</option>
+            <option value="7">۷ روز اخیر</option>
+            <option value="30">۳۰ روز اخیر</option>
+            <option value="old30">قدیمی‌تر از ۳۰ روز</option>
+          </select>
+        </label>
+        <label class="u-fl">
+          <span class="u-fl-lbl">👁️ آخرین بازدید</span>
+          <select class="u-fl-sel" id="uf-visit" onchange="userFilter2('visit',this.value)">
+            <option value="all">همه</option>
+            <option value="today">امروز</option>
+            <option value="7">۷ روز اخیر</option>
+            <option value="30">۳۰ روز اخیر</option>
+            <option value="old7">بیش از ۷ روز غایب</option>
+            <option value="old30">بیش از ۳۰ روز غایب</option>
+            <option value="never">هرگز وارد نشده</option>
+          </select>
+        </label>
+        <label class="u-fl">
+          <span class="u-fl-lbl">🔌 اتصال اکسپرت</span>
+          <select class="u-fl-sel" id="uf-ea" onchange="userFilter2('ea',this.value)">
+            <option value="all">همه</option>
+            <option value="on">✅ وصل (ترید دارد)</option>
+            <option value="token">🔑 توکن ساخته، ترید ندارد</option>
+            <option value="off">وصل نشده</option>
+          </select>
+        </label>
+        <label class="u-fl">
+          <span class="u-fl-lbl">⚡ فعالیت امروز</span>
+          <select class="u-fl-sel" id="uf-today" onchange="userFilter2('today',this.value)">
+            <option value="all">همه</option>
+            <option value="yes">امروز فعال بوده</option>
+            <option value="no">امروز نیامده</option>
+          </select>
+        </label>
+        <button class="ch-chip u-fl-clear" onclick="userFilterClear()">✕ پاک کردن فیلترها</button>
+      </div>
       <div class="ch-metric">
         <button class="ch-chip" onclick="setGalleryAll(true)">🖼 گالری همه: فعال</button>
         <button class="ch-chip" onclick="setGalleryAll(false)">🔒 گالری همه: غیرفعال</button>
+      </div>
+      <!-- سوییچ کلی بخش سیگنال + مجوز سیگنال‌دهی -->
+      <div class="ch-metric">
+        <button class="ch-chip" onclick="setVipAll(true)">📡 سیگنال همه: فعال</button>
+        <button class="ch-chip" onclick="setVipAll(false)">🔒 سیگنال همه: غیرفعال</button>
+        <button class="ch-chip" onclick="setPosterAll(false)">🚫 سیگنال‌دهی همه: غیرفعال</button>
       </div>
     </div>
     <div class="tbl-wrap">
       <table>
         <thead><tr>
-          <th>#</th><th>نام کاربری</th><th>ایمیل</th><th>تاریخ عضویت</th><th>اکسپرت</th><th>آخرین بازدید</th><th>۳ روز اخیر</th><th>وضعیت</th><th>گالری</th><th>عملیات</th>
+          <th>#</th><th>نام کاربری</th><th>ایمیل</th><th>تاریخ عضویت</th><th>اکسپرت</th><th>آخرین بازدید</th><th>۳ روز اخیر</th><th>وضعیت</th><th>گالری</th><th>سیگنال</th><th>عملیات</th>
         </tr></thead>
-        <tbody id="users-body"><tr><td colspan="10" class="empty-row">در حال بارگذاری…</td></tr></tbody>
+        <tbody id="users-body"><tr><td colspan="11" class="empty-row">در حال بارگذاری…</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -791,14 +852,64 @@ async function loadGallery(){
     }
   }catch(e){ _gal=null; }
 }
+/* سیگنال: نقشه‌ی user_id → {vip, poster, signals}؛ null یعنی signals-v2.sql اجرا نشده */
+let _sigAcc=null;
+async function loadSignalAccess(){
+  try{
+    const r=await rpc('admin_signal_access_list',{p_token:ADMIN_TOKEN});
+    if(r&&r.ok){
+      _sigAcc={};
+      (r.rows||[]).forEach(x=>{ _sigAcc[x.user_id]={vip:!!x.vip,poster:!!x.poster,signals:x.signals||0}; });
+    }else _sigAcc=null;
+  }catch(e){ _sigAcc=null; }
+}
 async function loadUsers(){
   try{
     const r=await rpc('admin_users',{p_token:ADMIN_TOKEN});
     if(!r||!r.ok){ if(r&&r.error==='unauthorized')authFail(); return; }
     _users=r.users||[];
     await loadGallery();
+    await loadSignalAccess();
     renderUsers();
   }catch(e){}
+}
+/* --- سیگنال: دیدن (عضویت vip) --- */
+async function setVip(id,en){
+  const u=_users.find(x=>x.id===id);
+  if(!en && !confirm('بخش سیگنال برای «'+(u?u.name:'')+'» غیرفعال شود؟'))return;
+  const r=en
+    ? await rpc('admin_group_set',{p_token:ADMIN_TOKEN,p_user:id,p_group:'vip',p_expires:null})
+    : await rpc('admin_group_remove',{p_token:ADMIN_TOKEN,p_user:id,p_group:'vip'});
+  if(r&&r.ok){ toast(en?'📡 سیگنال برای کاربر فعال شد':'🔒 سیگنال کاربر غیرفعال شد'); loadUsers(); }
+  else if(r&&r.error==='unauthorized')authFail();
+  else toast('❌ خطا — فایل signals.sql در Supabase اجرا شده؟');
+}
+async function setVipAll(en){
+  if(!confirm(en
+    ? 'بخش سیگنال برای «همه» کاربران فعال شود؟'
+    : '⚠️ بخش سیگنال برای «همه» کاربران غیرفعال شود؟ (عضویت VIP همه پاک می‌شود)'))return;
+  const r=await rpc('admin_set_vip_all',{p_token:ADMIN_TOKEN,p_enabled:en});
+  if(r&&r.ok){ toast(en?'📡 سیگنال برای همه ('+faNum(r.count||0)+' کاربر) فعال شد':'🔒 سیگنال برای همه غیرفعال شد'); loadUsers(); }
+  else if(r&&r.error==='unauthorized')authFail();
+  else toast('❌ خطا — فایل signals-v2.sql در Supabase اجرا شده؟');
+}
+/* --- سیگنال: اجازه‌ی سیگنال دادن از داخل برنامه --- */
+async function setPoster(id,en){
+  const u=_users.find(x=>x.id===id);
+  if(!en && !confirm('اجازه‌ی سیگنال دادن «'+(u?u.name:'')+'» لغو شود؟'))return;
+  const r=await rpc('admin_set_signal_poster',{p_token:ADMIN_TOKEN,p_user:id,p_enabled:en});
+  if(r&&r.ok){ toast(en?'✍️ کاربر حالا می‌تواند سیگنال بدهد':'🚫 اجازه‌ی سیگنال‌دهی لغو شد'); loadUsers(); }
+  else if(r&&r.error==='unauthorized')authFail();
+  else toast('❌ خطا — فایل signals-v2.sql در Supabase اجرا شده؟');
+}
+async function setPosterAll(en){
+  if(!confirm(en
+    ? '⚠️ اجازه‌ی سیگنال دادن به «همه» کاربران داده شود؟'
+    : 'اجازه‌ی سیگنال دادن از «همه» گرفته شود؟'))return;
+  const r=await rpc('admin_set_signal_poster_all',{p_token:ADMIN_TOKEN,p_enabled:en});
+  if(r&&r.ok){ toast(en?'✍️ سیگنال‌دهی برای همه فعال شد':'🚫 سیگنال‌دهی همه لغو شد'); loadUsers(); }
+  else if(r&&r.error==='unauthorized')authFail();
+  else toast('❌ خطا — فایل signals-v2.sql در Supabase اجرا شده؟');
 }
 async function setGallery(id,en){
   const u=_users.find(x=>x.id===id);
@@ -844,6 +955,57 @@ function userFilter(f){
   });
   renderUsers();
 }
+
+/* ---- فیلترهای کشویی: عضویت / بازدید / اکسپرت / فعالیت امروز ---- */
+const _uf={join:'all',visit:'all',ea:'all',today:'all'};
+function userFilter2(kind,val){
+  _uf[kind]=val;
+  const el=document.getElementById('uf-'+kind);
+  if(el) el.classList.toggle('on',val!=='all');
+  renderUsers();
+}
+function userFilterClear(){
+  Object.keys(_uf).forEach(k=>{
+    _uf[k]='all';
+    const el=document.getElementById('uf-'+k);
+    if(el){ el.value='all'; el.classList.remove('on'); }
+  });
+  renderUsers();
+}
+/* «امروز» به وقت تهران — تا شمارش روز با بقیه‌ی پنل یکی باشد */
+function uDayKey(d){
+  try{ return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).format(d); }
+  catch(e){ return d.toISOString().slice(0,10); }
+}
+function uIsToday(iso){ return !!iso && uDayKey(new Date(iso))===uDayKey(new Date()); }
+function uAgeDays(iso){ return iso ? (Date.now()-new Date(iso).getTime())/86400000 : Infinity; }
+function uPassFilters(u){
+  // تاریخ عضویت
+  const j=_uf.join, ja=uAgeDays(u.created_at);
+  if(j==='today'  && !uIsToday(u.created_at)) return false;
+  if(j==='7'      && !(ja<=7))  return false;
+  if(j==='30'     && !(ja<=30)) return false;
+  if(j==='old30'  && !(ja>30))  return false;
+  // آخرین بازدید
+  const v=_uf.visit, va=uAgeDays(u.last_visit);
+  if(v==='never'  && u.last_visit) return false;
+  if(v==='today'  && !uIsToday(u.last_visit)) return false;
+  if(v==='7'      && !(va<=7))  return false;
+  if(v==='30'     && !(va<=30)) return false;
+  if(v==='old7'   && !(u.last_visit && va>7))  return false;
+  if(v==='old30'  && !(u.last_visit && va>30)) return false;
+  // اتصال اکسپرت
+  const e=_uf.ea;
+  if(e==='on'    && !(u.trades>0)) return false;
+  if(e==='token' && !(u.has_token && !(u.trades>0))) return false;
+  if(e==='off'   && (u.has_token || u.trades>0)) return false;
+  // فعالیت امروز
+  const t=_uf.today;
+  if(t==='yes' && !uIsToday(u.last_visit)) return false;
+  if(t==='no'  &&  uIsToday(u.last_visit)) return false;
+  return true;
+}
+function uAnyFilter2(){ return Object.values(_uf).some(v=>v!=='all'); }
 function renderUsers(){
   const tb=document.getElementById('users-body');
   // جست‌وجوی هوشمند: اول کسانی که نامشان با عبارت شروع می‌شود، بعد شامل‌شونده‌ها
@@ -859,11 +1021,13 @@ function renderUsers(){
   // تا کاربری که همین امروز ثبت‌نام کرده، اشتباهی کاندید حذف نشود.
   if(_userFilter==='active3')      list=list.filter(uActive3);
   else if(_userFilter==='idle3')   list=list.filter(u=>!uActive3(u)&&!uNew3(u));
-  const filtered=_userQuery||_userFilter!=='all';
+  // فیلترهای کشویی (عضویت / بازدید / اکسپرت / امروز)
+  if(uAnyFilter2()) list=list.filter(uPassFilters);
+  const filtered=_userQuery||_userFilter!=='all'||uAnyFilter2();
   document.getElementById('u-count').textContent=filtered
     ? faNum(list.length)+' از '+faNum(_users.length)+' کاربر'
     : faNum(_users.length)+' کاربر';
-  if(!list.length){ tb.innerHTML='<tr><td colspan="10" class="empty-row">'+(filtered?'کاربری با این شرایط پیدا نشد':'هنوز کاربری ثبت‌نام نکرده')+'</td></tr>'; return; }
+  if(!list.length){ tb.innerHTML='<tr><td colspan="11" class="empty-row">'+(filtered?'کاربری با این شرایط پیدا نشد':'هنوز کاربری ثبت‌نام نکرده')+'</td></tr>'; return; }
   tb.innerHTML=list.map((u,idx)=>{
     const ea = u.trades>0 ? '<span class="badge ok">✅ وصل — '+faNum(u.trades)+' ترید</span>'
              : u.has_token ? '<span class="badge mid">🔑 توکن ساخته</span>'
@@ -887,6 +1051,21 @@ function renderUsers(){
         +'<br><button class="act-btn act-ban" onclick="setGallery(\''+u.id+'\','+(g.enabled?'false':'true')+')">'
         +(g.enabled?'🔒 غیرفعال کن':'🖼 فعال کن')+'</button>';
     }
+    // ستون سیگنال — دیدنِ سیگنال (VIP) + اجازه‌ی سیگنال دادن
+    let sigCell;
+    if(_sigAcc===null){
+      sigCell='<span class="badge no" title="فایل signals-v2.sql هنوز در Supabase اجرا نشده">—</span>';
+    }else{
+      const a=_sigAcc[u.id]||{vip:false,poster:false,signals:0};
+      sigCell=(a.vip?'<span class="badge ok">📡 سیگنال فعال</span>'
+                    :'<span class="badge no">🔒 سیگنال بسته</span>')
+        +'<button class="act-btn act-ban" onclick="setVip(\''+u.id+'\','+(a.vip?'false':'true')+')">'
+        +(a.vip?'🔒 غیرفعال کن':'📡 فعال کن')+'</button>'
+        +'<br>'+(a.poster?'<span class="badge ok">✍️ سیگنال‌دِه — '+faNum(a.signals)+'</span>'
+                         :'<span class="badge no">فقط بیننده</span>')
+        +'<button class="act-btn act-pass" onclick="setPoster(\''+u.id+'\','+(a.poster?'false':'true')+')">'
+        +(a.poster?'🚫 لغو سیگنال‌دهی':'✍️ اجازه سیگنال‌دهی')+'</button>';
+    }
     return '<tr>'+
       '<td class="lb-rank">'+faNum(idx+1)+'</td>'+
       '<td class="u-name">'+esc(u.name)+'</td>'+
@@ -897,6 +1076,7 @@ function renderUsers(){
       '<td>'+act3+'</td>'+
       '<td>'+status+'</td>'+
       '<td>'+galCell+'</td>'+
+      '<td>'+sigCell+'</td>'+
       '<td>'+banBtn+
         '<button class="act-btn act-pass" onclick="sendMsg(\''+u.id+'\',\''+esc(u.name)+'\')">📩 پیام</button>'+
         '<button class="act-btn act-pass" onclick="changePass(\''+u.id+'\',\''+esc(u.name)+'\')">🔑 تغییر رمز</button>'+
@@ -1142,7 +1322,9 @@ function sigResBadge(s){
 async function sigAdmLoad(){
   const box=document.getElementById('sig-adm-list');
   try{
-    const r=await rpc('admin_signal_list',{p_token:ADMIN_TOKEN});
+    // نسخه ۲ نویسنده و عکس را هم برمی‌گرداند؛ اگر signals-v2.sql اجرا نشده، نسخه قدیمی
+    let r=await rpc('admin_signal_list2',{p_token:ADMIN_TOKEN});
+    if(!r||!r.ok) r=await rpc('admin_signal_list',{p_token:ADMIN_TOKEN});
     if(!r||!r.ok){ if(r&&r.error==='unauthorized')authFail(); else _sigSqlMissing(r,box); return; }
     _sigAdm=r.items||[];
     document.getElementById('sig-adm-count').textContent=_sigAdm.length?faNum(_sigAdm.length)+' سیگنال':'';
@@ -1161,8 +1343,10 @@ function sigAdmItemHTML(s){
   return '<div class="sig-adm-item '+dir+(s.status==='closed'?' closed':'')+'">'+
     '<div class="sig-adm-head">'+sigDirBadge(s.direction)+'<span class="sig-adm-sym">'+esc(s.symbol)+'</span>'+
       statusBadge+sigResBadge(s)+'<span class="badge no">'+esc(s.group_name)+'</span>'+
+      (s.author_name?'<span class="badge mid">✍️ '+esc(s.author_name)+'</span>':'')+
       '<span class="item-date">'+faDateTime(s.created_at)+'</span></div>'+
     (lv.length?'<div class="sig-adm-levels">'+lv.join(' · ')+'</div>':'')+
+    (s.img?'<img src="'+esc(s.img)+'" alt="chart" loading="lazy" style="max-width:260px;width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.12);margin:8px 0">':'')+
     (s.note?'<div class="ann-item-body">'+esc(s.note)+'</div>':'')+
     '<div class="item-btns">'+
       '<button class="act-btn act-pass" onclick="sigAdmResultForm('+s.id+')">🎯 ثبت نتیجه</button>'+
