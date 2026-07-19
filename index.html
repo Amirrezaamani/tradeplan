@@ -109,11 +109,7 @@ textarea::placeholder,input::placeholder{color:var(--text-dim)}
 .scale-btn{flex:1;aspect-ratio:1;border-radius:7px;border:1px solid rgba(255,255,255,.08);background:transparent;font-family:'Vazirmatn',sans-serif;font-size:12px;font-weight:700;color:var(--text-muted);cursor:pointer;transition:all var(--tr)}
 .scale-btn.active{background:var(--gold);color:#0b1628;border-color:var(--gold)}
 
-/* SETUP TABS (+ JOURNAL TABS — همان استایل) */
-.setup-tabs,.journal-tabs{display:flex;padding:11px 15px 0;gap:7px;overflow-x:auto;scrollbar-width:none}
-.setup-tabs::-webkit-scrollbar,.journal-tabs::-webkit-scrollbar{display:none}
-.setup-tab,.journal-tab{flex-shrink:0;padding:7px 13px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.08);background:transparent;color:var(--text-muted);transition:all var(--tr)}
-.setup-tab.active,.journal-tab.active{background:var(--gold);color:#0b1628;border-color:var(--gold)}
+/* SETUP TABS (+ JOURNAL TABS) — استایل اصلی پایین‌تر در بخش «SETUP PAGE» */
 
 /* JOURNAL PANELS */
 .journal-panel{display:none}
@@ -1482,29 +1478,43 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
    SETUP PAGE — Premium Redesign
    ══════════════════════════════════════════════ */
 
-/* Tabs — pill glassmorphism (setup + journal) */
+/* Tabs — segmented control (setup + journal)
+   عمداً بزرگ و پررنگ: کاربر باید در نگاه اول بفهمد اینجا ۳ بخش مجزا دارد. */
 .setup-tabs,.journal-tabs{
-  display:flex;padding:12px 14px 0;gap:6px;
+  display:flex;gap:5px;
+  margin:12px 14px 2px;padding:5px;
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+  border:1px solid rgba(244,200,106,.22);
+  box-shadow:0 6px 22px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   overflow-x:auto;scrollbar-width:none;
-  background:linear-gradient(to bottom,rgba(11,22,40,0),rgba(11,22,40,0));
 }
 .setup-tabs::-webkit-scrollbar,.journal-tabs::-webkit-scrollbar{display:none}
 .setup-tab,.journal-tab{
-  flex-shrink:0;padding:8px 16px;border-radius:22px;
-  font-family:'Vazirmatn',sans-serif;font-size:12px;font-weight:800;
-  cursor:pointer;border:1px solid rgba(255,255,255,.1);
-  background:rgba(255,255,255,.04);color:rgba(255,255,255,.55);
+  flex:1 1 0;min-width:0;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  padding:11px 8px;border-radius:14px;
+  font-family:'Vazirmatn',sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:-.2px;line-height:1;
+  cursor:pointer;border:1px solid transparent;
+  background:transparent;color:rgba(255,255,255,.62);
   transition:all .25s cubic-bezier(.4,0,.2,1);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  white-space:nowrap;
+  white-space:nowrap;position:relative;
 }
+.setup-tab:hover,.journal-tab:hover{color:rgba(255,255,255,.9);background:rgba(255,255,255,.05)}
 .setup-tab.active,.journal-tab.active{
   background:linear-gradient(135deg,#F4C86A,#e8a020);
-  color:#0b1628;border-color:transparent;
-  box-shadow:0 4px 18px rgba(232,160,32,.5),inset 0 1px 0 rgba(255,255,255,.35);
+  color:#0b1628;border-color:rgba(255,255,255,.28);
+  box-shadow:0 6px 20px rgba(232,160,32,.45),inset 0 1px 0 rgba(255,255,255,.45);
   transform:translateY(-1px);
 }
+.setup-tab.active:hover,.journal-tab.active:hover{color:#0b1628;background:linear-gradient(135deg,#F4C86A,#e8a020)}
 .setup-tab:active,.journal-tab:active{transform:scale(.96)}
+/* در موبایل جا تنگ است: آیکن بماند، متن کمی کوچک‌تر */
+@media (max-width:400px){
+  .setup-tab,.journal-tab{font-size:11.5px;padding:10px 4px;gap:3px}
+}
 
 /* Panel */
 .setup-panel{display:none;padding:12px 14px 16px;flex-direction:column;gap:12px}
@@ -3885,7 +3895,7 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
      بچسبد؛ با static به .page می‌چسبید و به‌صورت یک نوار زرد پایین صفحه می‌افتاد */
   .home-brand-bar,.journal-header,.psych-header,.page-header{position:relative}
   /* full-width strips above the columns */
-  .home-brand-bar,.journal-header,.psych-header,.page-header,.setup-tabs{column-span:all}
+  .home-brand-bar,.journal-header,.psych-header,.page-header,.setup-tabs,.journal-tabs{column-span:all}
   /* masonry column layouts per page */
   /* داشبورد: ستون‌بندی روی wrapper داخلی (.home-cols) با ارتفاع آزاد — مثل
      روانشناسی و تنظیمات — تا محتوای بلند به‌جای رفتن به ستون نامرئیِ بیرونِ
@@ -3969,9 +3979,46 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 .settings-logout{display:block;width:calc(100% - 24px);margin:14px 12px 4px;padding:13px;background:rgba(239,68,68,.08);border:1px solid var(--red-dim);border-radius:13px;color:var(--red);font-family:'Vazirmatn',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:background .2s}
 .settings-logout:active{background:rgba(239,68,68,.16)}
 .settings-acct-name{font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px;font-weight:600}
+
+/* ═══════ حالت تعمیر سایت (از پنل مدیریت روشن می‌شود) ═══════ */
+#mnt-screen{position:fixed;inset:0;z-index:99999;display:none;
+  align-items:center;justify-content:center;padding:24px;
+  background:radial-gradient(120% 90% at 50% 0%,#132743 0%,#0b1628 60%,#070f1d 100%)}
+#mnt-screen.show{display:flex}
+.mnt-box{max-width:420px;width:100%;text-align:center}
+.mnt-ico{font-size:64px;line-height:1;margin-bottom:18px;
+  animation:mntSpin 3.2s ease-in-out infinite;display:inline-block}
+@keyframes mntSpin{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+.mnt-t{font-size:22px;font-weight:900;color:#F4C86A;margin-bottom:12px;line-height:1.5}
+.mnt-m{font-size:14px;font-weight:600;color:rgba(255,255,255,.72);line-height:2;white-space:pre-wrap}
+.mnt-tg{display:inline-block;margin-top:26px;padding:11px 22px;border-radius:22px;
+  font-size:13px;font-weight:800;text-decoration:none;color:#0b1628;
+  background:linear-gradient(135deg,#F4C86A,#e8a020);
+  box-shadow:0 6px 20px rgba(232,160,32,.4)}
+.mnt-admin{display:block;margin:22px auto 0;background:none;border:none;cursor:pointer;
+  font-family:'Vazirmatn',sans-serif;font-size:11.5px;font-weight:700;
+  color:rgba(255,255,255,.28);text-decoration:underline}
+.mnt-admin:hover{color:rgba(255,255,255,.55)}
+/* نوار یادآوری برای ادمین اصلی که سایت در حالت تعمیر است */
+#mnt-banner{position:fixed;top:0;left:0;right:0;z-index:9998;display:none;
+  padding:7px 12px;text-align:center;font-size:11.5px;font-weight:800;
+  color:#0b1628;background:linear-gradient(90deg,#f87171,#ef4444)}
+#mnt-banner.show{display:block}
+body.mnt-bannered{padding-top:28px}
 </style>
 </head>
 <body>
+<!-- حالت تعمیر — روی همه‌چیز می‌افتد و تا وقتی ادمین خاموشش نکند کسی رد نمی‌شود -->
+<div id="mnt-screen">
+  <div class="mnt-box">
+    <div class="mnt-ico">🛠</div>
+    <div class="mnt-t" id="mnt-t">سایت در حال تعمیر است</div>
+    <div class="mnt-m" id="mnt-m">به‌زودی برمی‌گردیم. ممنون از صبرت 🙏</div>
+    <a class="mnt-tg" href="https://t.me/tradeplann" target="_blank" rel="noopener">کانال تلگرام ترید پلن</a>
+    <button type="button" class="mnt-admin" id="mnt-admin-btn" onclick="mntShowLogin()">ورود مدیر</button>
+  </div>
+</div>
+<div id="mnt-banner">🛠 سایت در حالت تعمیر است — فقط تو می‌بینی</div>
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">📈</div>
@@ -12215,7 +12262,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='80.3';
+const APP_VERSION='81.0';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
@@ -12909,6 +12956,13 @@ async function doLogout(){
 
 // Pull the user's row from Supabase into the local cache, then boot the app once.
 async function enterApp(interactive){
+  // در حالت تعمیر فقط ادمین اصلی رد می‌شود — این چک بعد از لاگین هم لازم است،
+  // چون کاربرِ لاگین‌نکرده وقتی site_status را صدا زد هنوز bypass نداشت.
+  if(interactive){
+    const st=await mntCheck();
+    if(st.maintenance && !st.bypass){ mntShow(st); return; }
+    if(st.maintenance && st.bypass) mntBanner();
+  }
   const uid=CURRENT_USER.id;
   const key='tradeplan_v3:'+uid;
   let hadRow=false;
@@ -12945,13 +12999,54 @@ async function enterApp(interactive){
   }
 }
 
+/* ═══════════════ MAINTENANCE MODE ═══════════════
+   ادمین از پنل مدیریت روشنش می‌کند (جدول site_settings). خودِ برنامه در بوت و
+   بعد از هر ورود، site_status() را صدا می‌زند:
+     • تعمیر خاموش  → برنامه عادی
+     • تعمیر روشن و کاربر جزو bypass → برنامه عادی + نوار قرمز یادآوری
+     • تعمیر روشن و بقیه → صفحه‌ی تعمیر، بدون راه عبور
+   اگر SQL اجرا نشده یا سرور در دسترس نباشد، عمداً «باز» فرض می‌شود تا یک خطای
+   شبکه‌ای کلِ برنامه را برای همه قفل نکند. */
+let MNT_ON=false;
+async function mntCheck(){
+  if(!SB) return {maintenance:false,bypass:false};
+  try{
+    const {data,error}=await SB.rpc('site_status');
+    if(error||!data) return {maintenance:false,bypass:false};
+    return data;
+  }catch(e){ return {maintenance:false,bypass:false}; }
+}
+function mntShow(st){
+  MNT_ON=true;
+  const t=document.getElementById('mnt-t'), m=document.getElementById('mnt-m');
+  if(st.title)   t.textContent=st.title;
+  if(st.message) m.textContent=st.message;
+  hideAuthScreen();
+  document.getElementById('mnt-banner').classList.remove('show');
+  document.body.classList.remove('mnt-bannered');
+  document.getElementById('mnt-screen').classList.add('show');
+}
+function mntHide(){
+  document.getElementById('mnt-screen').classList.remove('show');
+}
+// «ورود مدیر» — صفحه‌ی تعمیر کنار می‌رود تا ادمین اصلی بتواند لاگین کند.
+// بعد از لاگین دوباره چک می‌شود؛ اگر جزو bypass نباشد برمی‌گردد به صفحه‌ی تعمیر.
+function mntShowLogin(){ mntHide(); showAuthScreen(); }
+function mntBanner(){
+  document.getElementById('mnt-banner').classList.add('show');
+  document.body.classList.add('mnt-bannered');
+}
+
 // Boot: resume an existing session, otherwise show the login screen.
 async function bootAuth(){
   if(!SB){ hideAuthScreen(); if(!appStarted){appStarted=true;init();} return; } // degrade to local-only
-  try{
-    const {data:{session}}=await SB.auth.getSession();
-    if(session && session.user){ CURRENT_USER=session.user; await enterApp(false); return; }
-  }catch(e){}
+  let session=null;
+  try{ session=(await SB.auth.getSession()).data.session; }catch(e){}
+  // چک تعمیر بعد از برگشتن نشست انجام می‌شود تا site_status بداند کاربر کیست.
+  const st=await mntCheck();
+  if(st.maintenance && !st.bypass){ mntShow(st); return; }
+  if(st.maintenance && st.bypass) mntBanner();
+  if(session && session.user){ CURRENT_USER=session.user; await enterApp(false); return; }
   showAuthScreen();
 }
 bootAuth();

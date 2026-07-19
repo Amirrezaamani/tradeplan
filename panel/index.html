@@ -156,6 +156,41 @@ tr:hover td{background:rgba(232,160,32,.03)}
 .lb-rank{font-size:15px;font-weight:900;color:var(--gold-light);width:52px}
 .lb-score{font-weight:900;color:var(--gold)}
 tr.lb-top td{background:rgba(232,160,32,.045)}
+.lb-tr{font-weight:900;font-size:12px}
+.lb-tr.up{color:#34d399}.lb-tr.down{color:#f87171}.lb-tr.flat{color:rgba(255,255,255,.3)}
+
+/* ===== حالت تعمیر سایت ===== */
+.mnt-card.on{border-color:rgba(248,113,113,.55);box-shadow:0 0 0 1px rgba(248,113,113,.18),0 10px 34px rgba(248,113,113,.14)}
+.mnt-state{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:14px;border-radius:14px;margin-bottom:14px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
+.mnt-card.on .mnt-state{background:rgba(248,113,113,.09);border-color:rgba(248,113,113,.3)}
+.mnt-state-txt{flex:1;min-width:190px}
+.mnt-state-t{font-size:14px;font-weight:900;margin-bottom:3px}
+.mnt-state-s{font-size:11.5px;color:var(--text-muted);line-height:1.7}
+.mnt-sw{width:60px;height:32px;border-radius:20px;border:none;cursor:pointer;position:relative;
+  background:rgba(255,255,255,.13);transition:background .2s;flex-shrink:0}
+.mnt-sw::after{content:'';position:absolute;top:3px;right:3px;width:26px;height:26px;border-radius:50%;
+  background:#fff;transition:transform .2s}
+.mnt-sw.on{background:#ef4444}
+.mnt-sw.on::after{transform:translateX(-28px)}
+.mnt-fields{display:grid;gap:10px;margin-bottom:12px}
+.mnt-fields input,.mnt-fields textarea{width:100%;padding:11px 13px;border-radius:11px;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--text);
+  font-family:'Vazirmatn',sans-serif;font-size:13px;resize:vertical}
+.mnt-fields label{font-size:11.5px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px}
+.mnt-byp{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07)}
+.mnt-byp-t{font-size:13px;font-weight:900;margin-bottom:4px}
+.mnt-byp-list{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.mnt-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:20px;
+  font-size:12px;font-weight:700;background:rgba(52,211,153,.13);
+  border:1px solid rgba(52,211,153,.35);color:#6ee7b7}
+.mnt-chip button{background:none;border:none;color:inherit;cursor:pointer;font-size:14px;line-height:1;opacity:.7}
+.mnt-chip button:hover{opacity:1}
+.mnt-add{display:flex;gap:8px;flex-wrap:wrap}
+.mnt-add select{flex:1;min-width:180px;padding:10px 12px;border-radius:11px;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--text);
+  font-family:'Vazirmatn',sans-serif;font-size:12.5px}
 
 /* ===== announcements & feedback ===== */
 .sc-sub{font-size:10px;color:var(--muted);font-weight:700;margin-top:3px}
@@ -311,6 +346,38 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
     <div class="stat-card c-purple"><div class="sc-icon">💬</div><div class="sc-val" id="st-fb">—</div><div class="sc-label">بازخورد خوانده‌نشده</div></div>
   </div>
 
+  <!-- ===== حالت تعمیر سایت ===== -->
+  <div class="card mnt-card" id="mnt-card">
+    <div class="card-title">🛠 حالت تعمیر سایت</div>
+    <div class="mnt-state">
+      <div class="mnt-state-txt">
+        <div class="mnt-state-t" id="mnt-state-t">در حال بارگذاری…</div>
+        <div class="mnt-state-s" id="mnt-state-s">وقتی روشن باشد، هیچ کاربری وارد برنامه نمی‌شود و فقط صفحه‌ی تعمیر را می‌بیند — به‌جز کاربرانی که پایین به‌عنوان «ادمین اصلی» انتخاب کرده‌ای. خودِ همین پنل مدیریت هیچ‌وقت قفل نمی‌شود.</div>
+      </div>
+      <button class="mnt-sw" id="mnt-sw" onclick="mntToggle()" title="روشن/خاموش"></button>
+    </div>
+    <div class="mnt-fields">
+      <div>
+        <label>عنوان صفحه‌ی تعمیر</label>
+        <input id="mnt-title" maxlength="80" placeholder="سایت در حال تعمیر است">
+      </div>
+      <div>
+        <label>متن توضیح (چیزی که کاربر می‌بیند)</label>
+        <textarea id="mnt-msg" rows="3" maxlength="400" placeholder="به‌زودی برمی‌گردیم. ممنون از صبرت 🙏"></textarea>
+      </div>
+    </div>
+    <button class="ann-send" id="mnt-save-btn" onclick="mntSave()">💾 ذخیره و اعمال</button>
+    <div class="mnt-byp">
+      <div class="mnt-byp-t">👑 ادمین اصلی — کسانی که در حالت تعمیر هم وارد می‌شوند</div>
+      <div class="mnt-state-s">حساب خودت را اینجا اضافه کن، وگرنه بعد از روشن‌کردنِ تعمیر خودت هم نمی‌توانی وارد برنامه شوی.</div>
+      <div class="mnt-byp-list" id="mnt-byp-list"></div>
+      <div class="mnt-add">
+        <select id="mnt-byp-sel"><option value="">— انتخاب کاربر —</option></select>
+        <button class="ann-send" style="flex:0 0 auto" onclick="mntBypassAdd()">+ افزودن</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== month chart ===== -->
   <div class="card">
     <div class="ch-head">
@@ -432,17 +499,18 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
     <div class="card-title">🏆 فعال‌ترین کاربران <span class="legend" id="lb-count"></span></div>
     <div class="ch-metric" style="margin-bottom:10px">
       <button class="ch-chip active" id="lbf-active3" onclick="lbFilter('active3')">⚡ فعال ۳ روز اخیر</button>
+      <button class="ch-chip" id="lbf-week" onclick="lbFilter('week')">📅 فعال هفته</button>
       <button class="ch-chip" id="lbf-all" onclick="lbFilter('all')">همه (۳۰ روز)</button>
     </div>
     <div class="tbl-wrap">
       <table class="lb-table">
         <thead><tr>
-          <th>رتبه</th><th>نام کاربری</th><th>روز فعال</th><th>بازدید</th><th>ترید ثبت‌شده</th><th>بازخورد</th><th>آخرین بازدید</th><th>امتیاز</th>
+          <th>رتبه</th><th>نام کاربری</th><th>روند</th><th>روز فعال</th><th>۷ روز</th><th>پیاپی</th><th>بازدید</th><th>ترید</th><th>گالری</th><th>بازخورد</th><th>آخرین بازدید</th><th>امتیاز</th>
         </tr></thead>
-        <tbody id="lb-body"><tr><td colspan="8" class="empty-row">در حال بارگذاری…</td></tr></tbody>
+        <tbody id="lb-body"><tr><td colspan="12" class="empty-row">در حال بارگذاری…</td></tr></tbody>
       </table>
     </div>
-    <div class="dn-hint">امتیاز = روزِ فعال ×۱۰ + بازدید (تا سقف ۹۰) + ترید ثبت‌شده ×۲ (تا سقف ۳۰ ترید) + بازخورد ×۵ — همه در ۳۰ روز اخیر. از رتبه ۱ (بالاترین امتیاز) تا آخرین نفر.</div>
+    <div class="dn-hint">امتیاز هوشمند: روزِ فعال در ۷ روز اخیر ×۱۵، روزهای قدیمی‌تر ×۵، روزهای پیاپی ×۸، بازدید (سقف ۹۰)، ترید ×۳، گالری ×۴، بازخورد ×۵ — و کل امتیاز بر اساس اینکه آخرین بازدید چند روز پیش بوده کم می‌شود. یعنی «فعال‌ترین» = کسی که همین حالا فعال است، نه کسی که هفته‌ها پیش بوده. مرتب‌شده از رتبه ۱ تا آخر.</div>
   </div>
 
   <!-- ===== account growth ===== -->
@@ -648,7 +716,7 @@ function enterPanel(){
   loadAll();
 }
 async function loadAll(){
-  loadStats(); loadStatsExtra(); loadUsers(); chLoad(true); sigAdmLoad(); annLoad(); fbLoad(); donAdmLoad(); lbLoad(); growthLoad();
+  loadStats(); loadStatsExtra(); loadUsers(); chLoad(true); sigAdmLoad(); annLoad(); fbLoad(); donAdmLoad(); lbLoad(); growthLoad(); mntLoad();
   document.getElementById('p-updated').textContent='آخرین به‌روزرسانی: '+new Intl.DateTimeFormat('fa-IR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
 }
 async function loadStats(){
@@ -904,6 +972,7 @@ async function loadUsers(){
     await loadGallery();
     await loadSignalAccess();
     renderUsers();
+    mntFillSelect();   // لیست کاربران برای انتخاب «ادمین اصلی» حالت تعمیر
   }catch(e){}
 }
 /* مجوزهای تکی و همگانی حالا با permToggle() / permAll() انجام می‌شوند
@@ -1165,36 +1234,48 @@ async function loadStatsExtra(){
 
 /* ===== leaderboard (فعال‌ترین کاربران — رتبه ۱ تا آخر) ===== */
 let _lbItems=[], _lbFilter='active3';
+const LB_FILTERS=['active3','week','all'];
 function lbFilter(f){
   _lbFilter=f;
-  ['active3','all'].forEach(k=>{
+  LB_FILTERS.forEach(k=>{
     const b=document.getElementById('lbf-'+k);
     if(b)b.className='ch-chip'+(k===f?' active':'');
   });
   lbRender();
 }
+// اگر SQL نسخه‌ی قدیمی باشد این فیلدها undefined‌اند — فیلتر نباید همه را حذف کند.
+function lbPass(u){
+  if(_lbFilter==='active3') return u.active3===undefined?true:!!u.active3;
+  if(_lbFilter==='week')    return u.days7===undefined?true:u.days7>0;
+  return true;
+}
+const LB_TREND={up:'<span class="lb-tr up">▲</span>',down:'<span class="lb-tr down">▼</span>',flat:'<span class="lb-tr flat">—</span>'};
 function lbRender(){
   const tb=document.getElementById('lb-body');
-  // اگر تابع قدیمی باشد active3 ندارد — در حالت «فعال ۳ روز» همه را نشان بده
-  const items=_lbFilter==='active3'
-    ? _lbItems.filter(u=>u.active3===undefined?true:u.active3)
-    : _lbItems;
+  const items=_lbItems.filter(lbPass);
+  const label={active3:'کاربر فعال ۳ روز اخیر',week:'کاربر فعال هفته اخیر',all:'کاربر فعال ۳۰ روز اخیر'}[_lbFilter];
   const c=document.getElementById('lb-count');
-  if(c)c.textContent=_lbFilter==='active3'
-    ? faNum(items.length)+' کاربر فعال ۳ روز اخیر'
-    : faNum(items.length)+' کاربر فعال ۳۰ روز اخیر';
-  if(!items.length){ tb.innerHTML='<tr><td colspan="8" class="empty-row">'+(_lbFilter==='active3'?'در ۳ روز اخیر کاربر فعالی نبوده':'در ۳۰ روز اخیر فعالیتی ثبت نشده')+'</td></tr>'; return; }
+  if(c)c.textContent=faNum(items.length)+' '+label;
+  if(!items.length){
+    const empty={active3:'در ۳ روز اخیر کاربر فعالی نبوده',week:'در ۷ روز اخیر کاربر فعالی نبوده',all:'در ۳۰ روز اخیر فعالیتی ثبت نشده'}[_lbFilter];
+    tb.innerHTML='<tr><td colspan="12" class="empty-row">'+empty+'</td></tr>'; return;
+  }
   const MEDALS=['🥇','🥈','🥉'];
+  const n=v=>faNum(v==null?0:v);
   tb.innerHTML=items.map((u,i)=>
     '<tr'+(i<3?' class="lb-top"':'')+'>'+
       '<td class="lb-rank">'+(MEDALS[i]||faNum(i+1))+'</td>'+
       '<td class="u-name">'+esc(u.name)+'</td>'+
-      '<td>'+faNum(u.days30)+' روز</td>'+
-      '<td>'+faNum(u.visits30)+'</td>'+
-      '<td>'+faNum(u.trades30)+'</td>'+
-      '<td>'+faNum(u.fb30)+'</td>'+
+      '<td>'+(LB_TREND[u.trend]||LB_TREND.flat)+'</td>'+
+      '<td>'+n(u.days30)+' روز</td>'+
+      '<td>'+n(u.days7)+'</td>'+
+      '<td>'+(u.streak>0?'🔥 '+faNum(u.streak):'—')+'</td>'+
+      '<td>'+n(u.visits30)+'</td>'+
+      '<td>'+n(u.trades30)+'</td>'+
+      '<td>'+n(u.gallery30)+'</td>'+
+      '<td>'+n(u.fb30)+'</td>'+
       '<td>'+faDateTime(u.last_visit)+'</td>'+
-      '<td class="lb-score">'+faNum(u.score)+'</td>'+
+      '<td class="lb-score">'+n(u.score)+'</td>'+
     '</tr>').join('');
 }
 async function lbLoad(){
@@ -1204,12 +1285,86 @@ async function lbLoad(){
     if(!r||!r.ok){
       if(r&&r.error==='unauthorized'){ authFail(); return; }
       if(r&&(r.code==='PGRST202'||/could not find the function/i.test(r.message||'')))
-        tb.innerHTML='<tr><td colspan="8" class="empty-row">⚠️ فایل admin-activity.sql هنوز در Supabase اجرا نشده</td></tr>';
+        tb.innerHTML='<tr><td colspan="12" class="empty-row">⚠️ فایل admin-activity.sql هنوز در Supabase اجرا نشده</td></tr>';
       return;
     }
     _lbItems=r.items||[];
     lbRender();
   }catch(e){}
+}
+
+/* ===== حالت تعمیر سایت =====
+   site-maintenance.sql تابع‌های admin_site_* را می‌سازد. تا وقتی آن فایل اجرا
+   نشده باشد کارت پیام «SQL اجرا نشده» می‌دهد و برنامه دست‌نخورده کار می‌کند. */
+let _mntOn=false, _mntBypass=[];
+function mntPaint(){
+  const card=document.getElementById('mnt-card');
+  const sw=document.getElementById('mnt-sw');
+  card.classList.toggle('on',_mntOn);
+  sw.classList.toggle('on',_mntOn);
+  document.getElementById('mnt-state-t').textContent=_mntOn
+    ? '🔴 روشن — سایت برای همه بسته است'
+    : '🟢 خاموش — سایت برای همه باز است';
+  document.getElementById('mnt-byp-list').innerHTML=_mntBypass.length
+    ? _mntBypass.map(u=>'<span class="mnt-chip">👑 '+esc(u.name)+
+        '<button title="حذف" onclick="mntBypassDel(\''+u.id+'\',\''+esc(u.name).replace(/'/g,"\\'")+'\')">✕</button></span>').join('')
+    : '<span class="mnt-state-s">هنوز کسی اضافه نشده — یعنی در حالت تعمیر <b>هیچ‌کس</b> وارد نمی‌شود.</span>';
+}
+function mntFillSelect(){
+  const sel=document.getElementById('mnt-byp-sel');
+  if(!sel||!_users.length) return;
+  const has={}; _mntBypass.forEach(u=>has[u.id]=true);
+  sel.innerHTML='<option value="">— انتخاب کاربر —</option>'+
+    _users.filter(u=>!has[u.id])
+          .map(u=>'<option value="'+u.id+'">'+esc(u.name||u.email)+'</option>').join('');
+}
+async function mntLoad(){
+  try{
+    const r=await rpc('admin_site_get',{p_token:ADMIN_TOKEN});
+    if(!r||!r.ok){
+      if(r&&r.error==='unauthorized'){ authFail(); return; }
+      document.getElementById('mnt-state-t').textContent='⚠️ فایل site-maintenance.sql هنوز در Supabase اجرا نشده';
+      return;
+    }
+    _mntOn=!!r.maintenance; _mntBypass=r.bypass||[];
+    document.getElementById('mnt-title').value=r.title||'';
+    document.getElementById('mnt-msg').value=r.message||'';
+    mntPaint(); mntFillSelect();
+  }catch(e){}
+}
+// سوییچ فوراً اعمال می‌شود (بدون نیاز به دکمه‌ی ذخیره) — با تأیید، چون سایت را می‌بندد.
+async function mntToggle(){
+  const next=!_mntOn;
+  if(next && !_mntBypass.length &&
+     !confirm('هیچ «ادمین اصلی» انتخاب نکرده‌ای. با روشن‌کردن تعمیر، خودت هم نمی‌توانی وارد برنامه شوی (پنل مدیریت باز می‌ماند). ادامه بدهم؟')) return;
+  if(next && !confirm('سایت برای همه‌ی کاربران بسته شود؟')) return;
+  const r=await rpc('admin_site_save',{
+    p_token:ADMIN_TOKEN, p_maintenance:next,
+    p_title:document.getElementById('mnt-title').value.trim(),
+    p_message:document.getElementById('mnt-msg').value.trim()});
+  if(r&&r.ok){ _mntOn=next; mntPaint(); toast(next?'🛠 حالت تعمیر روشن شد':'✅ سایت دوباره باز شد'); }
+  else toast('❌ انجام نشد — site-maintenance.sql اجرا شده؟');
+}
+async function mntSave(){
+  const btn=document.getElementById('mnt-save-btn');
+  btn.disabled=true; btn.textContent='در حال ذخیره…';
+  const r=await rpc('admin_site_save',{
+    p_token:ADMIN_TOKEN, p_maintenance:_mntOn,
+    p_title:document.getElementById('mnt-title').value.trim(),
+    p_message:document.getElementById('mnt-msg').value.trim()});
+  btn.disabled=false; btn.textContent='💾 ذخیره و اعمال';
+  if(r&&r.ok){ toast('💛 ذخیره شد'); mntLoad(); }
+  else toast('❌ ذخیره نشد — site-maintenance.sql اجرا شده؟');
+}
+async function mntBypassAdd(){
+  const sel=document.getElementById('mnt-byp-sel');
+  const id=sel.value; if(!id){ toast('اول یک کاربر انتخاب کن'); return; }
+  const r=await rpc('admin_site_bypass',{p_token:ADMIN_TOKEN,p_user:id,p_enabled:true});
+  if(r&&r.ok){ toast('👑 اضافه شد'); mntLoad(); } else toast('❌ اضافه نشد');
+}
+async function mntBypassDel(id,name){
+  const r=await rpc('admin_site_bypass',{p_token:ADMIN_TOKEN,p_user:id,p_enabled:false});
+  if(r&&r.ok){ toast('«'+name+'» حذف شد'); mntLoad(); } else toast('❌ حذف نشد');
 }
 
 /* ===== رشد حساب کاربران (نسبت به سرمایه اولیه) ===== */
