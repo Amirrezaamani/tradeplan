@@ -1234,6 +1234,21 @@ canvas#pnl-chart{width:100%;min-width:0;height:240px;display:block;position:rela
 .sig-locked .sl-ic{font-size:40px;display:block;margin-bottom:10px;filter:drop-shadow(0 0 14px rgba(232,160,32,.4))}
 .sig-locked .sl-title{font-size:15px;font-weight:800;color:var(--gold);margin-bottom:7px}
 .sig-locked .sl-desc{font-size:12.5px;color:var(--text-muted);line-height:2}
+/* upsell — کارت‌های محو «بقیه‌ی سیگنال‌ها» + دعوت به VIP روی آن‌ها */
+/* MT5 قفل — کارت VIP در تنظیمات؛ کارت توکن در حالت قفل محو و غیرفعال می‌شود */
+.mt5-lock-card{margin:0 0 12px;background:linear-gradient(135deg,rgba(232,160,32,.12),rgba(232,160,32,.03));border:1px solid var(--gold-border);border-radius:18px;padding:22px 18px;text-align:center}
+.mt5-lock-card .mlc-ic{font-size:36px;margin-bottom:9px;filter:drop-shadow(0 0 14px rgba(232,160,32,.4))}
+.mt5-lock-card .mlc-title{font-size:14.5px;font-weight:800;color:var(--gold);margin-bottom:8px}
+.mt5-lock-card .mlc-desc{font-size:12.5px;color:var(--text-muted);line-height:2;margin-bottom:14px}
+.mt5-lock-card .mlc-btn{display:inline-block;padding:10px 20px;border-radius:12px;background:linear-gradient(135deg,rgba(244,200,106,.2),rgba(232,160,32,.08));border:1px solid rgba(244,200,106,.45);color:#F4C86A;font-size:12.5px;font-weight:800;text-decoration:none}
+.mt5link-card.mt5-locked{opacity:.42;filter:grayscale(.55);pointer-events:none;user-select:none}
+.sig-upsell{position:relative;margin:14px 14px 18px;border-radius:18px;overflow:hidden;border:1px solid var(--gold-border)}
+.sig-upsell-blur{display:flex;gap:10px;padding:12px;filter:blur(7px);opacity:.5;pointer-events:none}
+.sig-upsell-blur .sub-ghost{flex:1;height:120px;border-radius:14px;background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.04))}
+.sig-upsell-body{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px 18px;background:linear-gradient(135deg,rgba(232,160,32,.16),rgba(11,22,40,.82))}
+.sig-upsell-body .sl-ic{font-size:32px;margin-bottom:8px;filter:drop-shadow(0 0 14px rgba(232,160,32,.4))}
+.sig-upsell-body .sl-title{font-size:14.5px;font-weight:800;color:var(--gold);margin-bottom:6px}
+.sig-upsell-body .sl-desc{font-size:12px;color:var(--text-muted);line-height:1.95}
 /* hero */
 .sig-hero{margin:14px 14px 0;display:flex;align-items:center;gap:10px}
 .sig-hero-ic{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,rgba(232,160,32,.2),rgba(232,160,32,.06));border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
@@ -5150,6 +5165,14 @@ body.mnt-bannered{padding-top:28px}
     <button type="button" class="mcb-btn" onclick="openMt5Guide()">❓ راهنمای اتصال</button>
   </div>
 
+  <!-- کارت قفل VIP — وقتی ادمین اتصال متاتریدر را برای این کاربر فعال نکرده باشد -->
+  <div class="mt5-lock-card" id="mt5-lock-card" style="display:none">
+    <div class="mlc-ic">🔒</div>
+    <div class="mlc-title">اتصال خودکار متاتریدر ویژه‌ی اعضای VIP است</div>
+    <div class="mlc-desc">هر دو روش (نصب <b>اکسپرت</b> روی چارت و <b>سرویس پس‌زمینه</b> بدون چارت) بخشی از اشتراک VIP هستند. با فعال شدن، توکن اختصاصی‌ات همین‌جا ساخته می‌شود و هر پوزیشن بسته‌شده خودکار در ژورنال ثبت می‌گردد.</div>
+    <a class="mlc-btn" href="https://t.me/tradeplann" target="_blank" rel="noopener">💛 فعال‌سازی از پشتیبانی</a>
+  </div>
+
   <div class="mt5link-card" id="mt5-token-wrap">
     <div class="mt5link-desc">با اکسپرت <b>TradePlanSync</b> هر پوزیشنی که در متاتریدر ۵ بسته شود، خودکار با تمام جزئیات (نماد، نوع، حجم، قیمت‌ها، زمان و سود/ضرر خالص شامل کمیسیون و سواپ) در ژورنال ثبت می‌شود. با هر بار روشن شدن متاتریدر، کل ۲ ماه اخیر هم دوباره بررسی می‌شود — پوزیشن‌های موبایل و حتی ثبت‌های دستی اشتباه، با ارقام دقیق متاتریدر تصحیح می‌شوند.</div>
     <div class="mt5link-desc">دو روش نصب داری و فقط یکی کافی است: <b>اکسپرت</b> (ساده — روی یک چارت، هر نمادی) یا <b>سرویس بدون چارت</b> — مخصوص کسانی که اکسپرت دیگری مثل مدیریت سرمایه دارند؛ در پس‌زمینه‌ی متاتریدر اجرا می‌شود و با هیچ اکسپرتی تداخل ندارد. آموزش هر دو در راهنمای پایین 👇</div>
@@ -5912,7 +5935,7 @@ function showPage(name){
   if(name==='home') updateHome();
   if(name==='settings'){ if(typeof mt5LoadToken==='function') mt5LoadToken(); if(typeof donateLoad==='function') donateLoad(); }
   if(name==='setup') renderStrategy();
-  if(name==='journal'){ renderJournal(); animateMonthlyPnl(); if(typeof updateMt5Banner==='function') updateMt5Banner(); if(typeof mtCloudSync==='function') mtCloudSync(); if(typeof renderMt5Account==='function'){ renderMt5Account(); mt5LoadAccount(); } }
+  if(name==='journal'){ renderJournal(); animateMonthlyPnl(); if(typeof mt5CheckAccess==='function') mt5CheckAccess(); if(typeof updateMt5Banner==='function') updateMt5Banner(); if(typeof mtCloudSync==='function') mtCloudSync(); if(typeof renderMt5Account==='function'){ renderMt5Account(); mt5LoadAccount(); } }
   if(name==='psychology') renderPsychology();
 }
 
@@ -5958,6 +5981,18 @@ function sigLockedHTML(msg){
     <div class="sl-desc">${msg||'برای دریافت سیگنال‌های دقیق و لحظه‌ای، عضویت VIP را از پشتیبانی فعال کن. 💛'}</div>
   </div>`;
 }
+/* بنر دعوت به VIP زیر تنها سیگنالِ رایگان — دو کارتِ محو به‌عنوان «بقیه‌ی
+   سیگنال‌ها» نشان داده می‌شود تا کاربر بفهمد چه چیزی را از دست می‌دهد. */
+function sigUpsellHTML(shown){
+  return `<div class="sig-upsell">
+    <div class="sig-upsell-blur"><div class="sub-ghost"></div><div class="sub-ghost"></div></div>
+    <div class="sig-upsell-body">
+      <span class="sl-ic">🔒</span>
+      <div class="sl-title">${shown?'بقیه‌ی سیگنال‌ها ویژه‌ی اعضای VIP است':'سیگنال‌ها ویژه‌ی اعضای VIP است'}</div>
+      <div class="sl-desc">با عضویت VIP همه‌ی سیگنال‌های کاربران را می‌بینی، سیگنال‌های خودت را می‌گذاری و نتیجه‌ی هر سیگنال را دنبال می‌کنی. برای فعال‌سازی به پشتیبانی پیام بده 💛</div>
+    </div>
+  </div>`;
+}
 function sigEsc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function sigMemberValid(g){ return !g.expires_at || new Date(g.expires_at)>new Date(); }
 function sigUnitLabel(u){ return u==='pip'?'پیپ':u==='percent'?'٪':u==='r'?'R':''; }
@@ -5983,8 +6018,8 @@ async function loadSignals(){
     _sigVip=vip;
     // مجوز سیگنال‌دهی — از کش (آفلاین) و بعد از سرور
     await sigCheckPostAccess();
-    // کسی که اجازه‌ی سیگنال دادن دارد، حتی اگر VIP نباشد به بخش دسترسی دارد
-    if(!vip && !_sigCanPost){ root.innerHTML=sigLockedHTML(); return; }
+    // تب دیگر برای غیرVIP قفل کامل نیست: RLS فقط تازه‌ترین سیگنال را برمی‌گرداند
+    // و پایینش بنر «بقیه ویژه‌ی VIP» نشان داده می‌شود (نمونه‌ی رایگان).
     // سیگنال‌ها (RLS فقط سیگنالِ گروه‌های معتبرِ کاربر + سیگنال‌های خودش را برمی‌گرداند)
     const {data:rows,error}=await SB.from('signals').select('*').order('id',{ascending:false}).limit(200);
     if(error){ root.innerHTML=sigLockedHTML('سرور سیگنال هنوز آماده نیست (فایل signals.sql باید در Supabase اجرا شود).'); return; }
@@ -6044,6 +6079,9 @@ function renderSignals(){
     grid+=`<div class="gal-empty">🕊️ هنوز سیگنالی ثبت نشده.<br>به‌زودی اینجا سیگنال‌های دقیق و اختصاصی می‌بینی.</div>`;
   }
   html+=`<div class="sig-grid">${grid}</div>`;
+  // کاربر رایگان فقط تازه‌ترین سیگنال را می‌بیند (سرور هم بیشتر نمی‌دهد)؛
+  // زیرش دعوت به VIP نشان داده می‌شود. VIPها این بنر را نمی‌بینند.
+  if(!_sigVip) html+=sigUpsellHTML(items.length);
   root.innerHTML=html;
 }
 
@@ -6418,7 +6456,12 @@ let galFilter='all', galSymbol='all', galResult='win';
 let galFrom='', galTo='';                 // فیلتر بازه زمانی (YYYY-MM-DD)
 let galEditId=null, galDelId=null, galPendingImg=null;
 let galLoaded=false, galPulled=false;
-let galAccess=false, galAccChecked=false; // مجوز آپلود — فقط ادمین از پنل فعال می‌کند
+let galAccess=false, galAccChecked=false; // مجوز کامل (VIP) — فقط ادمین از پنل فعال می‌کند
+// بدون مجوز، گالری قفل نیست: کاربر رایگان تا این تعداد عکس می‌تواند بگذارد و
+// بعد پیام VIP می‌بیند. همین سقف در access-tiers.sql سمت سرور هم اعمال می‌شود.
+const GAL_FREE_LIMIT=3;
+function galCanAdd(){ return galAccess || galItems.length<GAL_FREE_LIMIT; }
+function galLeftFree(){ return Math.max(0,GAL_FREE_LIMIT-galItems.length); }
 
 function GAL_KEY(){ return CURRENT_USER?('tradeplan_gallery:'+CURRENT_USER.id):'tradeplan_gallery'; }
 function GAL_DEL_KEY(){ return GAL_KEY()+':del'; }
@@ -6437,7 +6480,7 @@ async function galCheckAccess(){
     }
   }catch(e){ /* آفلاین یا جدول ساخته نشده — همان کش می‌ماند */ }
 }
-function galLockedMsg(){ showToast('🔒 آپلود عکس گالری بعد از تأیید مدیر برایت فعال می‌شود'); }
+function galLockedMsg(){ showToast('🔒 سقف رایگان ۳ عکس پر شد — گالری نامحدود ویژه‌ی اعضای VIP است'); }
 function galEsc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function galNum(s){ return String(s||'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)); }
 function galUUID(){ return (window.crypto&&crypto.randomUUID)?crypto.randomUUID():'g'+Date.now().toString(36)+Math.random().toString(36).slice(2,10); }
@@ -6583,17 +6626,27 @@ function galClearRange(){
 function galRenderGrid(){
   const grid=document.getElementById('gal-grid'); if(!grid) return;
   const items=galFiltered();
-  let html=galAccess
-    ? `<div class="gal-add-card" onclick="openGallerySheet()">
+  // کارت افزودن سه حالت دارد: VIP (نامحدود) / رایگان با ظرفیت باقی‌مانده / رایگانِ پرشده
+  let html;
+  if(galAccess){
+    html=`<div class="gal-add-card" onclick="openGallerySheet()">
         <div class="gal-add-plus">＋</div>
         <div class="gal-add-title">افزودن معامله جدید</div>
         <div class="gal-add-sub">عکس چارت معامله‌ات را بارگذاری کن</div>
-      </div>`
-    : `<div class="gal-add-card locked" onclick="galLockedMsg()">
-        <div class="gal-add-plus">🔒</div>
-        <div class="gal-add-title">آپلود عکس غیرفعال است</div>
-        <div class="gal-add-sub">این بخش بعد از تأیید مدیر برایت فعال می‌شود</div>
       </div>`;
+  }else if(galLeftFree()>0){
+    html=`<div class="gal-add-card" onclick="openGallerySheet()">
+        <div class="gal-add-plus">＋</div>
+        <div class="gal-add-title">افزودن معامله جدید</div>
+        <div class="gal-add-sub">${toFA(galLeftFree())} عکس رایگان باقی مانده · گالری نامحدود ویژه‌ی VIP است</div>
+      </div>`;
+  }else{
+    html=`<div class="gal-add-card locked" onclick="galLockedMsg()">
+        <div class="gal-add-plus">🔒</div>
+        <div class="gal-add-title">سقف رایگان پر شد (${toFA(GAL_FREE_LIMIT)} عکس)</div>
+        <div class="gal-add-sub">گالری نامحدود ویژه‌ی اعضای VIP است — برای فعال‌سازی به پشتیبانی پیام بده 💛</div>
+      </div>`;
+  }
   html+=items.map(it=>`
     <div class="gal-card ${it.result}">
       <div class="gal-img-wrap" onclick="galOpenView('${it.id}')">
@@ -6611,7 +6664,7 @@ function galRenderGrid(){
           ${it.strategy?`<span class="gal-tag">${galEsc(it.strategy)}</span>`:''}
           ${it.rr?`<span class="gal-tag rr">RR ${galEsc(it.rr)}</span>`:''}
           <div class="gal-actions">
-            ${galAccess?`<button type="button" class="gal-act" onclick="openGallerySheet('${it.id}')" title="ویرایش">✏️</button>`:''}
+            <button type="button" class="gal-act" onclick="openGallerySheet('${it.id}')" title="ویرایش">✏️</button>
             <button type="button" class="gal-act del" onclick="galAskDelete('${it.id}')" title="حذف">🗑</button>
           </div>
         </div>
@@ -6627,7 +6680,9 @@ function galSetSymbol(s){ galSymbol=s; galRenderGrid(); }
 function galToLocalInput(d){ const p=n=>String(n).padStart(2,'0');
   return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); }
 function openGallerySheet(id){
-  if(!galAccess){ galLockedMsg(); return; }
+  // ویرایش همیشه آزاد است (کاربر رایگان هم باید همان ۳ عکس خودش را اصلاح کند)؛
+  // فقط «افزودنِ تازه» به سقف رایگان محدود می‌شود.
+  if(!id && !galCanAdd()){ galLockedMsg(); return; }
   galEditId=id||null;
   const it=id?galItems.find(i=>i.id===id):null;
   galPendingImg=it?it.img:null;
@@ -6673,6 +6728,9 @@ async function galPickFile(file){
 }
 function gallerySave(){
   if(!galPendingImg){ showToast('اول عکس چارت معامله را بارگذاری کن 📸'); return; }
+  // دوباره چک می‌شود چون ممکن است بین باز شدن شیت و ذخیره، سینک ابری عکس‌های
+  // دستگاه دیگر را آورده و سقف رایگان پر شده باشد.
+  if(!galEditId && !galCanAdd()){ closeGallerySheet(); galLockedMsg(); return; }
   const symbol=document.getElementById('gal-symbol').value.trim().toUpperCase();
   if(!symbol){ showToast('نماد معامله را بنویس (مثلاً XAU/USD)'); return; }
   const amt=Math.abs(parseFloat(galNum(document.getElementById('gal-pnl').value))||0);
@@ -12262,7 +12320,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='81.0';
+const APP_VERSION='81.1';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
@@ -12722,6 +12780,40 @@ function goDonate(src){
   },350);
 }
 
+/* ----- MT5 access (اشتراکی — ادمین از پنل مدیریت فعال می‌کند) -----
+   برخلاف گالری و سیگنال، این قابلیت حالت رایگان ندارد: یا باز است یا قفل.
+   سدّ واقعی سمت سرور است (access-tiers.sql): بدون مجوز نه توکن ساخته می‌شود
+   نه تریدی ثبت. این‌جا فقط تجربه‌ی کاربر است تا با دیوار خطا روبه‌رو نشود. */
+let mt5Access=false, mt5AccChecked=false;
+function MT5_ACC_KEY(){ return CURRENT_USER?('tradeplan_mt5acc:'+CURRENT_USER.id):'tradeplan_mt5acc'; }
+function mt5LockedMsg(){
+  showToast('🔒 اتصال خودکار متاتریدر ویژه‌ی اعضای VIP است — برای فعال‌سازی به پشتیبانی پیام بده 💛',4000);
+}
+async function mt5CheckAccess(){
+  mt5Access = localStorage.getItem(MT5_ACC_KEY())==='1';   // فوری از کش (آفلاین)
+  mt5ApplyAccess();
+  if(!SB||!CURRENT_USER) return;
+  try{
+    const {data:row,error}=await SB.from('mt5_access').select('enabled')
+      .eq('user_id',CURRENT_USER.id).maybeSingle();
+    if(!error){
+      mt5Access=!!(row&&row.enabled);
+      localStorage.setItem(MT5_ACC_KEY(),mt5Access?'1':'0');
+    }
+  }catch(e){ /* آفلاین یا جدول ساخته نشده — همان کش می‌ماند */ }
+  mt5AccChecked=true;
+  mt5ApplyAccess();
+}
+// قفل/باز کردن کارت تنظیمات: متن‌های معرفی سر جایشان می‌مانند (تبلیغ قابلیت)
+// و فقط توکن و دکمه‌ها جای خود را به کارت VIP می‌دهند.
+function mt5ApplyAccess(){
+  const wrap=document.getElementById('mt5-token-wrap');
+  if(wrap) wrap.classList.toggle('mt5-locked',!mt5Access);
+  const lock=document.getElementById('mt5-lock-card');
+  if(lock) lock.style.display=mt5Access?'none':'block';
+  if(typeof updateMt5Banner==='function') updateMt5Banner();
+}
+
 /* ----- MT5 connection token (settings) ----- */
 let _mt5Token='';
 // توکن هر حساب یکی است و در سرور نگه‌داری می‌شود؛ اگر هنوز ساخته نشده،
@@ -12729,6 +12821,9 @@ let _mt5Token='';
 async function mt5LoadToken(){
   const el=document.getElementById('mt5-token-value');
   if(!el||!SB||!CURRENT_USER) return;
+  await mt5CheckAccess();
+  // بدون مجوز اصلاً توکن نمی‌سازیم؛ RLS هم اجازه نمی‌داد و فقط خطا می‌گرفتیم.
+  if(!mt5Access){ el.textContent='🔒 ویژه‌ی اعضای VIP'; return; }
   try{
     const {data:row,error}=await SB.from('mt5_tokens').select('token').eq('user_id',CURRENT_USER.id).maybeSingle();
     if(error) throw error;
@@ -12744,6 +12839,7 @@ async function mt5LoadToken(){
 }
 async function mt5CreateToken(silent){
   if(!SB||!CURRENT_USER){ if(!silent) showToast('❌ ابتدا وارد حساب شو'); return; }
+  if(!mt5Access){ if(!silent) mt5LockedMsg(); return; }
   if(!silent&&_mt5Token&&!confirm('توکن جدید ساخته شود؟\nتوکن قبلی باطل می‌شود و باید توکن جدید را یک بار در اکسپرت/سرویس متاتریدر وارد کنی.')) return;
   const bytes=new Uint8Array(16); crypto.getRandomValues(bytes);
   const tok='tp_'+Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join('');
@@ -12783,6 +12879,9 @@ function mt5CopyText(txt){
 
 /* ----- MT5 guide modal + journal banner ----- */
 function openMt5Guide(){
+  // بدون مجوز، راهنمای نصب باز نمی‌شود: دانلود اکسپرت/سرویس بی‌فایده است چون
+  // توکنی وجود ندارد. به‌جایش پیام VIP و رفتن به کارت تنظیمات.
+  if(!mt5Access && mt5AccChecked){ mt5LockedMsg(); mt5GuideGoSettings(); return; }
   const g=document.getElementById('mt5-guide');
   if(g){ g.classList.add('show'); const b=g.querySelector('.mg-body'); if(b) b.scrollTop=0; }
 }
@@ -12808,8 +12907,22 @@ function updateMt5Banner(){
   // CTA هدر ژورنال هم با همین وضعیت به‌روز می‌شود
   const cta=document.getElementById('jh-mt5-cta');
   if(cta){
-    cta.classList.toggle('connected',connected);
-    cta.textContent=connected?'✅ متاتریدر متصله':'⚡ اتصال خودکار متاتریدر رو فعال کن';
+    cta.classList.toggle('connected',connected&&mt5Access);
+    cta.textContent=!mt5Access ? '🔒 اتصال متاتریدر — ویژه‌ی VIP'
+                   : connected ? '✅ متاتریدر متصله'
+                   : '⚡ اتصال خودکار متاتریدر رو فعال کن';
+  }
+  // قفل: بنر می‌ماند (قابلیت را تبلیغ می‌کند) ولی با ظاهر و پیام VIP
+  if(!mt5Access){
+    b.style.display='flex';
+    b.classList.remove('connected');
+    const ic0=b.querySelector('.mcb-icon'), t0=b.querySelector('.mcb-title'),
+          s0=b.querySelector('.mcb-sub'), btn0=b.querySelector('.mcb-btn');
+    if(ic0)  ic0.textContent='🔒';
+    if(t0)   t0.textContent='اتصال خودکار متاتریدر — ویژه‌ی اعضای VIP';
+    if(s0)   s0.textContent='با فعال شدن این قابلیت، هر پوزیشنی که در متاتریدر ۵ می‌بندی خودکار و با سود خالص دقیق در ژورنال ثبت می‌شود. برای فعال‌سازی به پشتیبانی پیام بده 💛';
+    if(btn0) btn0.textContent='💛 فعال‌سازی';
+    return;
   }
   b.style.display='flex';
   b.classList.toggle('connected',connected);
@@ -12977,6 +13090,7 @@ async function enterApp(interactive){
   if(!appStarted){ appStarted=true; init(); }
   mtCloudSync();         // تریدهای ارسالی از متاتریدر را بگیر و در ژورنال ثبت کن
   mt5LoadAccount();      // بالانس و وضعیت حساب برای کارت بالای ژورنال
+  mt5CheckAccess();      // مجوز اتصال متاتریدر (VIP) — بنر و کارت تنظیمات را تنظیم می‌کند
   checkAnnouncements();  // اطلاعیه‌های جدید ادمین (اگر باشد، نمایش داده می‌شود)
   checkPrivateMessages();// پیام خصوصی ادمین به همین کاربر
   checkNewSignals();     // اعلان سیگنال جدید (اگر کاربر خاموشش نکرده باشد)

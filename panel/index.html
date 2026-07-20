@@ -457,10 +457,10 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
       <!-- مجوزهای همگانی — هر سه مجوز، فعال/غیرفعال برای همه‌ی کاربران -->
       <div class="perm-all">
         <div class="perm-all-title">⚙️ مجوزهای همگانی</div>
-        <div class="perm-all-sub">روی <b>همه‌ی</b> کاربران فعلی اعمال می‌شود. برای هر کاربر جداگانه، از سوییچ‌های ستون «مجوزها» در جدول استفاده کن.</div>
+        <div class="perm-all-sub">روی <b>همه‌ی</b> کاربران فعلی اعمال می‌شود. برای هر کاربر جداگانه، از سوییچ‌های ستون «مجوزها» در جدول استفاده کن.<br>وقتی مجوزی <b>غیرفعال</b> است کاربر پیام «ویژه‌ی اعضای VIP» می‌بیند: گالری فقط تا ۳ عکس، سیگنال فقط تازه‌ترین مورد، و اتصال متاتریدر کاملاً قفل.</div>
         <div class="perm-all-row">
           <span class="pa-ico">🖼</span>
-          <span class="pa-name">اجازه استفاده از گالری معاملات</span>
+          <span class="pa-name">گالری معاملات — بدون مجوز فقط ۳ عکس</span>
           <div class="pa-btns">
             <button class="pa-btn on" onclick="permAll('gal',true)">فعال برای همه</button>
             <button class="pa-btn off" onclick="permAll('gal',false)">غیرفعال برای همه</button>
@@ -468,7 +468,7 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
         </div>
         <div class="perm-all-row">
           <span class="pa-ico">📡</span>
-          <span class="pa-name">اجازه سیگنال دیدن</span>
+          <span class="pa-name">دیدن سیگنال — بدون مجوز فقط ۱ سیگنال</span>
           <div class="pa-btns">
             <button class="pa-btn on" onclick="permAll('vip',true)">فعال برای همه</button>
             <button class="pa-btn off" onclick="permAll('vip',false)">غیرفعال برای همه</button>
@@ -480,6 +480,14 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
           <div class="pa-btns">
             <button class="pa-btn on" onclick="permAll('poster',true)">فعال برای همه</button>
             <button class="pa-btn off" onclick="permAll('poster',false)">غیرفعال برای همه</button>
+          </div>
+        </div>
+        <div class="perm-all-row">
+          <span class="pa-ico">🤖</span>
+          <span class="pa-name">اتصال خودکار متاتریدر — اکسپرت و سرویس پس‌زمینه</span>
+          <div class="pa-btns">
+            <button class="pa-btn on" onclick="permAll('mt5',true)">فعال برای همه</button>
+            <button class="pa-btn off" onclick="permAll('mt5',false)">غیرفعال برای همه</button>
           </div>
         </div>
       </div>
@@ -964,13 +972,24 @@ async function loadSignalAccess(){
     }else _sigAcc=null;
   }catch(e){ _sigAcc=null; }
 }
+/* اتصال متاتریدر: نقشه‌ی user_id → {enabled, linked}؛ null یعنی access-tiers.sql اجرا نشده */
+let _mt5Acc=null;
+async function loadMt5Access(){
+  try{
+    const r=await rpc('admin_mt5_access_list',{p_token:ADMIN_TOKEN});
+    if(r&&r.ok){
+      _mt5Acc={};
+      (r.rows||[]).forEach(x=>{ _mt5Acc[x.user_id]={enabled:!!x.enabled,linked:!!x.linked}; });
+    }else _mt5Acc=null;
+  }catch(e){ _mt5Acc=null; }
+}
 async function loadUsers(){
   try{
     const r=await rpc('admin_users',{p_token:ADMIN_TOKEN});
     if(!r||!r.ok){ if(r&&r.error==='unauthorized')authFail(); return; }
     _users=r.users||[];
-    await loadGallery();
-    await loadSignalAccess();
+    // هر سه مجوز موازی خوانده می‌شوند؛ سریال کردنشان جدول را بی‌دلیل کند می‌کرد
+    await Promise.all([loadGallery(), loadSignalAccess(), loadMt5Access()]);
     renderUsers();
     mntFillSelect();   // لیست کاربران برای انتخاب «ادمین اصلی» حالت تعمیر
   }catch(e){}
@@ -1090,10 +1109,12 @@ function renderUsers(){
     // ستون مجوزها — سه سوییچ: گالری معاملات / دیدن سیگنال / گذاشتن سیگنال
     const g = _gal===null ? null : (_gal[u.id]||{enabled:false,photos:0});
     const a = _sigAcc===null ? null : (_sigAcc[u.id]||{vip:false,poster:false,signals:0});
+    const m = _mt5Acc===null ? null : (_mt5Acc[u.id]||{enabled:false,linked:false});
     const permCell='<div class="perm-cell">'
       + permSwitch('gal',   u.id, g?g.enabled:false, '🖼 گالری معاملات', g?faNum(g.photos)+' عکس':'', _gal===null,    'gallery.sql')
       + permSwitch('vip',   u.id, a?a.vip:false,     '📡 دیدن سیگنال',   '',                        _sigAcc===null, 'signals.sql')
       + permSwitch('poster',u.id, a?a.poster:false,  '✍️ گذاشتن سیگنال', a&&a.poster?faNum(a.signals)+' سیگنال':'', _sigAcc===null, 'signals-v2.sql')
+      + permSwitch('mt5',   u.id, m?m.enabled:false, '🤖 اتصال متاتریدر', m&&m.linked?'وصل شده':'',  _mt5Acc===null, 'access-tiers.sql')
       + '</div>';
     return '<tr>'+
       '<td class="lb-rank">'+faNum(idx+1)+'</td>'+
@@ -1117,7 +1138,7 @@ function renderUsers(){
 /* ═══════════ مجوزها: سوییچ on/off ═══════════
    kind: 'gal' = گالری معاملات | 'vip' = دیدن سیگنال | 'poster' = گذاشتن سیگنال
    sqlMissing یعنی فایل SQL مربوطه هنوز در Supabase اجرا نشده → سوییچ غیرفعال. */
-const PERM_COLOR={gal:'#e8a020', vip:'#3b82f6', poster:'#22c55e'};
+const PERM_COLOR={gal:'#e8a020', vip:'#3b82f6', poster:'#22c55e', mt5:'#a855f7'};
 function permSwitch(kind,uid,on,label,count,sqlMissing,sqlFile){
   const dis=sqlMissing?' disabled':'';
   const title=sqlMissing?' title="فایل '+sqlFile+' هنوز در Supabase اجرا نشده"':'';
@@ -1146,11 +1167,16 @@ async function permToggle(el,kind,uid){
     okMsg=en?'📡 دیدن سیگنال فعال شد':'🔒 دیدن سیگنال بسته شد';
     errMsg='❌ خطا — فایل signals.sql در Supabase اجرا شده؟';
     if(r&&r.ok&&_sigAcc){ (_sigAcc[uid]=_sigAcc[uid]||{vip:false,poster:false,signals:0}).vip=en; }
-  }else{
+  }else if(kind==='poster'){
     r=await rpc('admin_set_signal_poster',{p_token:ADMIN_TOKEN,p_user:uid,p_enabled:en});
     okMsg=en?'✍️ کاربر حالا می‌تواند سیگنال بگذارد':'🚫 اجازه‌ی سیگنال گذاشتن لغو شد';
     errMsg='❌ خطا — فایل signals-v2.sql در Supabase اجرا شده؟';
     if(r&&r.ok&&_sigAcc){ (_sigAcc[uid]=_sigAcc[uid]||{vip:false,poster:false,signals:0}).poster=en; }
+  }else{
+    r=await rpc('admin_set_mt5',{p_token:ADMIN_TOKEN,p_user:uid,p_enabled:en});
+    okMsg=en?'🤖 اتصال خودکار متاتریدر فعال شد':'🔒 اتصال متاتریدر بسته شد (توکن و ثبت خودکار کار نمی‌کند)';
+    errMsg='❌ خطا — فایل access-tiers.sql در Supabase اجرا شده؟';
+    if(r&&r.ok&&_mt5Acc){ (_mt5Acc[uid]=_mt5Acc[uid]||{enabled:false,linked:false}).enabled=en; }
   }
   el.disabled=false;
   if(r&&r.ok){ toast(okMsg); return; }
@@ -1159,10 +1185,10 @@ async function permToggle(el,kind,uid){
 }
 /* اعمال یک مجوز روی همه‌ی کاربران */
 async function permAll(kind,en){
-  const NAME={gal:'استفاده از گالری معاملات', vip:'دیدن سیگنال', poster:'گذاشتن سیگنال'};
+  const NAME={gal:'استفاده از گالری معاملات', vip:'دیدن سیگنال', poster:'گذاشتن سیگنال', mt5:'اتصال خودکار متاتریدر'};
   if(!confirm((en?'اجازه‌ی «':'⚠️ اجازه‌ی «')+NAME[kind]+'» برای همه‌ی کاربران '+(en?'فعال':'غیرفعال')+' شود؟'))return;
-  const fn={gal:'admin_set_gallery_all', vip:'admin_set_vip_all', poster:'admin_set_signal_poster_all'}[kind];
-  const sql={gal:'gallery.sql', vip:'signals.sql', poster:'signals-v2.sql'}[kind];
+  const fn={gal:'admin_set_gallery_all', vip:'admin_set_vip_all', poster:'admin_set_signal_poster_all', mt5:'admin_set_mt5_all'}[kind];
+  const sql={gal:'gallery.sql', vip:'signals.sql', poster:'signals-v2.sql', mt5:'access-tiers.sql'}[kind];
   const r=await rpc(fn,{p_token:ADMIN_TOKEN,p_enabled:en});
   if(r&&r.ok){
     toast((en?'✅ ':'🔒 ')+NAME[kind]+' برای همه '+(en?'فعال':'غیرفعال')+' شد'+(r.count?' ('+faNum(r.count)+' کاربر)':''));
