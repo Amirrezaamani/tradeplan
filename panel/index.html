@@ -63,6 +63,27 @@ input{font-family:inherit}
 /* ===== cards ===== */
 .card{background:linear-gradient(165deg,var(--navy-card),var(--navy-deep));border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 10px 34px rgba(0,0,0,.25)}
 .card-title{font-size:14px;font-weight:900;color:var(--text);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+/* کارت‌های کشویی — بخش‌های بلند (رشد حساب، تعمیر سایت) پیش‌فرض بسته‌اند تا
+   پنل کوتاه بماند. وضعیت هر کارت در localStorage یادش می‌ماند. */
+.fold-t{cursor:pointer;user-select:none}
+.fold-t:hover{filter:brightness(1.15)}
+.fold-ico{margin-inline-start:auto;font-size:13px;opacity:.65;transition:transform .22s}
+.card.folded .fold-ico{transform:rotate(90deg)}
+.card.folded .fold-b{display:none}
+.card.folded{padding-bottom:14px}
+.fold-hint{font-size:10.5px;color:var(--dim);font-weight:700}
+.card:not(.folded) .fold-hint{display:none}
+/* نوار مرتب‌سازی جدول فعال‌ترین کاربران */
+.lb-sortbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;padding-top:2px}
+.lb-sort-lbl{font-size:11px;color:var(--dim);font-weight:800;margin-inline-end:2px}
+/* پاک‌سازی کاربران غیرفعال */
+.cl-box{margin-top:12px;padding:12px 13px;border-radius:13px;background:rgba(248,113,113,.05);border:1px dashed rgba(248,113,113,.28)}
+.cl-title{font-size:12.5px;font-weight:900;color:#f87171;margin-bottom:5px}
+.cl-sub{font-size:10.5px;color:var(--dim);line-height:1.9;margin-bottom:9px}
+.cl-row{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.cl-row select{padding:8px 11px;border-radius:9px;border:1px solid rgba(255,255,255,.12);background:var(--navy-deep);color:var(--text);font-family:inherit;font-size:12px;font-weight:700}
+.cl-res{margin-top:10px;font-size:11.5px;color:var(--muted);font-weight:700;line-height:2;max-height:190px;overflow:auto}
+.cl-res .cl-u{display:inline-block;background:rgba(255,255,255,.05);border-radius:7px;padding:2px 8px;margin:2px 3px 2px 0}
 
 /* ===== chart ===== */
 .ch-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
@@ -240,38 +261,12 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
 .fb-item.new{border-color:rgba(232,160,32,.35);background:rgba(232,160,32,.045)}
 .fb-name{font-weight:900;font-size:12.5px;color:var(--gold-light)}
 
-/* ===== signals ===== */
-.sig-af-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
-.sig-af-row .ann-inp{flex:1;min-width:150px}
-.sig-dir-toggle{display:flex;gap:6px;flex-shrink:0}
-.sig-dir-btn{padding:9px 15px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:var(--muted);font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer;transition:all .18s}
-.sig-dir-btn.buy.active{color:#34d399;border-color:rgba(52,211,153,.5);background:rgba(52,211,153,.12)}
-.sig-dir-btn.sell.active{color:#f87171;border-color:rgba(248,113,113,.5);background:rgba(248,113,113,.12)}
-.sig-af-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
-@media(max-width:720px){.sig-af-grid{grid-template-columns:1fr 1fr}}
-#sig-note,#sig-image{margin-bottom:8px}
-.sig-adm-item{border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:12px 14px;margin-bottom:9px;background:rgba(255,255,255,.02);border-right:3px solid rgba(52,211,153,.5)}
-.sig-adm-item.sell{border-right-color:rgba(248,113,113,.5)}
-.sig-adm-item.closed{opacity:.72}
-.sig-adm-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px}
-.sig-adm-sym{font-weight:900;font-size:14px;color:var(--text);direction:ltr}
-.sig-adm-levels{font-size:11.5px;color:var(--muted);font-weight:700;line-height:2;direction:ltr;text-align:left}
-.sig-adm-levels b{color:var(--text)}
+/* بج‌های خرید/فروش و نتیجه — در کارت‌های دیگر پنل هم استفاده می‌شوند */
 .badge.buy{background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.3)}
 .badge.sell{background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.3)}
 .badge.win{background:rgba(52,211,153,.14);color:#34d399;border:1px solid rgba(52,211,153,.35)}
 .badge.loss{background:rgba(248,113,113,.14);color:#f87171;border:1px solid rgba(248,113,113,.35)}
 .badge.breakeven{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(255,255,255,.12)}
-.sig-rf{margin-top:10px;padding:11px;border-radius:11px;background:rgba(0,0,0,.22);border:1px dashed var(--gold-border)}
-.sig-rf-res{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
-.sig-rf-btn{flex:1;min-width:82px;padding:8px;border-radius:9px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:var(--muted);font-family:inherit;font-size:12px;font-weight:800;cursor:pointer}
-.sig-rf-btn.win.active{color:#34d399;border-color:rgba(52,211,153,.5);background:rgba(52,211,153,.12)}
-.sig-rf-btn.loss.active{color:#f87171;border-color:rgba(248,113,113,.5);background:rgba(248,113,113,.12)}
-.sig-rf-btn.be.active{color:var(--gold);border-color:var(--gold-border);background:rgba(232,160,32,.1)}
-.sig-rf-row{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
-.sig-rf-row .ann-inp{flex:1;min-width:90px}
-.sig-rf-row select.ann-inp{max-width:110px;flex:0 0 auto}
-.sig-rf-row .ann-send{padding:9px 16px;flex-shrink:0}
 /* ═══════════ PERMISSIONS — سوییچ‌های مجوز (گالری / دیدن سیگنال / دادن سیگنال) ═══════════
    سوییچ داخلاً ltr است تا «خاموش = چپ، روشن = راست» در محیط RTL هم قابل‌پیش‌بینی بماند. */
 .sw{position:relative;display:inline-block;width:34px;height:19px;flex-shrink:0;direction:ltr;vertical-align:middle}
@@ -393,7 +388,9 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
 
   <!-- ===== حالت تعمیر سایت ===== -->
   <div class="card mnt-card" id="mnt-card">
-    <div class="card-title">🛠 حالت تعمیر سایت</div>
+    <div class="card-title fold-t" onclick="cardFold('mnt')">🛠 حالت تعمیر سایت
+      <span class="fold-hint" id="mnt-fold-hint"></span><span class="fold-ico">▾</span></div>
+    <div class="fold-b">
     <div class="mnt-state">
       <div class="mnt-state-txt">
         <div class="mnt-state-t" id="mnt-state-t">در حال بارگذاری…</div>
@@ -421,6 +418,7 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
         <button class="ann-send" style="flex:0 0 auto" onclick="mntBypassAdd()">+ افزودن</button>
       </div>
     </div>
+    </div>
   </div>
 
   <!-- ===== month chart ===== -->
@@ -433,15 +431,18 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
       </div>
       <div class="ch-metric">
         <button class="ch-chip active" id="chip-signups" onclick="chMetric('signups')">✨ ثبت‌نام</button>
-        <button class="ch-chip" id="chip-visits" onclick="chMetric('visits')">👁️ بازدید</button>
+        <button class="ch-chip" id="chip-visits" onclick="chMetric('visits')">🔥 کاربر فعال</button>
+        <button class="ch-chip" id="chip-trades" onclick="chMetric('trades')">📊 ترید</button>
+        <button class="ch-chip" id="chip-signals" onclick="chMetric('signals')">📡 سیگنال</button>
       </div>
     </div>
     <div class="ch-stats">
-      <div class="chs-item"><div class="chs-val" id="chs-total">—</div><div class="chs-lbl">جمع این ماه</div></div>
+      <div class="chs-item"><div class="chs-val" id="chs-total">—</div><div class="chs-lbl" id="chs-total-lbl">جمع این ماه</div></div>
       <div class="chs-item"><div class="chs-val" id="chs-avg">—</div><div class="chs-lbl">میانگین روزانه</div></div>
       <div class="chs-item"><div class="chs-val" id="chs-best">—</div><div class="chs-lbl">بهترین روز</div></div>
       <div class="chs-item"><div class="chs-val" id="chs-diff">—</div><div class="chs-lbl">نسبت به ماه قبل</div></div>
     </div>
+    <div class="dn-hint" id="ch-hint"></div>
     <div class="chart-scroll" id="chart-scroll">
       <canvas id="chart"></canvas>
     </div>
@@ -498,6 +499,22 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
           </select>
         </label>
         <button class="ch-chip u-fl-clear" onclick="userFilterClear()">✕ پاک کردن فیلترها</button>
+      </div>
+      <!-- پاک‌سازی گروهی کاربران غیرفعال -->
+      <div class="cl-box">
+        <div class="cl-title">🧹 پاک‌سازی کاربران غیرفعال</div>
+        <div class="cl-sub">کاربرانی که در بازه‌ی انتخابی هیچ بازدیدی نداشته‌اند (یا اصلاً هرگز وارد نشده‌اند) را پیدا می‌کند. اول <b>لیست را ببین</b>، بعد اگر خواستی همه را یک‌جا حذف کن.<br>⚠️ حذف کاربر یعنی پاک‌شدن کامل حسابش: ژورنال، تریدها، عکس‌های گالری و سیگنال‌هایش. <b>برگشت‌پذیر نیست.</b></div>
+        <div class="cl-row">
+          <select id="cl-days">
+            <option value="7">بیش از ۷ روز غایب</option>
+            <option value="14">بیش از ۱۴ روز غایب</option>
+            <option value="30">بیش از ۳۰ روز غایب</option>
+            <option value="0">هرگز وارد نشده‌اند</option>
+          </select>
+          <button class="ch-chip" onclick="clFind()">🔍 نمایش لیست</button>
+          <button class="ch-chip" id="cl-del-btn" onclick="clDeleteAll()" style="display:none;color:#f87171;border-color:rgba(248,113,113,.4)">🗑 حذف همه</button>
+        </div>
+        <div class="cl-res" id="cl-res"></div>
       </div>
       <!-- مجوزهای همگانی — هر سه مجوز، فعال/غیرفعال برای همه‌ی کاربران -->
       <div class="perm-all">
@@ -561,25 +578,38 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
   <!-- ===== leaderboard ===== -->
   <div class="card">
     <div class="card-title">🏆 فعال‌ترین کاربران <span class="legend" id="lb-count"></span></div>
-    <div class="ch-metric" style="margin-bottom:10px">
+    <div class="ch-metric" style="margin-bottom:8px">
       <button class="ch-chip active" id="lbf-active3" onclick="lbFilter('active3')">⚡ فعال ۳ روز اخیر</button>
       <button class="ch-chip" id="lbf-week" onclick="lbFilter('week')">📅 فعال هفته</button>
       <button class="ch-chip" id="lbf-all" onclick="lbFilter('all')">همه (۳۰ روز)</button>
     </div>
+    <!-- مرتب‌سازی: هر کدام را بزنی، جدول از بیشترین به کمترینِ همان ستون چیده می‌شود -->
+    <div class="lb-sortbar">
+      <span class="lb-sort-lbl">مرتب‌سازی بر اساس:</span>
+      <button class="ch-chip active" id="lbs-score"   onclick="lbSort('score')">🏆 امتیاز کلی</button>
+      <button class="ch-chip" id="lbs-days30"  onclick="lbSort('days30')">📅 بیشترین روز فعال</button>
+      <button class="ch-chip" id="lbs-trades30" onclick="lbSort('trades30')">📊 بیشترین ترید</button>
+      <button class="ch-chip" id="lbs-gallery30" onclick="lbSort('gallery30')">🖼 بیشترین عکس گالری</button>
+      <button class="ch-chip" id="lbs-sig_win30" onclick="lbSort('sig_win30')">✅ بیشترین سیگنال سودده</button>
+      <button class="ch-chip" id="lbs-signals30" onclick="lbSort('signals30')">📡 بیشترین سیگنال</button>
+    </div>
     <div class="tbl-wrap">
       <table class="lb-table">
         <thead><tr>
-          <th>رتبه</th><th>نام کاربری</th><th>روند</th><th>روز فعال</th><th>۷ روز</th><th>پیاپی</th><th>بازدید</th><th>ترید</th><th>گالری</th><th>بازخورد</th><th>آخرین بازدید</th><th>امتیاز</th>
+          <th>رتبه</th><th>نام کاربری</th><th>روند</th><th>روز فعال</th><th>۷ روز</th><th>پیاپی</th><th>بازدید</th><th>ترید</th><th>گالری</th><th>📡 سیگنال</th><th>✅ سود</th><th>❌ ضرر</th><th>موفقیت</th><th>بازخورد</th><th>آخرین بازدید</th><th>امتیاز</th>
         </tr></thead>
-        <tbody id="lb-body"><tr><td colspan="12" class="empty-row">در حال بارگذاری…</td></tr></tbody>
+        <tbody id="lb-body"><tr><td colspan="16" class="empty-row">در حال بارگذاری…</td></tr></tbody>
       </table>
     </div>
-    <div class="dn-hint">امتیاز هوشمند: روزِ فعال در ۷ روز اخیر ×۱۵، روزهای قدیمی‌تر ×۵، روزهای پیاپی ×۸، بازدید (سقف ۹۰)، ترید ×۳، گالری ×۴، بازخورد ×۵ — و کل امتیاز بر اساس اینکه آخرین بازدید چند روز پیش بوده کم می‌شود. یعنی «فعال‌ترین» = کسی که همین حالا فعال است، نه کسی که هفته‌ها پیش بوده. مرتب‌شده از رتبه ۱ تا آخر.</div>
+    <div class="dn-hint">امتیاز هوشمند: روزِ فعال در ۷ روز اخیر ×۱۵، روزهای قدیمی‌تر ×۵، روزهای پیاپی ×۸، بازدید (سقف ۹۰)، ترید ×۳، گالری ×۴، بازخورد ×۵، <b>سیگنال منتشرشده ×۲ و سیگنال سودده ×۷</b> — و کل امتیاز بر اساس اینکه آخرین بازدید چند روز پیش بوده کم می‌شود. یعنی «فعال‌ترین» = کسی که همین حالا فعال است، نه کسی که هفته‌ها پیش بوده.<br><span id="lb-sig-warn"></span></div>
   </div>
 
   <!-- ===== account growth ===== -->
-  <div class="card">
-    <div class="card-title">📈 رشد حساب کاربران <span class="legend">درصد رشد نسبت به سرمایه اولیه — از بیشترین تا کمترین</span></div>
+  <div class="card" id="fold-gr">
+    <div class="card-title fold-t" onclick="cardFold('gr')">📈 رشد حساب کاربران
+      <span class="legend">درصد رشد نسبت به سرمایه اولیه — از بیشترین تا کمترین</span>
+      <span class="fold-hint" id="gr-fold-hint"></span><span class="fold-ico">▾</span></div>
+    <div class="fold-b">
     <div class="tbl-wrap">
       <table class="lb-table">
         <thead><tr>
@@ -589,36 +619,18 @@ textarea.ann-inp{resize:vertical;min-height:74px;line-height:1.9}
       </table>
     </div>
     <div class="dn-hint">داده از سینک خودکار متاتریدر (mt5_accounts) می‌آید — فقط کاربرانی که اکسپرت وصل است و سرمایه اولیه ثبت شده.</div>
+    </div>
   </div>
 
-  <!-- ===== signals ===== -->
-  <div class="card">
-    <div class="card-title">📡 سیگنال‌ها <span class="legend" id="sig-adm-count"></span></div>
-    <div class="ann-form">
-      <div class="sig-af-row">
-        <input type="text" id="sig-symbol" class="ann-inp ltr" placeholder="نماد (مثلاً XAUUSD)" maxlength="40">
-        <div class="sig-dir-toggle">
-          <button type="button" class="sig-dir-btn buy active" id="sig-dir-buy" onclick="sigAdmSetDir('buy')">🔺 خرید</button>
-          <button type="button" class="sig-dir-btn sell" id="sig-dir-sell" onclick="sigAdmSetDir('sell')">🔻 فروش</button>
-        </div>
-      </div>
-      <div class="sig-af-grid">
-        <input type="text" id="sig-entry" class="ann-inp ltr" placeholder="ورود (مثلاً 2650 یا 2650-2648)" maxlength="60">
-        <input type="text" id="sig-sl" class="ann-inp ltr" placeholder="حد ضرر (SL)" maxlength="60">
-        <input type="text" id="sig-tp1" class="ann-inp ltr" placeholder="TP1" maxlength="60">
-        <input type="text" id="sig-tp2" class="ann-inp ltr" placeholder="TP2 (اختیاری)" maxlength="60">
-        <input type="text" id="sig-tp3" class="ann-inp ltr" placeholder="TP3 (اختیاری)" maxlength="60">
-        <input type="text" id="sig-group" class="ann-inp ltr" placeholder="گروه" maxlength="40" value="vip">
-      </div>
-      <textarea id="sig-note" class="ann-inp" rows="2" placeholder="توضیح سیگنال… (مثلاً: از این ناحیه طلا بخرید، با تایید ساختار)" maxlength="2000"></textarea>
-      <input type="text" id="sig-image" class="ann-inp ltr" placeholder="لینک عکس سیگنال (اختیاری — فعلاً می‌توانی خالی بگذاری)" maxlength="500">
-      <div class="ann-actions">
-        <button class="ann-send" id="sig-save-btn" onclick="sigAdmSave()">📤 ثبت سیگنال</button>
-        <button class="ann-cancel" id="sig-cancel-btn" onclick="sigAdmCancel()" style="display:none">انصراف از ویرایش</button>
-      </div>
-    </div>
-    <div id="sig-adm-list"><div class="empty-row">در حال بارگذاری…</div></div>
-  </div>
+  <!-- ===== signals =====
+       کارت سیگنال‌ها عمداً از پنل حذف شد (۱۴۰۵/۰۵/۰۲): عکسِ هر سیگنالِ هر
+       کاربر اینجا لود می‌شد و کل پنل را سنگین و طولانی می‌کرد. مدیریت سیگنال
+       کاملاً داخل خودِ برنامه انجام می‌شود (تب 📡 سیگنال):
+         • ثبت سیگنال  → کاربرانی که مجوز «گذاشتن سیگنال» دارند
+         • ثبت سود/ضرر → فقط نویسنده‌ی همان سیگنال و «ادمین اصلی»
+           (همان لیستِ بالای کارت حالت تعمیر — سرور هم با sig_may_set_result
+            همین را اجبار می‌کند، پس دور زدنش از سمت کلاینت ممکن نیست).
+       آمار سیگنالِ هر کاربر در کارت «فعال‌ترین کاربران» دیده می‌شود. -->
 
   <!-- ===== announcements ===== -->
   <div class="card">
@@ -780,7 +792,8 @@ function enterPanel(){
   loadAll();
 }
 async function loadAll(){
-  loadStats(); loadStatsExtra(); loadUsers(); permDefaultsLoad(); chLoad(true); sigAdmLoad(); annLoad(); fbLoad(); donAdmLoad(); lbLoad(); growthLoad(); mntLoad();
+  foldInit();
+  loadStats(); loadStatsExtra(); loadUsers(); permDefaultsLoad(); chLoad(true); annLoad(); fbLoad(); donAdmLoad(); lbLoad(); growthLoad(); mntLoad();
   document.getElementById('p-updated').textContent='آخرین به‌روزرسانی: '+new Intl.DateTimeFormat('fa-IR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
 }
 async function loadStats(){
@@ -810,10 +823,21 @@ function chNav(dir){
   chY=y;chM=m;
   chLoad();
 }
+/* متریک‌های نمودار — «visits» در سرور count(distinct user_id) است، یعنی
+   کاربرِ یکتای فعال در آن روز، نه تعداد بازدید. اسمش اینجا درست نوشته شده. */
+const CH_METRICS={
+  signups:{label:'ثبت‌نام',      unit:'کاربر',  hint:'تعداد حساب‌های تازه‌ای که آن روز ساخته شده‌اند.'},
+  visits :{label:'کاربر فعال',   unit:'کاربر',  hint:'کاربرِ یکتای فعال در هر روز — اگر یک نفر ۱۰ بار وارد شود، یک بار شمرده می‌شود.'},
+  trades :{label:'ترید',         unit:'ترید',   hint:'تریدهایی که آن روز از متاتریدر ثبت شده‌اند (mt5_trades).'},
+  signals:{label:'سیگنال',       unit:'سیگنال', hint:'سیگنال‌هایی که آن روز در تب سیگنالِ برنامه منتشر شده‌اند.'}
+};
+const CH_KEYS=['signups','visits','trades','signals'];
 function chMetric(k){
   chKey=k;
-  document.getElementById('chip-signups').className='ch-chip'+(k==='signups'?' active':'');
-  document.getElementById('chip-visits').className ='ch-chip'+(k==='visits'?' active blue':'');
+  CH_KEYS.forEach(m=>{
+    const b=document.getElementById('chip-'+m);
+    if(b)b.className='ch-chip'+(m===k?(m==='signups'?' active':' active blue'):'');
+  });
   chRenderStats(); chStartAnim();
 }
 
@@ -838,12 +862,16 @@ async function chLoad(force){
       return;
     }
     const curStart=gStr(toGregorian(chY,chM,1));
-    const cur=[],prev={signups:0,visits:0};
+    const cur=[],prev={signups:0,visits:0,trades:0,signals:0};
     (r.days||[]).forEach(d=>{
-      if(d.d>=curStart) cur.push(d);
-      else{ prev.signups+=d.signups; prev.visits+=d.visits; }
+      // متریک‌های جدید فقط با admin-chart-v2.sql می‌آیند؛ بدون آن صفر می‌مانند
+      const row={d:d.d,signups:d.signups|0,visits:d.visits|0,trades:d.trades|0,signals:d.signals|0};
+      if(d.d>=curStart) cur.push(row);
+      else CH_KEYS.forEach(k=>{ prev[k]+=row[k]; });
     });
-    _chCache[key]={days:cur,prevTotal:prev};
+    // آیا سرور نسخه‌ی v2 است؟ (متریک‌های ترید/سیگنال فقط آن‌جا هستند)
+    const hasNew=(r.days||[]).some(d=>d.trades!==undefined);
+    _chCache[key]={days:cur,prevTotal:prev,hasNew:hasNew};
     chRenderStats(); chStartAnim();
   }catch(e){}
 }
@@ -852,14 +880,23 @@ function chData(){ return _chCache[chY+'-'+chM]||null; }
 
 function chRenderStats(){
   const d=chData(); if(!d)return;
-  const vals=d.days.map(x=>x[chKey]);
+  const meta=CH_METRICS[chKey]||CH_METRICS.signups;
+  const vals=d.days.map(x=>x[chKey]||0);
   const total=vals.reduce((s,v)=>s+v,0);
   // میانگین فقط تا امروز (برای ماه جاری) — نه کل روزهای نیامده
   const isCur=(chY===_tJ.jy&&chM===_tJ.jm);
-  const passed=isCur?_tJ.jd:vals.length;
+  const passed=isCur?Math.min(_tJ.jd,vals.length):vals.length;
   const avg=passed>0?(total/passed):0;
   let bi=-1,bv=0;
   vals.forEach((v,i)=>{ if(v>bv){bv=v;bi=i;} });
+  const tl=document.getElementById('chs-total-lbl');
+  if(tl)tl.textContent='جمع '+meta.label+' این ماه';
+  const hint=document.getElementById('ch-hint');
+  if(hint){
+    if(!d.hasNew&&(chKey==='trades'||chKey==='signals'))
+      hint.innerHTML='⚠️ این متریک نیاز به اجرای فایل <b>admin-chart-v2.sql</b> در Supabase دارد.';
+    else hint.textContent=meta.hint+(isCur?' · ماه جاری: میانگین فقط روی روزهای گذشته حساب می‌شود.':'');
+  }
   document.getElementById('chs-total').textContent=faNum(total);
   document.getElementById('chs-avg').textContent=avg>=10?faNum(Math.round(avg)):(Math.round(avg*10)/10).toLocaleString('fa-IR');
   document.getElementById('chs-best').textContent=bi>=0?(faNum(bi+1)+' '+J_MONTHS[chM-1]+' — '+faNum(bv)):'—';
@@ -1059,9 +1096,10 @@ async function sendMsg(id,name){
   if(!(b||'').trim()){ toast('پیام خالی است'); return; }
   if(b.length>500){ toast('پیام حداکثر ۵۰۰ حرف باشد'); return; }
   const r=await rpc('admin_send_message',{p_token:ADMIN_TOKEN,p_user:id,p_body:b.trim()});
-  if(r&&r.ok) toast('📩 پیام برای «'+name+'» ارسال شد');
-  else if(r&&r.error==='unauthorized')authFail();
+  if(r&&r.ok){ toast('📩 پیام برای «'+name+'» ارسال شد'); return true; }
+  if(r&&r.error==='unauthorized')authFail();
   else toast('❌ خطا — فایل admin-users-extra.sql در Supabase اجرا شده؟');
+  return false;
 }
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 let _userQuery='';
@@ -1383,6 +1421,68 @@ async function delUser(id,name){
   else toast('❌ خطا در حذف');
 }
 
+/* ===== پاک‌سازی گروهی کاربران غیرفعال =====
+   admin_inactive_users(token, days) فقط لیست می‌دهد (چیزی حذف نمی‌کند)؛ حذف
+   واقعی با همان admin_delete_user تکی انجام می‌شود تا دقیقاً همان مسیرِ
+   امتحان‌پس‌داده طی شود (cascade کامل روی همه‌ی جدول‌ها). */
+let _clList=[];
+async function clFind(){
+  const box=document.getElementById('cl-res');
+  const btn=document.getElementById('cl-del-btn');
+  const days=Number(document.getElementById('cl-days').value);
+  box.textContent='در حال جست‌وجو…'; btn.style.display='none'; _clList=[];
+  const r=await rpc('admin_inactive_users',{p_token:ADMIN_TOKEN,p_days:days});
+  if(!r||!r.ok){
+    if(r&&r.error==='unauthorized'){ authFail(); return; }
+    box.innerHTML=(r&&(r.code==='PGRST202'||/could not find the function/i.test(r.message||'')))
+      ? '⚠️ فایل <b>admin-cleanup.sql</b> هنوز در Supabase اجرا نشده'
+      : '❌ خطا در دریافت لیست';
+    return;
+  }
+  _clList=r.users||[];
+  if(!_clList.length){ box.textContent='✅ هیچ کاربر غیرفعالی در این بازه نیست.'; return; }
+  box.innerHTML='<b>'+faNum(_clList.length)+' کاربر</b> پیدا شد:<br>'+
+    _clList.map(u=>'<span class="cl-u">'+esc(u.name||'—')+
+      (u.last_visit?' · '+faNum(u.days_idle)+' روز غایب':' · هرگز نیامده')+'</span>').join('');
+  btn.style.display='';
+}
+async function clDeleteAll(){
+  if(!_clList.length)return;
+  const n=_clList.length;
+  if(!confirm('⚠️ '+n+' کاربر و تمام داده‌هایشان برای همیشه حذف شوند؟\nاین کار برگشت‌پذیر نیست.'))return;
+  if(!confirm('مطمئنی؟ برای تأیید نهایی دوباره تایید کن.\nحذف '+n+' کاربر…'))return;
+  const box=document.getElementById('cl-res');
+  const btn=document.getElementById('cl-del-btn');
+  btn.style.display='none';
+  let ok=0,fail=0;
+  for(let i=0;i<_clList.length;i++){
+    box.textContent='در حال حذف… '+faNum(i+1)+' از '+faNum(n);
+    const r=await rpc('admin_delete_user',{p_token:ADMIN_TOKEN,p_user:_clList[i].id});
+    if(r&&r.ok)ok++; else fail++;
+  }
+  box.innerHTML='✅ '+faNum(ok)+' کاربر حذف شد'+(fail?' · ❌ '+faNum(fail)+' ناموفق':'');
+  _clList=[];
+  toast('🧹 '+faNum(ok)+' کاربر غیرفعال حذف شد');
+  loadAll();
+}
+
+/* ===== کارت‌های کشویی ===== */
+const FOLD_KEYS=['mnt','gr'];
+function cardFold(k){
+  const c=document.getElementById(k==='mnt'?'mnt-card':'fold-'+k);
+  if(!c)return;
+  const on=c.classList.toggle('folded');
+  try{ localStorage.setItem('tp_fold_'+k, on?'1':'0'); }catch(e){}
+}
+function foldInit(){
+  FOLD_KEYS.forEach(k=>{
+    const c=document.getElementById(k==='mnt'?'mnt-card':'fold-'+k);
+    if(!c)return;
+    let v=null; try{ v=localStorage.getItem('tp_fold_'+k); }catch(e){}
+    if(v===null||v==='1') c.classList.add('folded');   // پیش‌فرض: بسته
+  });
+}
+
 /* ===== extra stats (فعال امروز/هفته، متاتریدر٪، بازخورد جدید) ===== */
 async function loadStatsExtra(){
   try{
@@ -1418,20 +1518,47 @@ function lbPass(u){
   return true;
 }
 const LB_TREND={up:'<span class="lb-tr up">▲</span>',down:'<span class="lb-tr down">▼</span>',flat:'<span class="lb-tr flat">—</span>'};
+/* مرتب‌سازی — پیش‌فرض «امتیاز کلی» (همان ترتیبی که سرور می‌دهد).
+   بقیه‌ی گزینه‌ها همان لیست را از بیشترین به کمترینِ آن ستون می‌چینند. */
+let _lbSort='score';
+const LB_SORTS=['score','days30','trades30','gallery30','sig_win30','signals30'];
+function lbSort(k){
+  _lbSort=k;
+  LB_SORTS.forEach(s=>{
+    const b=document.getElementById('lbs-'+s);
+    if(b)b.className='ch-chip'+(s===k?' active':'');
+  });
+  lbRender();
+}
 function lbRender(){
   const tb=document.getElementById('lb-body');
-  const items=_lbItems.filter(lbPass);
+  let items=_lbItems.filter(lbPass);
+  if(_lbSort!=='score'){
+    // مرتب‌سازی پایدار: مساوی‌ها ترتیب امتیازِ سرور را نگه می‌دارند
+    items=items.map((u,i)=>({u,i}))
+      .sort((a,b)=>(Number(b.u[_lbSort]||0)-Number(a.u[_lbSort]||0))||(a.i-b.i))
+      .map(x=>x.u);
+  }
   const label={active3:'کاربر فعال ۳ روز اخیر',week:'کاربر فعال هفته اخیر',all:'کاربر فعال ۳۰ روز اخیر'}[_lbFilter];
   const c=document.getElementById('lb-count');
   if(c)c.textContent=faNum(items.length)+' '+label;
   if(!items.length){
     const empty={active3:'در ۳ روز اخیر کاربر فعالی نبوده',week:'در ۷ روز اخیر کاربر فعالی نبوده',all:'در ۳۰ روز اخیر فعالیتی ثبت نشده'}[_lbFilter];
-    tb.innerHTML='<tr><td colspan="12" class="empty-row">'+empty+'</td></tr>'; return;
+    tb.innerHTML='<tr><td colspan="16" class="empty-row">'+empty+'</td></tr>'; return;
   }
+  // اگر SQL نسخه‌ی قدیمی روی سرور باشد، ستون‌های سیگنال اصلاً برنمی‌گردند
+  const hasSig=_lbItems.some(u=>u.signals30!==undefined);
+  const warn=document.getElementById('lb-sig-warn');
+  if(warn)warn.innerHTML=hasSig?'':'⚠️ ستون‌های سیگنال خالی‌اند چون فایل <b>admin-leaderboard-v2.sql</b> هنوز در Supabase اجرا نشده.';
   const MEDALS=['🥇','🥈','🥉'];
   const n=v=>faNum(v==null?0:v);
-  tb.innerHTML=items.map((u,i)=>
-    '<tr'+(i<3?' class="lb-top"':'')+'>'+
+  const dash=v=>(v===undefined?'—':n(v));
+  tb.innerHTML=items.map((u,i)=>{
+    const w=Number(u.sig_win30||0), l=Number(u.sig_loss30||0), tot=w+l;
+    // نرخ موفقیت فقط وقتی معنا دارد که سیگنالِ نتیجه‌خورده وجود داشته باشد
+    const wr=tot>0?Math.round(w/tot*100):null;
+    const wrHtml=wr===null?'—':'<b style="color:'+(wr>=50?'#34d399':'#f87171')+'">'+faNum(wr)+'٪</b>';
+    return '<tr'+(i<3?' class="lb-top"':'')+'>'+
       '<td class="lb-rank">'+(MEDALS[i]||faNum(i+1))+'</td>'+
       '<td class="u-name">'+esc(u.name)+'</td>'+
       '<td>'+(LB_TREND[u.trend]||LB_TREND.flat)+'</td>'+
@@ -1441,10 +1568,15 @@ function lbRender(){
       '<td>'+n(u.visits30)+'</td>'+
       '<td>'+n(u.trades30)+'</td>'+
       '<td>'+n(u.gallery30)+'</td>'+
+      '<td>'+dash(u.signals30)+'</td>'+
+      '<td'+(w?' style="color:#34d399;font-weight:800"':'')+'>'+dash(u.sig_win30)+'</td>'+
+      '<td'+(l?' style="color:#f87171;font-weight:800"':'')+'>'+dash(u.sig_loss30)+'</td>'+
+      '<td>'+wrHtml+'</td>'+
       '<td>'+n(u.fb30)+'</td>'+
       '<td>'+faDateTime(u.last_visit)+'</td>'+
       '<td class="lb-score">'+n(u.score)+'</td>'+
-    '</tr>').join('');
+    '</tr>';
+  }).join('');
 }
 async function lbLoad(){
   const tb=document.getElementById('lb-body');
@@ -1453,7 +1585,7 @@ async function lbLoad(){
     if(!r||!r.ok){
       if(r&&r.error==='unauthorized'){ authFail(); return; }
       if(r&&(r.code==='PGRST202'||/could not find the function/i.test(r.message||'')))
-        tb.innerHTML='<tr><td colspan="12" class="empty-row">⚠️ فایل admin-activity.sql هنوز در Supabase اجرا نشده</td></tr>';
+        tb.innerHTML='<tr><td colspan="16" class="empty-row">⚠️ فایل admin-activity.sql هنوز در Supabase اجرا نشده</td></tr>';
       return;
     }
     _lbItems=r.items||[];
@@ -1473,6 +1605,9 @@ function mntPaint(){
   document.getElementById('mnt-state-t').textContent=_mntOn
     ? '🔴 روشن — سایت برای همه بسته است'
     : '🟢 خاموش — سایت برای همه باز است';
+  // وقتی کارت بسته است، وضعیت باید در همان تیتر دیده شود
+  const fh=document.getElementById('mnt-fold-hint');
+  if(fh)fh.textContent=_mntOn?'🔴 روشن است':'🟢 خاموش';
   document.getElementById('mnt-byp-list').innerHTML=_mntBypass.length
     ? _mntBypass.map(u=>'<span class="mnt-chip">👑 '+esc(u.name)+
         '<button title="حذف" onclick="mntBypassDel(\''+u.id+'\',\''+esc(u.name).replace(/'/g,"\\'")+'\')">✕</button></span>').join('')
@@ -1547,6 +1682,8 @@ async function growthLoad(){
       return;
     }
     const items=r.items||[];
+    const fh=document.getElementById('gr-fold-hint');
+    if(fh)fh.textContent=items.length?faNum(items.length)+' حساب':'خالی';
     if(!items.length){ tb.innerHTML='<tr><td colspan="7" class="empty-row">هنوز حسابی از متاتریدر سینک نشده (سرمایه اولیه لازم است)</td></tr>'; return; }
     const MEDALS=['🥇','🥈','🥉'];
     tb.innerHTML=items.map((u,i)=>{
@@ -1651,161 +1788,6 @@ async function annDel(id){
   else if(r&&r.error==='unauthorized')authFail();
 }
 
-/* ===== signals ===== */
-let _sigAdm=[], _sigAdmEdit=null, _sigAdmDir='buy';
-function _sigSqlMissing(r,box){
-  if(r&&(r.code==='PGRST202'||/could not find the function/i.test(r.message||''))){
-    if(box)box.innerHTML='<div class="empty-row">⚠️ فایل signals.sql هنوز در Supabase اجرا نشده</div>';
-    return true;
-  }
-  return false;
-}
-function sigAdmSetDir(d){
-  _sigAdmDir=(d==='sell')?'sell':'buy';
-  document.getElementById('sig-dir-buy').classList.toggle('active',_sigAdmDir==='buy');
-  document.getElementById('sig-dir-sell').classList.toggle('active',_sigAdmDir==='sell');
-}
-function sigDirBadge(d){ return d==='sell'?'<span class="badge sell">🔻 فروش</span>':'<span class="badge buy">🔺 خرید</span>'; }
-function sigResBadge(s){
-  if(s.status!=='closed'||!s.result) return '';
-  const map={win:'✅ سود',loss:'❌ ضرر',breakeven:'➖ سربه‌سر'};
-  const unit={pip:'پیپ',percent:'٪',r:'R'};
-  let v='';
-  if(s.result_value!=null){
-    const sign=s.result==='loss'?'−':s.result==='win'?'+':'';
-    v=' '+sign+Math.abs(s.result_value)+(unit[s.result_unit]?' '+unit[s.result_unit]:'');
-  }
-  return '<span class="badge '+s.result+'">'+map[s.result]+v+'</span>';
-}
-async function sigAdmLoad(){
-  const box=document.getElementById('sig-adm-list');
-  try{
-    // نسخه ۲ نویسنده و عکس را هم برمی‌گرداند؛ اگر signals-v2.sql اجرا نشده، نسخه قدیمی
-    let r=await rpc('admin_signal_list2',{p_token:ADMIN_TOKEN});
-    if(!r||!r.ok) r=await rpc('admin_signal_list',{p_token:ADMIN_TOKEN});
-    if(!r||!r.ok){ if(r&&r.error==='unauthorized')authFail(); else _sigSqlMissing(r,box); return; }
-    _sigAdm=r.items||[];
-    document.getElementById('sig-adm-count').textContent=_sigAdm.length?faNum(_sigAdm.length)+' سیگنال':'';
-    box.innerHTML=_sigAdm.length?_sigAdm.map(sigAdmItemHTML).join(''):'<div class="empty-row">هنوز سیگنالی ثبت نشده — از فرم بالا اولین سیگنال را بساز</div>';
-  }catch(e){}
-}
-function sigAdmItemHTML(s){
-  const dir=s.direction==='sell'?'sell':'buy';
-  const statusBadge=s.status==='closed'?'<span class="badge no">بسته</span>':'<span class="badge ok">فعال</span>';
-  const lv=[];
-  if(s.entry)lv.push('ورود: <b>'+esc(s.entry)+'</b>');
-  if(s.sl)lv.push('SL: <b>'+esc(s.sl)+'</b>');
-  if(s.tp1)lv.push('TP1: <b>'+esc(s.tp1)+'</b>');
-  if(s.tp2)lv.push('TP2: <b>'+esc(s.tp2)+'</b>');
-  if(s.tp3)lv.push('TP3: <b>'+esc(s.tp3)+'</b>');
-  return '<div class="sig-adm-item '+dir+(s.status==='closed'?' closed':'')+'">'+
-    '<div class="sig-adm-head">'+sigDirBadge(s.direction)+'<span class="sig-adm-sym">'+esc(s.symbol)+'</span>'+
-      statusBadge+sigResBadge(s)+'<span class="badge no">'+esc(s.group_name)+'</span>'+
-      (s.author_name?'<span class="badge mid">✍️ '+esc(s.author_name)+'</span>':'')+
-      '<span class="item-date">'+faDateTime(s.created_at)+'</span></div>'+
-    (lv.length?'<div class="sig-adm-levels">'+lv.join(' · ')+'</div>':'')+
-    (s.img?'<img src="'+esc(s.img)+'" alt="chart" loading="lazy" style="max-width:260px;width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.12);margin:8px 0">':'')+
-    (s.note?'<div class="ann-item-body">'+esc(s.note)+'</div>':'')+
-    '<div class="item-btns">'+
-      '<button class="act-btn act-pass" onclick="sigAdmResultForm('+s.id+')">🎯 ثبت نتیجه</button>'+
-      '<button class="act-btn act-pass" onclick="sigAdmEdit('+s.id+')">✏️ ویرایش</button>'+
-      (s.status==='closed'?'<button class="act-btn act-ban" onclick="sigAdmReopen('+s.id+')">↩️ باز کردن</button>':'')+
-      '<button class="act-btn act-del" onclick="sigAdmDel('+s.id+')">🗑 حذف</button>'+
-    '</div>'+
-    '<div class="sig-rf" id="sig-rf-'+s.id+'" style="display:none">'+
-      '<div class="sig-rf-res">'+
-        '<button type="button" class="sig-rf-btn win" data-res="win" onclick="sigAdmPickRes(this)">✅ سود</button>'+
-        '<button type="button" class="sig-rf-btn loss" data-res="loss" onclick="sigAdmPickRes(this)">❌ ضرر</button>'+
-        '<button type="button" class="sig-rf-btn be" data-res="breakeven" onclick="sigAdmPickRes(this)">➖ سربه‌سر</button>'+
-      '</div>'+
-      '<div class="sig-rf-row">'+
-        '<input type="number" class="ann-inp ltr" id="sig-rf-val-'+s.id+'" placeholder="مقدار (اختیاری)" step="0.1">'+
-        '<select class="ann-inp" id="sig-rf-unit-'+s.id+'"><option value="pip">پیپ</option><option value="percent">درصد</option><option value="r">R</option></select>'+
-        '<button class="ann-send" onclick="sigAdmResultSubmit('+s.id+')">تایید و بستن</button>'+
-      '</div>'+
-    '</div>';
-}
-function sigAdmResultForm(id){
-  const f=document.getElementById('sig-rf-'+id); if(!f)return;
-  f.style.display=(f.style.display==='none')?'block':'none';
-  const s=_sigAdm.find(x=>x.id===id);
-  if(f.style.display==='block' && s && s.result){
-    f.querySelectorAll('.sig-rf-btn').forEach(b=>b.classList.toggle('active',b.dataset.res===s.result));
-    if(s.result_value!=null) document.getElementById('sig-rf-val-'+id).value=s.result_value;
-    if(s.result_unit) document.getElementById('sig-rf-unit-'+id).value=s.result_unit;
-  }
-}
-function sigAdmPickRes(btn){
-  btn.parentElement.querySelectorAll('.sig-rf-btn').forEach(b=>b.classList.toggle('active',b===btn));
-}
-async function sigAdmResultSubmit(id){
-  const f=document.getElementById('sig-rf-'+id);
-  const sel=f.querySelector('.sig-rf-btn.active');
-  if(!sel){ toast('اول نتیجه را انتخاب کن (سود/ضرر/سربه‌سر)'); return; }
-  const valStr=document.getElementById('sig-rf-val-'+id).value.trim();
-  const val=valStr===''?null:parseFloat(valStr);
-  const unit=document.getElementById('sig-rf-unit-'+id).value;
-  const r=await rpc('admin_signal_result',{p_token:ADMIN_TOKEN,p_id:id,p_result:sel.dataset.res,p_value:val,p_unit:unit});
-  if(r&&r.ok){ toast('✅ نتیجه ثبت و سیگنال بسته شد'); sigAdmLoad(); }
-  else if(r&&r.error==='unauthorized')authFail();
-  else toast('❌ خطا در ثبت نتیجه');
-}
-async function sigAdmReopen(id){
-  const r=await rpc('admin_signal_result',{p_token:ADMIN_TOKEN,p_id:id,p_result:null,p_value:null,p_unit:null});
-  if(r&&r.ok){ toast('↩️ سیگنال دوباره فعال شد'); sigAdmLoad(); }
-  else if(r&&r.error==='unauthorized')authFail();
-}
-async function sigAdmSave(){
-  const symbol=document.getElementById('sig-symbol').value.trim();
-  if(!symbol){ toast('نماد سیگنال را وارد کن'); return; }
-  const editing=_sigAdmEdit;
-  const r=await rpc('admin_signal_save',{
-    p_token:ADMIN_TOKEN, p_id:editing, p_symbol:symbol, p_direction:_sigAdmDir,
-    p_entry:document.getElementById('sig-entry').value.trim(),
-    p_sl:document.getElementById('sig-sl').value.trim(),
-    p_tp1:document.getElementById('sig-tp1').value.trim(),
-    p_tp2:document.getElementById('sig-tp2').value.trim(),
-    p_tp3:document.getElementById('sig-tp3').value.trim(),
-    p_note:document.getElementById('sig-note').value.trim(),
-    p_image_url:document.getElementById('sig-image').value.trim(),
-    p_group:document.getElementById('sig-group').value.trim()||'vip'
-  });
-  if(r&&r.ok){ toast(editing?'✏️ سیگنال ویرایش شد':'📤 سیگنال ثبت شد — برای اعضای VIP نمایش داده می‌شود'); sigAdmCancel(); sigAdmLoad(); }
-  else if(r&&r.error==='unauthorized')authFail();
-  else if(r&&r.error==='empty_symbol') toast('نماد را وارد کن');
-  else if(!_sigSqlMissing(r,document.getElementById('sig-adm-list'))) toast('❌ خطا در ثبت سیگنال');
-}
-function sigAdmEdit(id){
-  const s=_sigAdm.find(x=>x.id===id); if(!s)return;
-  _sigAdmEdit=id;
-  document.getElementById('sig-symbol').value=s.symbol||'';
-  sigAdmSetDir(s.direction==='sell'?'sell':'buy');
-  document.getElementById('sig-entry').value=s.entry||'';
-  document.getElementById('sig-sl').value=s.sl||'';
-  document.getElementById('sig-tp1').value=s.tp1||'';
-  document.getElementById('sig-tp2').value=s.tp2||'';
-  document.getElementById('sig-tp3').value=s.tp3||'';
-  document.getElementById('sig-note').value=s.note||'';
-  document.getElementById('sig-image').value=s.image_url||'';
-  document.getElementById('sig-group').value=s.group_name||'vip';
-  document.getElementById('sig-save-btn').textContent='💾 ذخیره ویرایش';
-  document.getElementById('sig-cancel-btn').style.display='';
-  document.getElementById('sig-symbol').scrollIntoView({behavior:'smooth',block:'center'});
-}
-function sigAdmCancel(){
-  _sigAdmEdit=null; sigAdmSetDir('buy');
-  ['sig-symbol','sig-entry','sig-sl','sig-tp1','sig-tp2','sig-tp3','sig-note','sig-image'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=''; });
-  document.getElementById('sig-group').value='vip';
-  document.getElementById('sig-save-btn').textContent='📤 ثبت سیگنال';
-  document.getElementById('sig-cancel-btn').style.display='none';
-}
-async function sigAdmDel(id){
-  if(!confirm('این سیگنال حذف شود؟'))return;
-  const r=await rpc('admin_signal_delete',{p_token:ADMIN_TOKEN,p_id:id});
-  if(r&&r.ok){ toast('🗑 سیگنال حذف شد'); sigAdmLoad(); }
-  else if(r&&r.error==='unauthorized')authFail();
-}
-
 /* ===== feedback inbox ===== */
 async function fbLoad(){
   const box=document.getElementById('fb-list');
@@ -1829,11 +1811,20 @@ async function fbLoad(){
         '</div>'+
         '<div class="fb-msg">'+esc(f.message)+'</div>'+
         '<div class="item-btns">'+
+          // پاسخ مستقیم به همان کاربر — پیام خصوصی داخل برنامه نشانش داده می‌شود.
+          // اگر بازخورد بی‌نام (بدون حساب) بوده باشد user_id ندارد و دکمه نمی‌آید.
+          (f.user_id?'<button class="act-btn act-pass" onclick="fbReply('+f.id+',\''+f.user_id+'\',\''+esc(f.name||'کاربر').replace(/'/g,"\\'")+'\')">📩 ارسال پیام</button>':'')+
           (f.status==='new'?'<button class="act-btn act-pass" onclick="fbSeen('+f.id+')">✓ خوانده شد</button>':'')+
           '<button class="act-btn act-del" onclick="fbDel('+f.id+')">🗑 حذف</button>'+
         '</div></div>';
     }).join(''):'<div class="empty-row">هنوز بازخوردی نرسیده</div>';
   }catch(e){}
+}
+/* پاسخ به بازخورد = همان پیام خصوصیِ کارت کاربران، ولی بدون گشتن دنبال اسم.
+   بعد از ارسال موفق، بازخورد خودکار «خوانده شد» می‌شود تا در صف نماند. */
+async function fbReply(id,uid,name){
+  const ok=await sendMsg(uid,name);
+  if(ok) fbSeen(id);
 }
 async function fbSeen(id){
   const r=await rpc('admin_fb_status',{p_token:ADMIN_TOKEN,p_id:id,p_status:'seen'});

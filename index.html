@@ -235,6 +235,9 @@ input[type="datetime-local"]{width:100%;background:rgba(255,255,255,.05);border:
 .sigc:hover .sigc-img{transform:scale(1.04)}
 /* بدون عکس: پس‌زمینه‌ی ملایمِ جهت‌دار تا کارت خالی نباشد */
 .sigc-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:30px;opacity:.5}
+/* اسکلت لودینگ — تا وقتی عکسِ کارت از سرور برسد */
+.sigc-skel{background:linear-gradient(100deg,rgba(255,255,255,.03) 30%,rgba(255,255,255,.09) 50%,rgba(255,255,255,.03) 70%);background-size:220% 100%;animation:sigSkel 1.3s ease-in-out infinite}
+@keyframes sigSkel{0%{background-position:180% 0}100%{background-position:-40% 0}}
 .sigc-when{position:absolute;bottom:6px;right:6px;left:6px;display:flex;justify-content:space-between;gap:6px;pointer-events:none}
 .sigc-chip{padding:3px 8px;border-radius:11px;font-size:9.5px;font-weight:800;background:rgba(5,12,24,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.12);color:#fff;white-space:nowrap}
 .sigc-chip.time{direction:ltr;font-variant-numeric:tabular-nums}
@@ -6316,7 +6319,10 @@ async function loadSignals(){
     // تب دیگر برای غیرVIP قفل کامل نیست: RLS فقط تازه‌ترین سیگنال را برمی‌گرداند
     // و پایینش بنر «بقیه ویژه‌ی VIP» نشان داده می‌شود (نمونه‌ی رایگان).
     // سیگنال‌ها (RLS فقط سیگنالِ گروه‌های معتبرِ کاربر + سیگنال‌های خودش را برمی‌گرداند)
-    const {data:rows,error}=await SB.from('signals').select('*').order('id',{ascending:false}).limit(200);
+    // ستون‌های سنگین (img و result_imgs — عکس base64) عمداً اینجا خوانده نمی‌شوند؛
+    // sigLoadImages() آن‌ها را کارت‌به‌کارت و فقط برای کارت‌های قابل‌دیدن می‌گیرد.
+    const SIG_LIGHT_COLS='id,symbol,direction,entry,sl,tp1,tp2,tp3,note,image_url,group_name,status,result,result_value,result_unit,created_at,closed_at,author_id,author_name';
+    const {data:rows,error}=await SB.from('signals').select(SIG_LIGHT_COLS).order('id',{ascending:false}).limit(200);
     if(error){
       // پیام واقعی سرور را نشان بده. قبلاً هر خطایی «signals.sql اجرا نشده»
       // تفسیر می‌شد و همین یک بار باعث چند ساعت دنبال نخود سیاه گشتن شد.
@@ -6395,6 +6401,7 @@ function renderSignals(){
   // زیرش دعوت به VIP نشان داده می‌شود. VIPها این بنر را نمی‌بینند.
   if(!_sigVip) html+=sigUpsellHTML(items.length);
   root.innerHTML=html;
+  sigObserveCards();   // عکس‌ها فقط برای کارت‌هایی که به دید می‌آیند گرفته می‌شوند
 }
 function sigSetFilter(f){ _sigFilter=f; renderSignals(); }
 
@@ -6417,6 +6424,62 @@ function sigIsMine(s){ return !!(CURRENT_USER && s.author_id===CURRENT_USER.id);
 function sigCanSetResult(s){ return sigIsMine(s) || USER_BYPASS; }
 function sigResults(s){ try{ return Array.isArray(s.result_imgs)?s.result_imgs:JSON.parse(s.result_imgs||'[]'); }catch(e){ return []; } }
 
+/* ---------- لود تنبل عکس‌ها ----------
+   عکس هر سیگنال یک data:image/webp base64 داخل ستون img است (چند صد کیلوبایت).
+   قبلاً select('*') همه‌ی آن‌ها را یک‌جا می‌گرفت و تب سیگنال کند باز می‌شد.
+   حالا اول فقط متن سیگنال‌ها می‌آید و عکسِ هر کارت درست قبل از دیده‌شدن
+   گرفته می‌شود. s.img === undefined یعنی «هنوز نگرفته‌ایم» (null یعنی عکس ندارد). */
+let _sigIO=null, _sigImgPending=new Set();
+function sigObserveCards(){
+  if(_sigIO) _sigIO.disconnect();
+  const cards=document.querySelectorAll('.sigc[data-sigcard]');
+  if(!cards.length) return;
+  if(!('IntersectionObserver' in window)){          // مرورگر خیلی قدیمی
+    sigLoadImages(Array.from(cards).map(el=>+el.dataset.sigcard));
+    return;
+  }
+  _sigIO=new IntersectionObserver(entries=>{
+    const ids=[];
+    entries.forEach(e=>{
+      if(!e.isIntersecting) return;
+      ids.push(+e.target.dataset.sigcard);
+      _sigIO.unobserve(e.target);
+    });
+    if(ids.length) sigLoadImages(ids);
+  },{rootMargin:'400px 0px',threshold:0.01});
+  cards.forEach(el=>{
+    const s=_sigItems.find(x=>x.id===+el.dataset.sigcard);
+    if(s && s.img===undefined) _sigIO.observe(el);
+  });
+}
+async function sigLoadImages(ids){
+  if(!SB) return;
+  const need=ids.filter(id=>{
+    const s=_sigItems.find(x=>x.id===id);
+    return s && s.img===undefined && !_sigImgPending.has(id);
+  });
+  if(!need.length) return;
+  need.forEach(id=>_sigImgPending.add(id));
+  try{
+    const {data,error}=await SB.from('signals').select('id,img,result_imgs').in('id',need);
+    if(error) throw error;
+    (data||[]).forEach(r=>{
+      const s=_sigItems.find(x=>x.id===r.id); if(!s) return;
+      s.img=r.img===undefined?null:r.img;
+      s.result_imgs=r.result_imgs;
+      // فقط همان کارت را دوباره می‌سازیم — بقیه‌ی صفحه تکان نمی‌خورد
+      const el=document.querySelector('.sigc[data-sigcard="'+r.id+'"]');
+      if(el){
+        const tmp=document.createElement('div');
+        tmp.innerHTML=sigCardHTML(s);
+        if(tmp.firstElementChild) el.replaceWith(tmp.firstElementChild);
+      }
+    });
+  }catch(e){
+    need.forEach(id=>_sigImgPending.delete(id));   // دفعه‌ی بعد دوباره تلاش شود
+  }
+}
+
 function sigCardHTML(s){
   const dir=s.direction==='sell'?'sell':'buy';
   const img=s.img||s.image_url||'';
@@ -6426,9 +6489,12 @@ function sigCardHTML(s){
   const closedRes=s.status==='closed'&&(s.result==='win'||s.result==='loss'||s.result==='breakeven');
   // بنر نتیجه‌ی بزرگ و خوانا — وقتی نتیجه‌ی سیگنال مشخص شد
   const bigRes=closedRes?sigBigResHTML(s):'';
-  return `<div class="sigc ${dir}${s.status==='closed'?' closed':''}${closedRes?' has-res '+s.result:''}">
+  // تا وقتی عکس نیامده، به‌جای جای خالی یک اسکلتِ در حال بارگذاری نشان می‌دهیم
+  const pending=(s.img===undefined&&!s.image_url);
+  return `<div class="sigc ${dir}${s.status==='closed'?' closed':''}${closedRes?' has-res '+s.result:''}" data-sigcard="${s.id}">
     <div class="sigc-img-wrap" onclick="sigOpenView(${s.id})">
       ${img?`<img class="sigc-img" src="${sigEsc(img)}" alt="chart" loading="lazy">`
+           :pending?`<div class="sigc-noimg sigc-skel">${dir==='sell'?'🔻':'🔺'}</div>`
            :`<div class="sigc-noimg">${dir==='sell'?'🔻':'🔺'}</div>`}
       <span class="sigc-dirbadge ${dir}">${dir==='sell'?'🔻 فروش':'🔺 خرید'}</span>
       <div class="sigc-when">
@@ -6460,8 +6526,15 @@ function sigCardHTML(s){
 }
 
 /* ---------- مودال جزئیات ---------- */
+let _sigViewId=null;
 function sigOpenView(id,scrollToRes){
   const s=_sigItems.find(x=>x.id===id); if(!s) return;
+  _sigViewId=id;
+  // اگر کاربر خیلی سریع کلیک کرد و عکس هنوز نرسیده بود، همین‌جا بگیر و
+  // بعد از رسیدن، مودال را با همان اسکرول دوباره بساز.
+  if(s.img===undefined){
+    sigLoadImages([id]).then(()=>{ if(_sigViewId===id && s.img!==undefined) sigOpenView(id,scrollToRes); });
+  }
   const dir=s.direction==='sell'?'sell':'buy';
   const img=s.img||s.image_url||'';
   const res=sigResults(s);
@@ -6508,7 +6581,7 @@ function sigOpenView(id,scrollToRes){
     if(box) setTimeout(()=>{ const el=box.children[scrollToRes]; if(el) el.scrollIntoView({inline:'center',block:'nearest'}); },60);
   }
 }
-function sigCloseView(){ document.getElementById('sig-view').classList.remove('show'); }
+function sigCloseView(){ _sigViewId=null; document.getElementById('sig-view').classList.remove('show'); }
 /* عکس تمام‌صفحه — از همان لایت‌باکس گالری استفاده می‌کنیم */
 function galOpenImg(src){
   document.getElementById('gal-view-img').src=src;
@@ -12799,7 +12872,7 @@ const AUTH_EMAIL_DOMAIN='tradeplan.app';
    MT5_EA_VERSION: باید با «#property version» داخل mt5/TradePlanSync.mq5 یکی باشد؛
    MT5_SVC_VERSION: باید با «#property version» داخل mt5/TradePlanSyncService.mq5 یکی باشد؛
    اسم فایل دانلودی و متن دکمه‌های دانلود از همین ثابت‌ها ساخته می‌شود. */
-const APP_VERSION='81.9';
+const APP_VERSION='82.4';
 const MT5_EA_VERSION='1.30';
 const MT5_SVC_VERSION='1.30';
 (function(){
